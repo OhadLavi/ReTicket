@@ -1,0 +1,82 @@
+#app-background-image {
+	background: url("/css/images/concert-min.jpg");
+}
+
+.main-container {
+	background-color: grey;
+	text-align:center;
+	margin: 0;
+	width: 300px;
+	max-width: 50%;
+	top: 50%;
+	left: 50%;
+	padding: 20px;
+	position: absolute;
+	transform: translate(-50%, -50%);
+	display: center;
+	font-size: small;
+}
+
+.forgot {
+	text-align: right;
+	padding-right: 15px;
+	font-size:12px;
+}
+
+.header {
+	margin: 20px 0;
+	padding: 5px;
+	font-size: 20px;
+}
+
+.sign-up {
+	font-size: 12px;
+	font-weight: lighter;
+}
+
+button:hover, button:focus {
+    background-color: hsl(205, 100%, 40%);
+    box-shadow: 0 0 1px 0 hsl(205, 100%, 30%);
+}
+
+a {
+	color:hsl(205, 100%, 50%);
+	text-decoration: none;
+}
+
+.registration-form {
+	font-weight: bold;
+}
+
+.btn-orange {
+    background-color: orange;
+	-webkit-text-fill-color: black;
+}
+.btn-orange:hover {
+    background-color: darkorange;
+	-webkit-text-fill-color: black;
+}
+
+.form-control {
+	width: 100%;
+	max-width: none;
+  }
+
+  .input-group-text {
+    width: 40px;
+}
+
+.input-group > input[type="text"] {
+    width: 100%;
+}
+
+.input-group > .btn {
+    width: 100px;
+}
+
+.input-group {
+    display: flex;
+    justify-content: center;
+}
+
+  
