@@ -1,0 +1,79 @@
+<!-- views/index.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Reticket</title>
+    <link href="css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous" />
+    <link href="css/sb-admin-2.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/styles.css">
+
+</head>
+<body id="app-background-image">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 text-right mt-4">
+                <% if(!user) { %>
+                <a class="btn btn-orange mr-2" href="./login">LOG IN</a>
+                <a class="btn btn-orange" href="./register">SIGN UP</a>
+                <% } else { %>
+                    <p class="mt-2 text-warning">Hello, <a href="/user/<%= user._id %>"><%= user.firstName %></a>!</p>
+                    <form id="logout-form" method="post" action="/logout" style="display: inline;">
+                        <button type="submit" class="btn btn-link p-0 m-0 align-baseline text-warning">Not <%= user.firstName %>? Log out</button>
+                    </form>
+                    <!-- Sell Ticket button -->
+                    <a class="btn btn-orange mt-2" href="./uploadTicket">SELL TICKET</a>
+                    <% } %>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <img src="../css/images/logo-trans.png" alt="Reticket Logo" class="img-fluid mt-5" width="70%">
+                <h2 class="mt-4 text-warning">Buying & selling second-hand tickets</h2>
+                <div class="input-group mt-3 mx-auto text-center" style="max-width: 600px;">
+                    <form class="form-inline my-2 my-lg-0" method="post" action="/search">
+                        <input type="text" class="form-control flex-grow-1" placeholder="Search for tickets..." size="50" name="searchQuery">
+                        <div class="input-group-append">
+                            <button class="btn btn-orange" type="submit" for="search-input"><i class="fas fa-search"></i></button>
+                        </div>
+                    </form>
+                </div>                                 
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 text-center mt-5">
+                <h2 class="text-warning">Hot Shows</h2>
+            </div>
+        </div>
+        <div class="row mt-5 text-center justify-content-center">
+            <%# bands.forEach(function(band) { %>
+                <div class="col-md-2 offset-md-1">
+                    <div class="card">
+                        <h5 class="card-header bg-orange text-black"><%#= band.name %></h5>
+                        <img src="<%#= band.image %>" alt="Band" class="card-img-top">
+                        <div class="card-body">
+                            <button class="btn btn-black btn-block text-black bg-warning">Get Tickets</button>
+                        </div>
+                    </div>
+                </div>
+            <%# }); %>
+        </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="script/jquery.min.js"></script>
+    <script src="script/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="script/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="script/sb-admin-2.min.js"></script>
+      
+
+</body>
+</html>
