@@ -1,0 +1,31 @@
+/* Dashed border for mat-card-content */
+mat-card-content {
+    border: 3px dashed #717386;
+    transition: border-color 0.25s ease-in-out;
+}
+
+mat-card-content:hover {
+    border-color: #292a3a; /* Change to the desired color */
+}
+
+/* Color change on hover */
+#upload-container {
+    background-color: #fff; /* Change as per your requirement */
+}
+
+/* Color change on hover */
+#upload-container:hover {
+    background-color: #e0e0e0; /* Change as per your requirement */
+}
+
+.highlight-on-drag-over:hover {
+    background-color: #e0e0e0; /* Change to the desired color */
+}
+  
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 100vh;
+}

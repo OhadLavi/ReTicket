@@ -1,0 +1,42 @@
+/* .toolbar {
+    color: #0a1929;
+  }
+  
+  .fas {
+    color: #61b0ef;
+    border: 2px solid #61b0ef;
+    border-radius: 30%;
+    padding: 5px;
+  }
+  
+  .badge-notification {
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translate(50%, -50%);
+  }
+  
+  .user-image, .logo-image {
+    width: 32px;
+    height: 32px;
+  }
+   */
+
+   .example-spacer {
+    flex: 1 1 auto;
+  }
+  
+  .user-image {
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    background-position: center center;
+    object-fit: cover;
+}
+
+.login-button {
+  border-width: 1px;
+  border-style: solid;
+  border-color: mat-color($primary);
+  margin-left: 10px;
+}

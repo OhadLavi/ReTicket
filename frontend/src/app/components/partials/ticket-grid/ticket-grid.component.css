@@ -1,0 +1,8 @@
+.btn i {
+    transition: color 0.3s ease;
+}
+  
+  .btn:hover i {
+    color: rgb(84, 110, 197);
+}
+  

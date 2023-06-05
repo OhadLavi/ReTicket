@@ -1,0 +1,118 @@
+<!-- <mat-toolbar class="navbar navbar-expand-lg">
+	<div class="container-fluid justify-content-between">
+	  <div class="d-flex">
+		<a class="navbar-brand me-2 mb-1 d-flex align-items-center" href="#">
+		  <img src="https://mdbcdn.b-cdn.net/img/logo/mdb-transaprent-noshadows.webp" height="20" alt="MDB Logo" loading="lazy" style="margin-top: 2px;" />
+		</a>
+	  </div>
+	  <div class="d-flex align-items-center">
+		<a class="nav-link d-sm-flex align-items-sm-center me-3" href="#">
+		  <img src="https://mdbcdn.b-cdn.net/img/new/avatars/1.webp" class="rounded-circle" height="30" alt="Black and White Portrait of a Man" loading="lazy" />
+		  <strong class="d-none d-sm-block ms-1">John</strong>
+		</a>
+		<a class="nav-link dropdown-toggle hidden-arrow me-3" href="#" id="navbarDropdownMenuLink" role="button" data-mdb-toggle="dropdown" aria-expanded="false">
+		  <i class="fas fa-bell fa-lg" style="position: relative; border: 1px solid;"></i>
+		  <span class="badge rounded-pill badge-notification bg-danger" style="position: absolute; top: 0px; right: 8px;">3</span>
+		</a>
+		<button mat-icon-button (click)="toggleControl.setValue(!toggleControl.value)" style="border: 1px solid;">
+		  <i class="fas" [ngClass]="{'fa-moon': !toggleControl.value, 'fa-sun': toggleControl.value}" style="border: 1px solid;"></i>
+		</button>
+	  </div>
+	  
+	</div>
+  </mat-toolbar>
+   -->
+
+   <p>
+	<mat-toolbar>
+	 <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">
+	  <mat-icon>menu</mat-icon>
+	</button>
+	<span [routerLink]="['/']">Reticket</span>
+	<span class="example-spacer"></span>
+	<button *ngIf="isAuth" mat-button [matMenuTriggerFor]="menu">
+		<img [src]="'http://localhost:5000/' + user.imageURL" class="user-image">
+		Profile
+	</button>
+	  <mat-menu #menu="matMenu">
+		<button mat-menu-item>
+		  <mat-icon>edit</mat-icon>
+		  <span [routerLink]="['/account/profile']">Edit Profile</span>
+		</button>
+		<button mat-menu-item>
+		  <mat-icon>settings</mat-icon>
+		  <span [routerLink]="['/sellTicket']">Sell a Ticket</span>
+		</button>
+		<button mat-menu-item>
+			<mat-icon>settings</mat-icon>
+			<span [routerLink]="['/account/tickets']">My Tickets</span>
+		</button>
+		<button mat-menu-item>
+		  <mat-icon>exit_to_app</mat-icon>
+		  <a (click)="logout()">Logout</a>
+		</button>
+	  </mat-menu>
+	<button *ngIf="isAuth" mat-icon-button class="example-icon" aria-label="Example icon-button with share icon">
+		<mat-icon matBadge="1" matBadgeColor="warn" matBadgeHidden="badgeCounter==0">notifications</mat-icon>
+	</button>
+	<button *ngIf="isAuth" [routerLink]="['/cart']" mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
+	  <mat-icon matBadge="{{ cartQuantity }}" matBadgeColor="warn" [matBadgeHidden]="cartQuantity === 0">shopping_cart</mat-icon>
+	</button>
+	<button mat-button *ngIf="!isAuth" [routerLink]="['/login']" mat-button class="login-button">Login</button>
+	<button mat-button *ngIf="!isAuth" [routerLink]="['/register']" mat-button class="login-button">Register</button>
+   <button mat-icon-button (click)="toggleControl.setValue(!toggleControl.value)">
+	<i class="fas" [ngClass]="{'fa-moon': !toggleControl.value, 'fa-sun': toggleControl.value}"></i>
+  </button>
+  </mat-toolbar>
+</p>
+
+  
+  
+  <!--
+	<mat-toolbar class="toolbar d-flex justify-content-between align-items-center">
+	<div class="d-flex align-items-center">
+	  <a mat-button [routerLink]="['/']" routerLinkActive="active-link">
+		<img src="your_logo_url_here" class="logo-image" alt="logo">
+	  </a>
+	  <button mat-icon-button class="d-lg-none" (click)="snav.toggle()">
+		<span class="fas fa-list"></span>
+	  </button>
+	</div>
+  
+	<div class="d-none d-lg-flex align-items-center">
+	  <a mat-button [routerLink]="['/dashboard']" routerLinkActive="active-link">Dashboard</a>
+	  <a mat-button [routerLink]="['/team']" routerLinkActive="active-link">Team</a>
+	  <a mat-button [routerLink]="['/projects']" routerLinkActive="active-link">Projects</a>
+	</div>
+  
+	<div class="d-flex align-items-center">
+	  <button mat-icon-button [matMenuTriggerFor]="menu" *ngIf="isAuth">
+		<img [src]="'http://localhost:5000/' + user.imageURL" class="user-image">
+		<span class="badge rounded-pill badge-notification bg-danger">1</span>
+	  </button>	  
+	  <button mat-icon-button [matMenuTriggerFor]="notifications">
+		<span class="fas fa-bell"></span>
+		<span class="badge rounded-pill badge-notification bg-danger">2</span>
+	  </button>
+	  <button mat-icon-button [routerLink]="['/cart']">
+		<span class="fas fa-shopping-cart"></span>
+		<span class="badge rounded-pill badge-notification bg-danger">{{ cartQuantity }}</span>
+	  </button>
+	  <mat-slide-toggle name="toggleControl" ngDefaultControl [formControl]="toggleControl">
+		<span [ngClass]="{'fas fa-moon': toggleControl.value, 'fas fa-sun': !toggleControl.value}"></span>
+	  </mat-slide-toggle>
+	</div>
+  
+	<mat-sidenav #snav>
+
+	</mat-sidenav>
+  </mat-toolbar>
+  
+
+  <mat-menu #menu="matMenu">
+
+  </mat-menu>
+  <mat-menu #notifications="matMenu">
+
+  </mat-menu>
+  -->
