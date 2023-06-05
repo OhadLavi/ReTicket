@@ -1,0 +1,56 @@
+<div class="container mb-5 pb-3">
+    <div class="bg-light shadow-lg rounded-3 overflow-hidden">
+        <div class="row">
+            <!-- Sidebar -->
+            <aside class="col-lg-3 pe-xl-5">
+                <app-account-sidemenu></app-account-sidemenu>
+            </aside>
+            <!-- Content -->
+            <section class="col-lg-9 pt-lg-4 pb-4 mb-3">
+                <div class="pt-2 px-4 ps-lg-0 pe-xl-5">
+                    <div class="d-flex flex-sm-row flex-column align-items-sm-center justify-content-between mb-4">
+                        <h1 class="h3 mb-sm-0 mb-2 pb-1 text-sm-start text-center">My Tickets</h1>
+                        <div class="pb-1" style="overflow-x: auto;">
+                            <ul ngbNav #nav="ngbNav" class="nav nav-tabs nav-fill flex-nowrap text-nowrap mb-0">
+                                <li class="nav-item" ngbNavItem="All">
+                                    <a ngbNavLink class="nav-link">
+                                        All
+                                        <span class='opacity-70'>({{allTickets.length}})</span>
+                                    </a>
+                                    <ng-template ngbNavContent>
+                                        <app-ticket-grid [tickets]="allTickets"></app-ticket-grid>
+                                    </ng-template>
+                                </li>
+                                <li class="nav-item" ngbNavItem="sold">
+                                    <a ngbNavLink class="nav-link">
+                                        Sold
+                                        <span class='opacity-70'>({{soldTickets.length}})</span>
+                                    </a>
+                                    <ng-template ngbNavContent>
+                                        <app-ticket-grid [tickets]="soldTickets"></app-ticket-grid>
+                                    </ng-template>
+                                </li>
+                                <li class="nav-item" ngbNavItem="live">
+                                    <a ngbNavLink class="nav-link">
+                                        Bought
+                                        <span class='opacity-70'>({{boughtTickets.length}})</span>
+                                    </a>
+                                    <ng-template ngbNavContent>
+                                        <app-ticket-grid [tickets]="boughtTickets"></app-ticket-grid>
+                                    </ng-template>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div>
+                        <div [ngbNavOutlet]="nav"></div>
+                    </div>
+                    <!-- Create new item -->
+                    <!-- <div class="d-flex flex-sm-row flex-column">
+                        <a class="btn btn-accent" routerLink="/createnewitem">Sell a Ticket</a>
+                    </div> -->
+                </div>
+            </section>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,18 @@
+<div *ngIf="eventm" class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <div class="card rounded shadow">
+          <div class="position-relative">
+            <img [src]="eventm.image" [alt]="eventm.name" class="card-img-top rounded-top" />
+            <i class="fa fa-heart position-absolute top-0 start-0 m-2"></i>
+          </div>
+          <div class="card-body">
+            <h5 class="card-title">{{eventm.name}}</h5>
+            <p class="card-text">{{eventm.description}}</p>
+            <p class="card-text">Price: {{eventm.price | currency}}</p>
+            <button class="btn btn-primary" (click)="addToCart()">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>  

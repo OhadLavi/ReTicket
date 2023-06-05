@@ -1,0 +1,17 @@
+a {
+    text-decoration: none;
+}
+
+.nav-link-style {
+    color: #4b566b;
+}
+
+.menulist:hover {
+    color: rgb(84, 110, 197);
+    transition: color 0.3s ease;
+}
+
+.active {
+    color: rgb(84, 110, 197);
+}
+  

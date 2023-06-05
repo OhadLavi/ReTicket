@@ -1,0 +1,46 @@
+<div class="d-block d-lg-none p-4">
+    <a class="btn btn-outline-accent d-block">
+      <i class="fas fa-bars me-2"></i>
+      Account menu
+    </a>
+  </div>
+  
+  <div class="h-100 border-end mb-2">
+    <div class="d-lg-block collapse" id="account-menu">
+      <ul class="list-unstyled mb-0">
+        <li class="border-bottom mb-0">
+          <a class="nav-link-style d-flex align-items-center px-4 py-3 menulist" routerLink="/account/profile">
+            <i class="fas fa-user me-2"></i>
+            Profile Settings
+          </a>
+        </li>
+        <li class="border-bottom mb-0">
+          <a class="nav-link-style d-flex align-items-center px-4 py-3 menulist" routerLink="/account/tickets">
+            <i class="fas fa-ticket-alt me-2"></i>
+            Tickets
+            <span class="fs-sm text-muted ms-auto">1</span>
+          </a>
+        </li>
+        <li class="border-bottom mb-0">
+          <a class="nav-link-style d-flex align-items-center px-4 py-3 menulist" routerLink="/account/notifications">
+            <i class="fas fa-bell me-2"></i>
+            Notifications
+            <span class="fs-sm text-muted ms-auto">3</span>
+          </a>
+        </li>
+        <li class="border-bottom mb-0">
+          <a class="nav-link-style d-flex align-items-center px-4 py-3 menulist" routerLink="/account/favorite">
+            <i class="fas fa-heart me-2"></i>
+            Favorites
+            <span class="fs-sm text-muted ms-auto">2</span>
+          </a>
+        </li>
+        <li class="border-bottom mb-0 cursor-pointer">
+          <a class="nav-link-style d-flex align-items-center px-4 py-3 menulist cursor-pointer" (click)="logout()" href="#">
+            <i class="fas fa-sign-out-alt me-2"></i>
+            Sign out
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>

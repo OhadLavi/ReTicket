@@ -1,0 +1,27 @@
+<div class="text-center bg-image" style="background-image: url('https://mdbootstrap.com/img/new/slides/041.webp'); height: 400px;">
+    <div class="mask w-100 h-100" style="background-color: rgba(0, 0, 0, 0.6);">
+        <div class="d-flex justify-content-center align-items-center h-100">
+            <div class="text-white">
+                <h1 class="mb-3">Heading</h1>
+                <h4 class="mb-3">Subheading</h4> <a class="btn btn-outline-light btn-lg" href="#!" role="button">Call to action</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section>
+    <div class="row row-cols-1 row-cols-md-5 g-4 p-5">
+      <div class="col" *ngFor="let event of events">
+        <div class="card h-100">
+          <img [src]="event.image" class="card-img-top" [alt]="event.name" />
+          <div class="card-body">
+            <h5 class="card-title">{{event.name}}</h5>
+            <p class="card-text">{{event.description}}</p>
+          </div>
+          <div class="card-footer">
+            <small class="text-muted"><a [routerLink]="'/event/' + event.id" class="btn btn-primary"><i class="fa-regular fa-cart-shopping"></i>View Details</a></small>
+          </div>
+        </div>
+      </div>
+    </div>
+</section>
