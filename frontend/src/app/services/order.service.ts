@@ -13,20 +13,7 @@ export class OrderService {
   constructor(private http: HttpClient) { }
 
   create(order:Order){
-    const sanitizedItems = order.items.map(itemData => {
-      const item = new CartItem(itemData.eventM);
-      item.quantity = itemData.quantity;
-      return item.sanitize();
-  });
-  
-  const sanitizedOrder = {
-      ...order,
-      items: sanitizedItems
-  };
-  
-  return this.http.post<Order>(URLS.ORDER.GET_ORDER_CREATE_URL, sanitizedOrder);
-  
-    //return this.http.post<Order>(URLS.ORDER.GET_ORDER_CREATE_URL, order);
+    return this.http.post<Order>(URLS.ORDER.GET_ORDER_CREATE_URL, order);
   }
 
   getNewOrder():Observable<Order>{

@@ -40,14 +40,14 @@ export class SellTicketComponent implements OnInit {
       for (let i = 0; i < file.length; i++) {
         this.ticketUploadService.uploadTicket(file[i]).subscribe({
           next: (response: any) => {
-            const tickets = response.tickets; // Assuming 'tickets' is the key of the array in the response
+            const tickets = response.tickets;
             for (let i = 0; i < tickets.length; i++) {
               const ticket = tickets[i];
               if (this.isEventDatePassed(ticket.eventDate)) {
                 this.isEventDatePassedFlag = true;
               } else {
                 this.fileUploaded = true;
-                this.tickets.push(ticket); // push the ticket to the tickets array
+                this.tickets.push(ticket);
                 console.log(this.tickets);
                 this.isLoading = false;
               }
@@ -61,11 +61,16 @@ export class SellTicketComponent implements OnInit {
       }
     }
   }
-  onSubmit(index: number) {
+
+onSubmit() {
     this.isLoading = true; 
-    const ticketInfo = this.tickets[index];
+    const ticketInfo = { 
+        tickets: this.tickets, 
+        sellerId: this.userSrvice.currentUser.id
+    };
+    console.log(ticketInfo);
     this.ticketUploadService.submitTicketInfo(ticketInfo).subscribe({
-      next: (response: Ticket) => {
+      next: (response: Ticket[]) => {
         console.log(response);
         this.isLoading = false;
         this.router.navigate(['/ticketInMarket']); 
@@ -78,9 +83,10 @@ export class SellTicketComponent implements OnInit {
     });
 }
 
+
 resetForm() {
-  this.tickets = []; // clear the tickets array
-  this.fileUploaded = false; // set fileUploaded to false
+  this.tickets = [];
+  this.fileUploaded = false;
 }
 
 

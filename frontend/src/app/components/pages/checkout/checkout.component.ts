@@ -54,7 +54,7 @@ export class CheckoutComponent implements OnInit {
     this.order.email = this.fc.email.value;
     this.order.userId = this.userService.currentUser.id;
     console.log("here");
-    console.log(this.order);   
+    console.log(this.order);
     this.orderService.create(this.order).subscribe({
       next: (order:Order) => {
         console.log(order);

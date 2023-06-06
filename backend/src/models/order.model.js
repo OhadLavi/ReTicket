@@ -4,7 +4,8 @@ const mongoose = require('mongoose');
 const { Event } = require('./event.model');
 
 const OrderItemSchema = new mongoose.Schema({
-    event: { type: Schema.Types.ObjectId, ref: 'Event', required: true },
+    event: { type: String, required: true },
+    eventM: { type: Schema.Types.ObjectId, ref: 'Event', required: false },
     price: { type: Number, required: true },
     quantity: { type: Number, required: true }
 });

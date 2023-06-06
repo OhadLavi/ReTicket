@@ -103,7 +103,6 @@ const storage = multer.diskStorage({
 
         // Update the user's photo with the path of the uploaded file
         user.imageURL = photo.path; // Storing the path of the file in the user's photo field
-        console.log(user);
         await user.save();
         res.json(user);
     } catch (error) {
