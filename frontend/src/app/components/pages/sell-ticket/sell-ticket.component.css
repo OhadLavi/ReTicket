@@ -21,11 +21,7 @@ mat-card-content:hover {
 .highlight-on-drag-over:hover {
     background-color: #e0e0e0; /* Change to the desired color */
 }
-  
-.container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    height: 100vh;
+
+.container{
+    height: auto;
 }

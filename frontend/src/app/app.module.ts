@@ -37,8 +37,6 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatBadgeModule} from '@angular/material/badge';
 
-
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -53,7 +51,7 @@ import { MatBadgeModule} from '@angular/material/badge';
     CheckoutComponent,
     PaypalButtonComponent,
     SellTicketComponent,
-    TicketInMarketComponent,
+    TicketInMarketComponent
   ],
   imports: [
     BrowserModule,
@@ -77,14 +75,9 @@ import { MatBadgeModule} from '@angular/material/badge';
     MatTabsModule,
     MatGridListModule,
     MatSidenavModule,
-    MatMenuModule,
     MatBadgeModule,
     MatProgressSpinnerModule,
     MatIconModule,
-    MatGridListModule,
-    MatToolbarModule,
-    MatSlideToggleModule,
-    MatProgressSpinnerModule
   ],
   exports: [
     MatBadgeModule

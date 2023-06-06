@@ -3,6 +3,7 @@ const multer = require('multer');
 const fs = require('fs');
 const Ticket = require('../src/models/ticket.model');
 const { File } = require('../src/models/file.model');
+const { Event } = require('../src/models/event.model');
 const pdfjsLib = require('pdfjs-dist');
 const jsQR = require('jsqr');
 const router = express.Router();
@@ -15,7 +16,7 @@ const upload = multer({ storage: storage });
 const qrCode = require('qrcode-reader');
 const { PDFParser } = require('pdf2json');
 const jimp = require('jimp');
-
+const sample_events = require('../src/data/events');
 // const { PDFDocument, PNGStream } = require("pdfjs-dist");
 // const { fromPath } = require ('pdf2pic');
 // const pdfImgConvert = require('pdf-img-convert');
@@ -26,9 +27,19 @@ const jimp = require('jimp');
 // const { v4: uuidv4 } = require('uuid');
 // const jsQR = require('jsqr');
 // const { PDFDocument } = require('pdf-lib');
-
 // const jsBarcode = require('jsbarcode');
 
+router.get("/seed", asyncHandler(async (req, res) => {
+  const eventsCount = await Event.countDocuments();
+  if (eventsCount > 0) {
+      //res.status(400).json({ message: "Seed data already exists" });
+      res.send("Seed data already exists");
+      return;
+  }
+  await Event.create(sample_events);
+  //res.status(201).json({ message: "Seed data created" });
+  res.send("Seed data created");
+}));
 
 router.get("/", asyncHandler(async(req, res) => {
     const tickets = await Ticket.find();
@@ -38,25 +49,19 @@ router.get("/", asyncHandler(async(req, res) => {
 function generateRandomTicket() {
   const locations = ['Madison Square Garden', 'Wembley Stadium', 'Camp Nou', 'Old Trafford', 'Maracanã'];
   const statuses = ['On sale', 'Sold out', 'Cancelled'];
-
   const randomLocation = locations[Math.floor(Math.random() * locations.length)];
   const randomStatus = statuses[Math.floor(Math.random() * statuses.length)];
   const randomPrice = (Math.random() * 100).toFixed(2);
-
   const currentDate = new Date();
   const randomDate = getRandomDate(currentDate);
-
   let numTickets;
   const randomNum = Math.random();
-
   if (randomNum <= 0.55) {
     numTickets = 1;
   } else {
     numTickets = Math.floor(Math.random() * 5) + 2; // Random number between 2 and 6
   }
-
   const tickets = [];
-
   for (let i = 0; i < numTickets; i++) {
     const ticket = {
       price: randomPrice,
@@ -67,10 +72,8 @@ function generateRandomTicket() {
     };
     tickets.push(ticket);
   }
-
   return tickets;
 }
-
 
 function getRandomDate(currentDate) {
   const maxDaysAfter = 7; // Maximum number of days after the current date
