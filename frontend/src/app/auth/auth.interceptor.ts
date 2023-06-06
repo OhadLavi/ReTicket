@@ -16,7 +16,6 @@ export class AuthInterceptor implements HttpInterceptor {
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     const user = this.userService.currentUser;
     if(user.token) {
-      console.log('intercept');
       request = request.clone({
         setHeaders:{
           access_token: user.token
@@ -24,10 +23,8 @@ export class AuthInterceptor implements HttpInterceptor {
       })
     }
     else {
-      console.log('no intercept');
       this.userService.removeUserFromLocalStorage();
     }
-    console.log(user);
     return next.handle(request);
   }
 }

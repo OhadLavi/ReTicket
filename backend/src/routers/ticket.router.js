@@ -13,10 +13,12 @@ const storage = multer.diskStorage({
   filename: function (req, file, cb) {cb(null, file.originalname);}
 }); 
 const upload = multer({ storage: storage });
+const nodemailer = require('nodemailer');
 const qrCode = require('qrcode-reader');
 const { PDFParser } = require('pdf2json');
 const jimp = require('jimp');
 const sample_events = require('../data/events');
+const { send } = require('process');
 // const { PDFDocument, PNGStream } = require("pdfjs-dist");
 // const { fromPath } = require ('pdf2pic');
 // const pdfImgConvert = require('pdf-img-convert');
@@ -100,19 +102,27 @@ router.post('/upload', upload.single('file'), async (req, res) => {
 
 router.post('/submit', async (req, res) => {
   try {
-    const { eventDate, location, price, seller, fileName, description } = req.body;
+    const tickets = req.body.tickets;
+    const sellerId = req.body.sellerId;
 
-    const newTicket = await Ticket.create({
-      eventDate,
-      location,
-      price,
-      isSold: false,
-      seller,
-      soldDate: null,
-      fileName,
-      description
-    });
-    res.status(201).json(newTicket);
+    if (!sellerId) {
+        return res.status(400).json({ error: 'Seller ID is required.' });
+    }
+
+    const newTickets = await Promise.all(tickets.map(async ({ eventDate, location, price, fileName, description }) => {
+        const newTicket = await Ticket.create({
+          eventDate,
+          location,
+          price,
+          isSold: false,
+          seller: sellerId,
+          soldDate: null,
+          fileName,
+          description
+        });
+        return newTicket;
+    }));
+    res.status(201).json(newTickets);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Internal server error' });

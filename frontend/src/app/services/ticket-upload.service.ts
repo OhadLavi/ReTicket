@@ -17,8 +17,9 @@ export class TicketUploadService {
     return this.http.post<Ticket>(URLS.TICKET.GET_TICKET_UPLOAD_URL, formData); // Indicate expected return type
   }
 
-  submitTicketInfo(ticketInfo: Ticket): Observable<Ticket> {
-    return this.http.post<Ticket>(URLS.TICKET.GET_TICKET_SUBMIT_URL, ticketInfo);
+  submitTicketInfo(ticketInfo: { tickets: Ticket[], sellerId: string }): Observable<Ticket[]> {
+    return this.http.post<Ticket[]>(URLS.TICKET.GET_TICKET_SUBMIT_URL, ticketInfo);
   }
+
   
 }
