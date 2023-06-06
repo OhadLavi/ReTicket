@@ -11,17 +11,19 @@
 	</button>
 	  <mat-menu #menu="matMenu">
 		<button mat-menu-item>
-		  <mat-icon>edit</mat-icon>
-		  <span [routerLink]="['/account/profile']">Edit Profile</span>
+		  <mat-icon>account_circle</mat-icon>
+		  <span [routerLink]="['/account/profile']">Profile</span>
 		</button>
 		<button mat-menu-item>
-		  <mat-icon>settings</mat-icon>
-		  <span [routerLink]="['/sellTicket']">Sell a Ticket</span>
-		</button>
-		<button mat-menu-item>
-			<mat-icon>settings</mat-icon>
+			<mat-icon>receipt</mat-icon>
+			<span [routerLink]="['/sellTicket']">Sell a Ticket</span>
+		  </button>
+		  
+		  <button mat-menu-item>
+			<mat-icon>event</mat-icon>
 			<span [routerLink]="['/account/tickets']">My Tickets</span>
-		</button>
+		  </button>
+		  
 		<button mat-menu-item>
 		  <mat-icon>exit_to_app</mat-icon>
 		  <a (click)="logout()">Logout</a>

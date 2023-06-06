@@ -24,6 +24,7 @@ export class CartService {
         return;
     }
     this.cart.items.push(new CartItem(eventM));
+    console.log(this.cart);
     this.updateCartToLocalStorage();
   }
 

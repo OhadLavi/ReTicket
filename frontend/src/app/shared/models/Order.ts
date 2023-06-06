@@ -3,7 +3,7 @@ import { CartItem } from "./CartItem";
 export class Order {
     id!: number;
     items!: CartItem[];
-    userId!: number;
+    userId!: string;
     name!: string;
     email!: string;
     paymentId!: string;

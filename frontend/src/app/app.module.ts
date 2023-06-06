@@ -36,6 +36,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatBadgeModule} from '@angular/material/badge';
+import { OrderTrackComponent } from './components/pages/order-track/order-track.component';
 
 @NgModule({
   declarations: [
@@ -51,7 +52,8 @@ import { MatBadgeModule} from '@angular/material/badge';
     CheckoutComponent,
     PaypalButtonComponent,
     SellTicketComponent,
-    TicketInMarketComponent
+    TicketInMarketComponent,
+    OrderTrackComponent
   ],
   imports: [
     BrowserModule,
