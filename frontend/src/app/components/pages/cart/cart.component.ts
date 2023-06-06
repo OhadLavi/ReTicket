@@ -29,7 +29,6 @@ export class CartComponent implements OnInit{
       this.cart = cart;
       this.discountedPrice = this.cartService.getCart().cartPrice - this.cartService.getCart().totalPrice;
     });
-
   }
 
   removeFromCart(cartItem:CartItem) {

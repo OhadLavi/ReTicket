@@ -1,8 +1,8 @@
 const asyncHandler = require('express-async-handler');
 const express = require('express');
-const auth = require('../src/middlewares/auth.mid');
-const OrderModel = require('../src/models/order.model');
-const { OrderStatus } = require('../src/constants/order_status');
+const auth = require('../middlewares/auth.mid');
+const OrderModel = require('../models/order.model');
+const { OrderStatus } = require('../constants/order_status');
 const router = express.Router();
 
 router.use(auth);
@@ -15,21 +15,9 @@ router.post('/create', asyncHandler(async (req, res) => {
       return;
     }
 
-    OrderModel.collection.dropIndex('items.food.price_1', (err, result) => {
-      if (err) {
-        console.error(err);
-      } else {
-        console.log(result);
-      }
-    });
-    
+    console.log(requestOrder);
 
-    await OrderModel.deleteOne({
-      user: req.user.id,
-      status: OrderStatus.NEW,
-    });
-
-    const newOrder = new OrderModel({ ...requestOrder, user: req.user.id });
+    const newOrder = new OrderModel({ ...requestOrder, user: req.userId });
     await newOrder.save();
     res.send(newOrder);
   }),
@@ -63,7 +51,7 @@ router.get('/track/:id', asyncHandler(async (req, res) => {
 }));
 
 async function getNewOrder(req) {
-  return await OrderModel.findOne({ user: req.user.id, orderStatus: OrderStatus.NEW });
+  return await OrderModel.findOne({ user: req.userId, orderStatus: OrderStatus.NEW });
 }
 
 module.exports = router;

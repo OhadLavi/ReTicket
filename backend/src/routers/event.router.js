@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const sample_events = require('../src/data/events'); // Assuming you have an events data file
-const { Event } = require('../src/models/event.model'); // Assuming you have an event model
+const sample_events = require('../data/events'); // Assuming you have an events data file
+const { Event } = require('../models/event.model'); // Assuming you have an event model
 const asyncHandler = require('express-async-handler');
 
 router.get("/", asyncHandler(async (req, res) => {

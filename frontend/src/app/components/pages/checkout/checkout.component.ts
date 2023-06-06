@@ -17,6 +17,7 @@ export class CheckoutComponent implements OnInit {
   order:Order = new Order();
   checkoutForm!: FormGroup;
   cart!: Cart;
+  orderItemsArray: any[] = [];
   
   constructor(cartService:CartService,
     private formBuilder:FormBuilder,
@@ -44,15 +45,15 @@ export class CheckoutComponent implements OnInit {
   get fc() { return this.checkoutForm.controls; }
 
   createOrder() {
-    console.log("createOrder");
     if (this.checkoutForm.invalid) {
       console.log("invalid");
-      //show error message
       return;
     };
 
     this.order.name = this.fc.name.value;
     this.order.email = this.fc.email.value;
+    this.order.userId = this.userService.currentUser.id;
+    console.log("here");
     console.log(this.order);   
     this.orderService.create(this.order).subscribe({
       next: (order:Order) => {

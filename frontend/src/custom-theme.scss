@@ -36,3 +36,6 @@ $frontend2-dark-theme: mat.define-dark-theme((
   @include mat.all-component-themes($frontend2-dark-theme);
 }
 
+:root {
+  --color-primary: #{mat-color($frontend2-primary)};
+}

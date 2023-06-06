@@ -12,7 +12,7 @@ import { TicketsComponent } from './components/pages/account/tickets/tickets.com
 import { AccountModule } from './components/pages/account/account.module';
 import { SellTicketComponent } from './components/pages/sell-ticket/sell-ticket.component';
 import { TicketInMarketComponent } from './components/pages/ticket-in-market/ticket-in-market.component';
-
+import { OrderTrackComponent } from './components/pages/order-track/order-track.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -20,6 +20,7 @@ const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'cart', component: CartComponent },
   { path: 'checkout', component: CheckoutComponent, canActivate: [AuthGuard] },
+  { path: 'track/:orderId' , component: OrderTrackComponent, canActivate: [AuthGuard] },
   { path: 'event/:id', component: EventPageComponent },
   { path: 'account', loadChildren: () => import('./components/pages/account/account.module').then(m => m.AccountModule), canActivate: [AuthGuard] },
   { path: 'sellTicket', component: SellTicketComponent},

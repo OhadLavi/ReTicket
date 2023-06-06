@@ -1,10 +1,10 @@
 const { model, Schema, Types } = require('mongoose');
 const { OrderStatus } = require('../constants/order_status');
 const mongoose = require('mongoose');
-const { Food } = require('./food.model');
+const { Event } = require('./event.model');
 
 const OrderItemSchema = new mongoose.Schema({
-    food: { type: Schema.Types.ObjectId, ref: 'Food', required: true },
+    event: { type: Schema.Types.ObjectId, ref: 'Event', required: true },
     price: { type: Number, required: true },
     quantity: { type: Number, required: true }
 });
@@ -16,7 +16,7 @@ const orderSchema = new mongoose.Schema({
   totalPrice: { type: Number, required: true },
   items: { type: [OrderItemSchema], required: true },
   orderStatus: { type: String, default: OrderStatus.NEW },
-  user: { type: Schema.Types.ObjectId, required: true }
+  userId: { type: Schema.Types.ObjectId, required: true }
 }, {
   timestamps: true,
   toJSON: {
