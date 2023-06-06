@@ -21,13 +21,13 @@ app.use('/uploads', express.static('uploads'));
 
 //import routes
 const usersRouter = require('../routers/user.router');
-const foodRouter = require('../routers/food.router');
+const eventRouter = require('../routers/event.router');
 const orderRouter = require('../routers/order.router');
 const ticketRouter = require('../routers/ticket.router');
 
 //use routes
 app.use('/api/users', usersRouter);
-app.use('/api/foods', foodRouter);
+app.use('/api/events', eventRouter);
 app.use('/api/orders', orderRouter);
 app.use('/api/tickets', ticketRouter);
 

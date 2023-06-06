@@ -1,29 +1,4 @@
-<!-- <mat-toolbar class="navbar navbar-expand-lg">
-	<div class="container-fluid justify-content-between">
-	  <div class="d-flex">
-		<a class="navbar-brand me-2 mb-1 d-flex align-items-center" href="#">
-		  <img src="https://mdbcdn.b-cdn.net/img/logo/mdb-transaprent-noshadows.webp" height="20" alt="MDB Logo" loading="lazy" style="margin-top: 2px;" />
-		</a>
-	  </div>
-	  <div class="d-flex align-items-center">
-		<a class="nav-link d-sm-flex align-items-sm-center me-3" href="#">
-		  <img src="https://mdbcdn.b-cdn.net/img/new/avatars/1.webp" class="rounded-circle" height="30" alt="Black and White Portrait of a Man" loading="lazy" />
-		  <strong class="d-none d-sm-block ms-1">John</strong>
-		</a>
-		<a class="nav-link dropdown-toggle hidden-arrow me-3" href="#" id="navbarDropdownMenuLink" role="button" data-mdb-toggle="dropdown" aria-expanded="false">
-		  <i class="fas fa-bell fa-lg" style="position: relative; border: 1px solid;"></i>
-		  <span class="badge rounded-pill badge-notification bg-danger" style="position: absolute; top: 0px; right: 8px;">3</span>
-		</a>
-		<button mat-icon-button (click)="toggleControl.setValue(!toggleControl.value)" style="border: 1px solid;">
-		  <i class="fas" [ngClass]="{'fa-moon': !toggleControl.value, 'fa-sun': toggleControl.value}" style="border: 1px solid;"></i>
-		</button>
-	  </div>
-	  
-	</div>
-  </mat-toolbar>
-   -->
-
-   <p>
+	<p>
 	<mat-toolbar>
 	 <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">
 	  <mat-icon>menu</mat-icon>
@@ -61,7 +36,8 @@
 	<button mat-button *ngIf="!isAuth" [routerLink]="['/login']" mat-button class="login-button">Login</button>
 	<button mat-button *ngIf="!isAuth" [routerLink]="['/register']" mat-button class="login-button">Register</button>
    <button mat-icon-button (click)="toggleControl.setValue(!toggleControl.value)">
-	<i class="fas" [ngClass]="{'fa-moon': !toggleControl.value, 'fa-sun': toggleControl.value}"></i>
+	<mat-icon>{{toggleControl.value ? 'brightness_7' : 'brightness_3'}}</mat-icon>	  
+	<!-- <i class="fas" [ngClass]="{'fa-moon': !toggleControl.value, 'fa-sun': toggleControl.value}"></i> -->
   </button>
   </mat-toolbar>
 </p>
@@ -116,3 +92,28 @@
 
   </mat-menu>
   -->
+
+  <!-- <mat-toolbar class="navbar navbar-expand-lg">
+	<div class="container-fluid justify-content-between">
+	  <div class="d-flex">
+		<a class="navbar-brand me-2 mb-1 d-flex align-items-center" href="#">
+		  <img src="https://mdbcdn.b-cdn.net/img/logo/mdb-transaprent-noshadows.webp" height="20" alt="MDB Logo" loading="lazy" style="margin-top: 2px;" />
+		</a>
+	  </div>
+	  <div class="d-flex align-items-center">
+		<a class="nav-link d-sm-flex align-items-sm-center me-3" href="#">
+		  <img src="https://mdbcdn.b-cdn.net/img/new/avatars/1.webp" class="rounded-circle" height="30" alt="Black and White Portrait of a Man" loading="lazy" />
+		  <strong class="d-none d-sm-block ms-1">John</strong>
+		</a>
+		<a class="nav-link dropdown-toggle hidden-arrow me-3" href="#" id="navbarDropdownMenuLink" role="button" data-mdb-toggle="dropdown" aria-expanded="false">
+		  <i class="fas fa-bell fa-lg" style="position: relative; border: 1px solid;"></i>
+		  <span class="badge rounded-pill badge-notification bg-danger" style="position: absolute; top: 0px; right: 8px;">3</span>
+		</a>
+		<button mat-icon-button (click)="toggleControl.setValue(!toggleControl.value)" style="border: 1px solid;">
+		  <i class="fas" [ngClass]="{'fa-moon': !toggleControl.value, 'fa-sun': toggleControl.value}" style="border: 1px solid;"></i>
+		</button>
+	  </div>
+	  
+	</div>
+  </mat-toolbar>
+   -->

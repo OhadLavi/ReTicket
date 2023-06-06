@@ -1,11 +1,11 @@
 <section class="h-100 h-custom" style="background-color: #d2c9ff;">
-    <div class="container py-5 h-100">
+    <div class="container py-5 h-100" style="max-width: 1700px;">
       <div class="row d-flex justify-content-center align-items-center h-100">
         <div class="col-12">
           <div class="card card-registration card-registration-2" style="border-radius: 15px;">
             <div class="card-body p-0">
               <div class="row g-0">
-                <div class="col-lg-8">
+                <div class="col-lg-9">
                   <div class="p-5">
                     <div class="d-flex justify-content-between align-items-center mb-5">
                       <h1 class="fw-bold mb-0 text-black">Shopping Cart</h1>
@@ -13,35 +13,54 @@
                     </div>
                     <div *ngIf="cart && cart.items.length">
                       <hr class="my-4">
+                      <div class="row mb-4 d-flex justify-content-between align-items-center">
+                        <div class="col-md-2 col-lg-2 col-xl-2">
+                        </div>
+                        <div class="col-md-3 col-lg-3 col-xl-2">
+                          <h6 class="text-muted">Event Name</h6>
+                        </div>
+                        <div class="col-md-2 col-lg-2 col-xl-2">
+                          <h6 class="text-muted">Event Date</h6>
+                        </div>
+                        <div class="col-md-3 col-lg-3 col-xl-2">
+                          <h6 class="text-muted">Number of Tickets</h6>
+                        </div>
+                        <div class="col-md-3 col-lg-2 col-xl-1">
+                          <h6 class="text-muted">Price</h6>
+                        </div>
+                        <div class="col-md-1 col-lg-1 col-xl-1 text-end">
+                          <h6 class="text-muted"></h6>
+                        </div>
+                      </div>                      
                       <div *ngFor="let cartItem of cart.items" class="row mb-4 d-flex justify-content-between align-items-center">
                         <div class="col-md-2 col-lg-2 col-xl-2">
                           <a routerLink="/event/{{cartItem.eventM.id}}">
                             <img [src]="cartItem.eventM.image" [alt]="cartItem.eventM.name" class="img-fluid rounded-3">
                           </a>
                         </div>
-                        <div class="col-md-3 col-lg-3 col-xl-3">
-                          <h6 class="text-muted">Event</h6>
+                        <div class="col-md-3 col-lg-3 col-xl-2">
                           <h6 class="text-black mb-0">{{cartItem.eventM.name}}</h6>
                         </div>
+                        <div class="col-md-2 col-lg-2 col-xl-2">
+                          <h6 class="text-black mb-0">{{cartItem.eventM.date | date:'fullDate'}}</h6>
+                        </div>
                         <div class="col-md-3 col-lg-3 col-xl-2 d-flex">
-                          <button class="btn btn-link px-2"
-                            onclick="this.parentNode.querySelector('input[type=number]').stepDown();"
-                            >
+                          <button class="btn btn-link px-2" onclick="this.parentNode.querySelector('input[type=number]').stepDown();">
                             <i class="fas fa-minus"></i>
                           </button>
-    
-                          <input #quantitySelect id="form1" min="0" name="quantity" value="1" (change)="changeQuantity(cartItem, quantitySelect.value)" type="number" class="form-control form-control-sm" />
-
+                          <div class="col-4">
+                            <input #quantitySelect id="form1" min="0" name="quantity" value="1" (change)="changeQuantity(cartItem, quantitySelect.value)" type="number" class="form-control form-control-sm" />
+                          </div>                        
                           <button class="btn btn-link px-2"
                             onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
                             <i class="fas fa-plus"></i>
                           </button>
                         </div>
-                        <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
+                        <div class="col-md-3 col-lg-2 col-xl-1">
                           <h6 class="mb-0"> {{cartItem.price | currency}}</h6>
                         </div>
                         <div class="col-md-1 col-lg-1 col-xl-1 text-end">
-                          <a href="#!" class="text-muted" (click)="removeFromCart(cartItem)"><i class="fas fa-times"></i></a>
+                          <a class="text-muted" style="cursor: pointer;" (click)="removeFromCart(cartItem)"><i class="fas fa-times"></i></a>
                         </div>
                       </div>
                     </div>
@@ -54,7 +73,7 @@
                     </div>
                   </div>
                 </div>
-                <div *ngIf="cart && cart.items.length" class="col-lg-4" style="background-color: beige; border-radius: 0 15px 15px 0;">
+                <div *ngIf="cart && cart.items.length" class="col-lg-3" style="background-color: beige; border-radius: 0 15px 15px 0;">
                   <div class="p-5">
                     <h3 class="fw-bold mb-5 mt-2 pt-1">Summary</h3>
                     <hr class="my-4">

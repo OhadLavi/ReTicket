@@ -1,10 +1,10 @@
 const BASE_URL = 'http://localhost:5000';
 
 export const URLS = {
-    FOOD: {
-        GET_ALL: `${BASE_URL}/api/foods`,
-        GET_BY_ID: (id: string) => `${BASE_URL}/api/foods/id/${id}`,
-        GET_BY_SEARCH_TERM: (searchTerm: string) => `${BASE_URL}/api/foods/search/${searchTerm}`
+    EVENT: {
+        GET_ALL: `${BASE_URL}/api/events`,
+        GET_BY_ID: (id: string) => `${BASE_URL}/api/events/id/${id}`,
+        GET_BY_SEARCH_TERM: (searchTerm: string) => `${BASE_URL}/api/events/search/${searchTerm}`
     },
     USER: {
         GET_ALL: `${BASE_URL}/api/users`,

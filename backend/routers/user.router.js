@@ -47,7 +47,6 @@ router.post("/login", asyncHandler(
         const user = await UserModel.findOne({email});
         if(user){
             res.json(generateTokenResponse(user));
-            console.log("generate token - login: "+ generateTokenResponse(user).token);
         } else{
             res.status(400).json({error: "Invalid login"});
         }
