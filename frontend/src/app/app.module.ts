@@ -37,6 +37,9 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatBadgeModule} from '@angular/material/badge';
 import { OrderTrackComponent } from './components/pages/order-track/order-track.component';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { ButtonModule } from 'primeng/button';
+import { ToastModule } from 'primeng/toast';
 
 @NgModule({
   declarations: [
@@ -80,6 +83,11 @@ import { OrderTrackComponent } from './components/pages/order-track/order-track.
     MatBadgeModule,
     MatProgressSpinnerModule,
     MatIconModule,
+    MatSnackBarModule,
+    BrowserModule,
+    BrowserAnimationsModule,
+    ToastModule,
+    ButtonModule
   ],
   exports: [
     MatBadgeModule

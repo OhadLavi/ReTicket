@@ -3,6 +3,8 @@ import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms
 import { Router } from '@angular/router';
 import { UserService } from 'src/app/services/user.service';
 import { User } from 'src/app/shared/models/User';
+import { SnackbarService } from 'src/app/services/snackbar.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-profile',
@@ -17,7 +19,7 @@ export class ProfileComponent implements OnInit {
   photoForm!: UntypedFormGroup;
   user!: User;
 
-  constructor(private formBuilder: UntypedFormBuilder, private userService: UserService) {
+  constructor(private formBuilder: UntypedFormBuilder, private userService: UserService, private snackBar: MatSnackBar) {
     this.user = userService.currentUser;
     console.log(this.user.imageURL);
   }
@@ -76,6 +78,13 @@ export class ProfileComponent implements OnInit {
     return this.photoForm.controls;
   }
 
+  openSnackBarSuccess(message: string) {
+    this.snackBar.open(message, 'Close', {
+      duration: 5000,
+      panelClass: ['success-snackbar']
+    });
+  }
+
   updatePhoto(event: any) {
     if (event.target.files && event.target.files.length > 0) {
       const photo: File = event.target.files[0];
@@ -89,6 +98,7 @@ export class ProfileComponent implements OnInit {
   
       // Use the service method to send the file to the backend
       this.userService.updateUserPhoto(this.user.id, photo).subscribe((res) => {
+        this.openSnackBarSuccess('Operation successful!');
         console.log(res);
         document.querySelectorAll('#user_profile').forEach((element: any) => {
           element.src = this.imageURL;
