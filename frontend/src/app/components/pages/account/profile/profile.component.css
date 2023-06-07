@@ -1,0 +1,15 @@
+.success-snackbar {
+    background-color: green;
+    color: white;
+  }
+  
+  .warning-snackbar {
+    background-color: orange;
+    color: white;
+  }
+  
+  .info-snackbar {
+    background-color: blue;
+    color: white;
+  }
+  

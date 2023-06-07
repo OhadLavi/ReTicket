@@ -52,3 +52,27 @@ mongoose
 .catch((err) => { console.log(err); });
 
 // web scraping function
+
+const { google } = require('googleapis');
+const TOKEN_PATH = 'token.json';
+
+app.get('/google/redirect', (req, res) => {
+    const authCode = req.query.code;
+    const oAuth2Client = new google.auth.OAuth2(
+        process.env.CLIENT_ID, 
+        process.env.CLIENT_SECRET, 
+        'http://localhost:5000/google/redirect'
+    );
+
+    oAuth2Client.getToken(authCode, (err, token) => {
+        if (err) return console.error('Error retrieving access token', err);
+        oAuth2Client.setCredentials(token);
+
+        // Store the token to disk for later program executions
+        fs.writeFile(TOKEN_PATH, JSON.stringify(token), (err) => {
+            if (err) return console.error(err);
+            console.log('Token stored to', TOKEN_PATH);
+        });
+    });
+    res.send('Google Auth Successful');
+});
