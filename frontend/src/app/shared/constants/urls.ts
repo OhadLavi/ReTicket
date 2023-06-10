@@ -27,9 +27,12 @@ export const URLS = {
         GET_ORDER_TRACK_URL: (id:string) => `${BASE_URL}/api/orders/track/${id}`
     },
     TICKET: {
-        GET_TICKETS_URL: `${BASE_URL}/api/tickets/`,
+        GET_USER_TICKETS_URL: (userId: string) => `${BASE_URL}/api/tickets/getUserTickets/${userId}`,
         GET_TICKET_UPLOAD_URL: `${BASE_URL}/api/tickets/upload/`,
         GET_TICKET_SUBMIT_URL: `${BASE_URL}/api/tickets/submit/`,
-        GET_TICKET_REVIEW_URL: (id:string) => `${BASE_URL}/api/tickets/review/${id}`
+        GET_TICKET_REVIEW_URL: (id:string) => `${BASE_URL}/api/tickets/review/${id}`,
+        GET_TICKET_DOWNLOAD_URL: (id:string) => `${BASE_URL}/api/tickets/getTicketFile/${id}`
     }
 };
+
+//        GET_TICKETS_URL: (userId:string) => `${BASE_URL}/api/tickets/getUserTickets/${userId}`,

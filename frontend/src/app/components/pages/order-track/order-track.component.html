@@ -4,13 +4,17 @@
         <div mat-dialog-content *ngIf="order">
           <h1 class="mb-4">Order #{{order.id}}</h1>
           <div class="row details mb-3">
-            <div class="col-12 d-flex align-items-center">
-              <mat-icon>date_range</mat-icon>&nbsp;
-              <strong>Date:</strong>&nbsp;{{order.createdAt | date:'medium' }}
+            <div>
+              Thank you for your purchase! We are pleased to inform you that your ticket(s) for the event(s) have been confirmed. 
+              <p>You can now view and access your tickets. Here are the details:</p>
             </div>
             <div class="col-12 d-flex align-items-center">
               <mat-icon>person</mat-icon>&nbsp;
               <strong>Name:</strong>&nbsp;{{order.name}}
+            </div>           
+            <div class="col-12 d-flex align-items-center">
+              <mat-icon>date_range</mat-icon>&nbsp;
+              <strong>Date:</strong>&nbsp;{{order.createdAt | date:'medium' }}
             </div>
             <div class="col-12 d-flex align-items-center" *ngIf="order.location">
               <mat-icon>location_on</mat-icon>&nbsp;
@@ -27,11 +31,10 @@
               <span style="font-size: 20px;">The ticket has been sent to: {{order.email}}</span>
             </div>
             <div class="d-flex align-items-center">
-              <mat-icon>file_download</mat-icon>&nbsp;&nbsp;&nbsp;
-              <mat-icon>print</mat-icon>
-            </div>
-          </div>
-                   
+              <mat-icon (click)="downloadFile()" style="cursor: pointer;">file_download</mat-icon>&nbsp;&nbsp;&nbsp;
+              <mat-icon (click)="printFile()" style="cursor: pointer;">print</mat-icon>
+            </div>                
+          </div>    
           <order-items-list [order]="order"></order-items-list>
         </div>
       </mat-card-content>

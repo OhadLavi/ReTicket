@@ -4,6 +4,8 @@ const fs = require('fs');
 const ics = require('ics');
 const { Event } = require('../models/event.model');
 require('dotenv').config();
+const Ticket = require('../models/ticket.model');
+const { File } = require('../models/file.model');
 
 const credentials = {
     "web": {
@@ -28,15 +30,10 @@ const oAuth2Client = new google.auth.OAuth2(client_id, client_secret, redirect_u
 oAuth2Client.setCredentials(token);
 const calendar = google.calendar({ version: 'v3', auth: oAuth2Client });
 
-const nodemailerTransporter = nodemailer.createTransport({
-  host: 'smtp-relay.sendinblue.com',
-  port: 587,
-  ignoreTLS: true
-});
-
 async function sendEmail(order, email) {
   console.log("sendEmail");
-
+  
+  // Create email transporter
   const transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
     port: 587,
@@ -51,7 +48,9 @@ async function sendEmail(order, email) {
   const itemsWithDetails = await Promise.all(
     order.items.map(async (item, index) => {
       const eventDetails = await findEventDetailsByEventId(item.event);
-  
+      const ticket = await Ticket.findOne({ eventId: item.event, buyer: order.userId });
+      const file = await File.findById(ticket.fileIds[0]);
+      const fileData = Buffer.from(file.data).toString('base64');
       const event = {
         start: [new Date(eventDetails.date).getFullYear(), new Date(eventDetails.date).getMonth()+1, new Date(eventDetails.date).getDate()],
         duration: { hours: 2 },
@@ -59,23 +58,29 @@ async function sendEmail(order, email) {
         description: `Location: ${eventDetails.location}\nPrice: ${order.items[index].price}`,
         location: eventDetails.location,
       };
-  
       const { error, value } = ics.createEvent(event);
-      
       if (error) {
         console.log("error creating ics: " + error);
         return;
       }
-      
-      return { ...item, eventDetails, icsEvent: value };
+
+      return { ...item, eventDetails, icsEvent: value, ticketFile: { data: fileData, contentType: file.contentType, name: file.name } };
     })
   );
 
-  const attachments = itemsWithDetails.map((item, index) => ({
-    filename: `${item.eventDetails.name}.ics`,
-    content: item.icsEvent,
-    contentType: 'text/calendar',
-  }));
+  const attachments = itemsWithDetails.map((item, index) => ([
+    {
+      filename: `${item.eventDetails.name}.ics`,
+      content: item.icsEvent,
+      contentType: 'text/calendar',
+    },
+    {
+      filename: item.ticketFile.name,
+      content: item.ticketFile.data,
+      contentType: item.ticketFile.contentType, // Assuming the content type is stored in the file model
+      encoding: 'base64'
+    }
+  ])).flat();
 
   const mailOptions = {
     from: process.env.EMAIL_ADDRESS,
@@ -90,12 +95,12 @@ async function sendEmail(order, email) {
             <p><strong>Event Date:</strong> ${new Date(item.eventDetails.date).toLocaleDateString()}</p>
             <p><strong>Location:</strong> ${item.eventDetails.location}</p>
             <p><strong>Price:</strong> ${order.items[index].price}</p>
-            <p>See attached file to add this event to your calendar.</p>
+            <p>See attached files to add this event to your calendar and view your ticket.</p>
           </div>
         `;
       }).join('')}
     `,
-    attachments
+    attachments: attachments
   };
   
   transporter.sendMail(mailOptions, (error, info) => {

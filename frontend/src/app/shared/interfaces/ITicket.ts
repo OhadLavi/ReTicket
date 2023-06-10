@@ -1,10 +1,11 @@
 export interface Ticket {
-    id: string;
+    eventId: string;
     eventDate: string;
     location: string;
     price: number;
     isSold: boolean;
     seller: string;
-    fileName: string;
+    buyer?: string;
+    fileIds: string;
     description?: string;
 }

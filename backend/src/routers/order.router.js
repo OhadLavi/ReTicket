@@ -5,6 +5,9 @@ const OrderModel = require('../models/order.model');
 const { OrderStatus } = require('../constants/order_status');
 const router = express.Router();
 const { sendEmail } = require('../services/email.service');
+const { updateEventAvailableTickets, updateTicketStatus } = require('../services/ticket.service');
+const Ticket = require('../models/ticket.model');
+const { File } = require('../models/file.model');
 
 router.use(auth);
 
@@ -30,15 +33,31 @@ router.post('/pay', asyncHandler(async (req, res) => {
   console.log("pay - test");
   const { paymentId } = req.body;
   const order = await getNewOrder(req);
-  if (!order) {
+  if (!order)
     return res.status(400).send('Order Not Found!');
+  try {
+    await Promise.all(order.items.map(async item => {
+      await updateEventAvailableTickets(item.eventM, item.quantity);
+      await updateTicketStatus(item.event, order.userId);
+    }));
+    order.paymentId = paymentId;
+    order.orderStatus = OrderStatus.PAYED;
+    await order.save();
+    await sendEmail(order, order.email);
+
+    const tickets = await Promise.all(order.items.map(async item => {
+      return await Ticket.findOne({ eventId: item.event, buyer: order.userId });
+    }));
+
+    const ticket = tickets[0];
+    const pdfFile = await File.findById(ticket.fileIds[0]);
+    res.send({orderId: order._id, fileData: Buffer.from(pdfFile.data).toString('base64'), fileName: 'YourTicket.pdf'});
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Failed to update tickets and event details.');
   }
-  order.paymentId = paymentId;
-  order.orderStatus = OrderStatus.PAYED;
-  await order.save();
-  await sendEmail(order, order.email);
-  res.send(order._id);
 }));
+
 
 router.get('/track/:id', asyncHandler(async (req, res) => {
   const order = await OrderModel.findById(req.params.id);
