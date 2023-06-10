@@ -96,4 +96,16 @@ isEventDatePassed(date: string): boolean {
   return selectedDate < today;
 }
 
+downloadTicket(fileId: string) {
+  console.log(fileId);
+  this.ticketUploadService.downloadTicket(fileId).subscribe((data: Blob) => {
+    const downloadURL = window.URL.createObjectURL(data);
+    const link = document.createElement('a');
+    link.href = downloadURL;
+    link.download = 'ticket.pdf';
+    link.click();
+  });
+}
+
+
 }

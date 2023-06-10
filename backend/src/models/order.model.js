@@ -17,7 +17,7 @@ const orderSchema = new mongoose.Schema({
   totalPrice: { type: Number, required: true },
   items: { type: [OrderItemSchema], required: true },
   orderStatus: { type: String, default: OrderStatus.NEW },
-  userId: { type: Schema.Types.ObjectId, required: true }
+  userId: { type: Schema.Types.ObjectId, ref: 'User', required: true }
 }, {
   timestamps: true,
   toJSON: {

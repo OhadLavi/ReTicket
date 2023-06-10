@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { TicketService } from 'src/app/services/ticket.service';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-tickets',
@@ -11,31 +13,36 @@ export class TicketsComponent implements OnInit {
   boughtTickets: any = [];
   soldTickets: any = [];
 
-  constructor() { }
+  constructor(private ticketService: TicketService, private userService:UserService) { }
 
   ngOnInit(): void {
     this.allTickets = [];
-    // When the user clicks on the button, scroll to the top of the document
     document.documentElement.scrollTop = 0;
     this.generateFakeData();
-    // Fetch Data
     this.fetchTickets();
   }
 
   fetchTickets(): void {
     console.log(this.allTickets);
+    this.ticketService.fetchUserTickets(this.userService.currentUser.id)
+    .subscribe(response => {
+      console.log(response);
+      this.soldTickets = response.sellingTickets;
+      this.boughtTickets = response.boughtTickets;
+      this.allTickets = [...this.soldTickets, ...this.boughtTickets];
+    });
+
     // Fetch all tickets
     // this.allTickets = []; // Replace with your API call to fetch all tickets
 
     // Filter sold tickets
-    this.soldTickets = this.allTickets.filter((ticket: any) => ticket.status === 'Sold');
+    //this.soldTickets = this.allTickets.filter((ticket: any) => ticket.status === 'Sold');
 
     // Filter bought tickets
-    this.boughtTickets = this.allTickets.filter((ticket: any) => ticket.status === 'Bought');
+    //this.boughtTickets = this.allTickets.filter((ticket: any) => ticket.status === 'Bought');
   }
 
   generateFakeData(): void {
-    // Generate fake data for allTickets
     const today = new Date();
     const nextYear = new Date(today.getFullYear() + 1, today.getMonth(), today.getDate());
   
@@ -46,13 +53,10 @@ export class TicketsComponent implements OnInit {
   
       const randomNumber = Math.random();
       if (randomNumber < 0.33) {
-        // Set eventDate to a random date earlier than today
         eventDate = new Date(today.getTime() - Math.random() * (today.getTime() - nextYear.getTime()));
       } else if (randomNumber < 0.66) {
-        // Set eventDate to today
         eventDate = today;
       } else {
-        // Set eventDate to a random date between today and nextYear
         eventDate = new Date(today.getTime() + Math.random() * (nextYear.getTime() - today.getTime()));
       }
   
@@ -76,13 +80,11 @@ export class TicketsComponent implements OnInit {
         numberOfTickets: Math.floor(Math.random() * 10),
         image: `https://via.placeholder.com/200x200?text=Event+${i}`,
         status: status,
-        ticketSeller: seller // Add ticketSeller property with random value
+        ticketSeller: seller
       };
   
       this.allTickets.push(ticket);
     }
   }
-  
-  
 
 }

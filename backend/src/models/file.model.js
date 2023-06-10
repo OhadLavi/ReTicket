@@ -1,8 +1,9 @@
 const mongoose = require('mongoose');
 
 const fileSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  data: { type: Buffer, required: true }
+  data: Buffer,
+  contentType: String,
+  name: String
 }, {
   timestamps: true,
   toJSON: {virtuals: true},

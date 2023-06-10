@@ -8,7 +8,6 @@ import { User } from 'src/app/shared/models/User';
   styleUrls: ['./account-sidemenu.component.css']
 })
 
-// AccountSidemenu Component
 export class AccountSidemenuComponent implements OnInit {
 
   public isCollapsed = true;
