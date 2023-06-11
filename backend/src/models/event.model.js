@@ -23,6 +23,12 @@ const eventSchema = new mongoose.Schema({
     trim: true,
     maxlength: [50, 'Event location cannot exceed 50 characters']
   },
+  venue: {
+    type: String,
+    required: [true, 'Event venue is required'],
+    trim: true,
+    maxlength: [50, 'Event venue cannot exceed 50 characters']
+  },
   image: {
     type: String,
     required: [true, 'Event image is required'],
@@ -38,6 +44,17 @@ const eventSchema = new mongoose.Schema({
     type: Number,
     required: [true, 'Event availableTickets is required'],
     min: [0, 'Event availableTickets cannot be less than 0']
+  },
+  soldTickets: {
+    type: Number,
+    required: [true, 'Event soldTickets is required'],
+    min: [0, 'Event soldTickets cannot be less than 0']
+  },
+  wantedTickets: {
+    type: Number,
+    required: [false, 'Event wantedTickets is required'],
+    min: [0, 'Event wantedTickets cannot be less than 0'],
+    default: 0
   },
   registeredUsers: [{
     type: mongoose.Schema.Types.ObjectId,

@@ -21,7 +21,8 @@ export class HomeComponent {
       else
         eventsObservable = eventService.getAll();
 
-      eventsObservable.subscribe((serverEvents) => {this.events = serverEvents;});
+      eventsObservable.subscribe((serverEvents) => {this.events = serverEvents;
+      console.log(this.events);});
     });
   }
 

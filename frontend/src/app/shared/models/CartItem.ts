@@ -11,7 +11,6 @@ export class CartItem {
     price: number;
     quantity:number;
 
-    // New method to get a sanitized version of this object
     public sanitize() {
         return {
             event: this.event,

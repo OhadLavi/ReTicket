@@ -1,0 +1,55 @@
+.relative {
+    position: relative;
+    color: white;
+}
+
+.vh-50 {
+    height: 50vh;
+}
+
+.relative.vh-50 {
+    border-bottom: 1px solid #59616b;
+}
+
+.header-content {
+    box-sizing: border-box;
+    max-width: 900px;
+    margin: 0 auto;
+    width: 100%;
+  }
+  
+  
+.blur-container {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    overflow: hidden;
+}
+
+.bg-blur {
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    filter: blur(15px);
+}
+
+.event-logo {
+    width: 400px;
+}  
+
+img.portrait {
+    max-height: 250px;
+    object-fit: contain;
+  }  
+
+.fa {
+    margin-right: 5px;
+}
+
+.text-shadow {
+    color: white;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}

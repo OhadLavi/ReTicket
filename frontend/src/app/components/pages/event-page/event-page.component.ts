@@ -12,24 +12,48 @@ import { EventM } from 'src/app/shared/models/EventM';
 export class EventPageComponent implements OnInit {
   eventm! : EventM;
   isFavorite: boolean = false;
-  
-  constructor(activatedRoute:ActivatedRoute, eventService:EventService, private cartService:CartService, private router:Router) { 
+  ticketAlert: boolean = false;
+  isPortrait: boolean = false;
+
+  constructor(activatedRoute: ActivatedRoute, eventService: EventService, private cartService: CartService, private router: Router) {
     activatedRoute.params.subscribe(params => {
       if(params.id) {
-        eventService.getEventById(params.id).subscribe(serverEvent => this.eventm = serverEvent);
+        eventService.getEventById(params.id).subscribe(serverEvent => {
+          this.eventm = serverEvent;
+          if(this.eventm) { // Check if eventm is defined before accessing its properties
+            this.checkImageDimensions(this.eventm.image);
+          }
+        });
       }
     });
   }
 
-  ngOnInit(): void {
+  checkImageDimensions(imgSrc: string) {
+    console.log("hi");
+    const img = new Image();
+    img.onload = () => {
+      this.isPortrait = img.height > img.width;
+    };
+    img.src = imgSrc;
   }
 
-  addToCart() {
+ngOnInit(): void {
+}
+
+  sellTicket() {
+    // Your sellTicket logic here
+  }
+
+  buyTicket() {
     this.cartService.addToCart(this.eventm);
     //this.router.navigate(['/cart']);
   }
 
   toggleFavorite() {
     this.isFavorite = !this.isFavorite; // Toggle the favorite state
+  }
+
+  toggleAlert() {
+    this.ticketAlert = !this.ticketAlert; // Toggle the ticket alert state
   }
 }

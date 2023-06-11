@@ -77,7 +77,7 @@ async function sendEmail(order, email) {
     {
       filename: item.ticketFile.name,
       content: item.ticketFile.data,
-      contentType: item.ticketFile.contentType, // Assuming the content type is stored in the file model
+      contentType: item.ticketFile.contentType,
       encoding: 'base64'
     }
   ])).flat();
