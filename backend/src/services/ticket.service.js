@@ -8,14 +8,13 @@ const sample_events = require('../data/events');
 const Ticket = require('../models/ticket.model');
 const { File } = require('../models/file.model');
 
-async function updateEventAvailableTickets(eventId, quantity) {
-  console.log("updateEventAvailableTickets");
-  return await Event.findByIdAndUpdate(eventId, { $inc: { availableTickets: -quantity } }, { new: true });
+async function updateEventAvailableTickets(eventId, quantity) { 
+  return await Event.findByIdAndUpdate(eventId, { $inc: { availableTickets: -quantity, soldTickets: quantity } }, { new: true }); 
 }
 
 async function updateTicketStatus(eventId, buyerId) {
+  console.log(eventId, buyerId);
   try {
-    console.log(buyerId);
     const soldDate = new Date().toISOString();
     const ticket = await Ticket.findOne({ eventId: eventId, isSold: false });
     if(!ticket) {
@@ -76,7 +75,6 @@ async function formatTicketDetails(tickets) {
       };
   }));
 }
-
 
 async function loadPdf(pdfPath) {
   const pdfData = new Uint8Array(fs.readFileSync(pdfPath));

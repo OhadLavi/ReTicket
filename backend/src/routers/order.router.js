@@ -12,7 +12,6 @@ const { File } = require('../models/file.model');
 router.use(auth);
 
 router.post('/create', asyncHandler(async (req, res) => {
-  console.log("create");
   const requestOrder = req.body;
   if (requestOrder.items.length <= 0)
     return res.status(400).send('Cart Is Empty!');
@@ -20,6 +19,7 @@ router.post('/create', asyncHandler(async (req, res) => {
   await newOrder.save();
   res.send(newOrder);
 }));
+
 
 router.get('/newOrder', asyncHandler(async (req, res) => {
   const order = await getNewOrder(req);
@@ -30,13 +30,13 @@ router.get('/newOrder', asyncHandler(async (req, res) => {
 }));
 
 router.post('/pay', asyncHandler(async (req, res) => {
-  console.log("pay - test");
   const { paymentId } = req.body;
   const order = await getNewOrder(req);
   if (!order)
     return res.status(400).send('Order Not Found!');
   try {
     await Promise.all(order.items.map(async item => {
+      console.log(item.event);
       await updateEventAvailableTickets(item.eventM, item.quantity);
       await updateTicketStatus(item.event, order.userId);
     }));
@@ -44,17 +44,15 @@ router.post('/pay', asyncHandler(async (req, res) => {
     order.orderStatus = OrderStatus.PAYED;
     await order.save();
     await sendEmail(order, order.email);
-
     const tickets = await Promise.all(order.items.map(async item => {
       return await Ticket.findOne({ eventId: item.event, buyer: order.userId });
     }));
-
     const ticket = tickets[0];
     const pdfFile = await File.findById(ticket.fileIds[0]);
     res.send({orderId: order._id, fileData: Buffer.from(pdfFile.data).toString('base64'), fileName: 'YourTicket.pdf'});
   } catch (err) {
     console.error(err);
-    res.status(500).send('Failed to update tickets and event details.');
+    return res.status(500).send('Failed to update tickets and event details.');
   }
 }));
 

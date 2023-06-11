@@ -1,9 +1,8 @@
-	<p>
 	<mat-toolbar>
 	 <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">
 	  <mat-icon>menu</mat-icon>
 	</button>
-	<span [routerLink]="['/']">Reticket</span>
+	<span [routerLink]="['/']" style="cursor: pointer;">Reticket</span>
 	<span class="example-spacer"></span>
 	<button *ngIf="isAuth" mat-button [matMenuTriggerFor]="menu">
 		<img [src]="'http://localhost:5000/' + user.imageURL" class="user-image">
@@ -42,9 +41,6 @@
 	<!-- <i class="fas" [ngClass]="{'fa-moon': !toggleControl.value, 'fa-sun': toggleControl.value}"></i> -->
   </button>
   </mat-toolbar>
-</p>
-
-  
   
   <!--
 	<mat-toolbar class="toolbar d-flex justify-content-between align-items-center">

@@ -6,6 +6,9 @@ export class EventM {
     description!: string;
     image!: string;
     location!: string;
+    venue!: string;
     availableTickets!: number;
+    soldTickets!: number;
+    wantedTickets!: number;
 }
   

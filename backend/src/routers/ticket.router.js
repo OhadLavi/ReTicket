@@ -81,7 +81,7 @@ router.post('/upload', upload.single('file'), async (req, res) => {
           fs.unlink(filePath, (err) => {
               if (err) console.error(err);
           });
-          const event = await getEventByNameDateLocation("Justin Bieber", "2023-10-08T19:00:00.000+00:00", "Wembley Stadium");
+          const event = await getEventByNameDateLocation("Justin Bieber", "2023-09-12T19:00:00.000+00:00", "London, UK");
           const eventId = event._id;          
           const tickets = await generateRandomTicket(savedFileId, eventId);
           res.json({ tickets: tickets });
