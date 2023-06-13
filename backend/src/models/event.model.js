@@ -9,8 +9,8 @@ const eventSchema = new mongoose.Schema({
   },
   description: {
     type: String,
-    required: [true, 'Event description is required'],
-    trim: true,
+    required: [false, 'Event description is required'],
+    trim: false,
     maxlength: [500, 'Event description cannot exceed 500 characters']
   },
   date: {
@@ -37,18 +37,21 @@ const eventSchema = new mongoose.Schema({
   },
   price: {
     type: Number,
-    required: [true, 'Event price is required'],
-    min: [0, 'Event price cannot be less than 0']
+    required: [false, 'Event price is required'],
+    min: [0, 'Event price cannot be less than 0'],
+    default: 50
   },
   availableTickets: {
     type: Number,
-    required: [true, 'Event availableTickets is required'],
-    min: [0, 'Event availableTickets cannot be less than 0']
+    required: [false, 'Event availableTickets is required'],
+    min: [0, 'Event availableTickets cannot be less than 0'],
+    default: 0
   },
   soldTickets: {
     type: Number,
-    required: [true, 'Event soldTickets is required'],
-    min: [0, 'Event soldTickets cannot be less than 0']
+    required: [false, 'Event soldTickets is required'],
+    min: [0, 'Event soldTickets cannot be less than 0'],
+    default: 0
   },
   wantedTickets: {
     type: Number,
@@ -62,8 +65,9 @@ const eventSchema = new mongoose.Schema({
   }],
   registeredUsersCount: {
     type: Number,
-    required: [true, 'Event registeredUsersCount is required'],
-    min: [0, 'Event registeredUsersCount cannot be less than 0']
+    required: [false, 'Event registeredUsersCount is required'],
+    min: [0, 'Event registeredUsersCount cannot be less than 0'],
+    default: 0
   }
 }, {
   timestamps: true,

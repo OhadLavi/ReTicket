@@ -4,7 +4,8 @@ const User = require('./user.model');
 const ticketSchema = new mongoose.Schema({
     eventId: { type: mongoose.Schema.Types.ObjectId, ref: 'Event', required: true },
     eventDate: { type: String, required: true },
-    location: { type: String, required: true },
+    location: { type: String, required: false },
+    venue: { type: String, required: false },
     price: { type: Number, required: true },
     isSold: { type: Boolean, required: true },
     soldDate: { type: String, required: false },

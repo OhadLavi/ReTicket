@@ -110,12 +110,14 @@ isEventDatePassed(date: string): boolean {
   return selectedDate < today;
 }
 
-checkTicketPrice() {
-  if (this.ticketPrice > this.originalPrice) {
-      this.errorMessage = 'Updated price cannot be more than the original price.';
+checkTicketPrice(ticket: Ticket) {
+  if (+ticket.price > this.originalPrice) {
+    this.errorMessage = 'Updated price cannot be more than the original price.';
   } else {
-      this.errorMessage = '';
+    this.errorMessage = '';
   }
 }
+
+
 
 }

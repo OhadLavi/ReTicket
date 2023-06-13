@@ -6,8 +6,10 @@ const dotenv = require('dotenv');
 const request = require('request');
 var osmosis = require('osmosis');
 const cheerio = require('cheerio');
-const scrape = require('./crawler/crawler');
+const { google } = require('googleapis');
+const TOKEN_PATH = 'token.json';
 const fs = require('fs');
+const { scrapeWebsite } = require('./crawler/crawler');
 
 dotenv.config();
 const path = require('path');
@@ -39,7 +41,8 @@ app.use('/api/tickets', ticketRouter);
 //start server
 app.listen(port, () => { 
     console.log(`Server is running on port: ${port}`);
-    //scrapeWebsite();
+    //scrapeWebsite('eventim');
+    //scrapeWebsite('tmisrael');
  });
 
 // Disable strict mode for queries in Mongoose
@@ -50,11 +53,6 @@ mongoose
 .connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true})
 .then(() => { console.log('MongoDB database connection established successfully');})
 .catch((err) => { console.log(err); });
-
-// web scraping function
-
-const { google } = require('googleapis');
-const TOKEN_PATH = 'token.json';
 
 app.get('/google/redirect', (req, res) => {
     const authCode = req.query.code;

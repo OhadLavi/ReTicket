@@ -1,5 +1,18 @@
 const events = [
     {
+        name: "One Republic",
+        description: "OneRepublic is an American pop rock band formed in Colorado Springs, Colorado, in 2002. It consists of lead vocalist and multi-instrumentalist Ryan Tedder, guitarist Zach Filkins, guitarist Drew Brown, bassist and cellist Brent Kutzle, drummer Eddie Fisher and keyboardist Brian Willett.",
+        date: "2023-08-11T15:30:00.000Z",
+        location: "Tel-Aviv, IL",
+        venue: "Park hayarkon",
+        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/OneRepublic_2015_Tour_%28cropped%29.jpg/1200px-OneRepublic_2015_Tour_%28cropped%29.jpg",
+        price: 100,
+        availableTickets: 100,
+        soldTickets: 0,
+        registeredUsers: [],
+        registeredUsersCount: 0
+    },
+    {
         name: "The Weeknd",
         description: "The Weeknd is an R&B singer-songwriter and producer hailing from Scarborough, Ontario, Canada who was born on February 16th, 1990. Since his debut in 2011, he has won three Juno Awards, eight Billboard Music Awards, two Grammy Awards, and has been nominated for an Academy Award.",
         date: "2023-07-23T19:00:00.000Z",
