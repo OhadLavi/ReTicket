@@ -136,7 +136,7 @@ async function parseTicketDetails(pdfBuffer) {
   const ticket = {
     artists: artistName,
     price: ticketPrice,
-    location: "Park hayarkon",
+    venue: "Park hayarkon",
     eventDate: eventDate,
     fileName: 'ticket.pdf',
     status: "On sale",
@@ -145,8 +145,6 @@ async function parseTicketDetails(pdfBuffer) {
 
   return ticket;
 }
-
-
 
 async function updateEventAvailableTickets(eventId, quantity) { 
   return await Event.findByIdAndUpdate(eventId, { $inc: { availableTickets: -quantity, soldTickets: quantity } }, { new: true }); 
