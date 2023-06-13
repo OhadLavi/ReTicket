@@ -1,8 +1,8 @@
-<div class="container">
+<div class="container mt-5">
   <div class="row bg-white rounded shadow-sm p-4 mb-4">
     <div class="col-md-9 mx-auto">
       <h2 class="text-center">Upload Ticket File</h2>
-      <div id="upload-container" *ngIf="!fileUploaded" class="card my-4 border-dashed">
+      <div id="upload-container" *ngIf="!fileUploaded" class="card my-4 border-dashed" [@fade]>
         <div class="card-body text-center p-4">
           <p class="my-2">Drag and drop your file here</p>
           <p>or</p>
@@ -16,7 +16,7 @@
           <div>The event date has already passed.</div>
         </div>
       </div>
-      <form id="ticket-info-form" *ngIf="fileUploaded" (ngSubmit)="onSubmit()" class="my-4 border rounded p-4">
+      <form id="ticket-info-form" *ngIf="fileUploaded" (ngSubmit)="onSubmit()" class="my-4 border rounded p-4" [@fade]>
         <p>
           <a class="btn btn-link" (click)="resetForm()">
             <i class="fas fa-arrow-left"></i> Back to Upload
@@ -27,26 +27,39 @@
             <div id="ticket-info-form" class="my-4 border rounded p-4">
               <div class="form-group mb-4">
                 <mat-form-field class="w-100">
+                  <mat-label>Artist</mat-label>
+                  <input matInput id="artists" type="text" [(ngModel)]="ticket.artists" name="artists" readonly>
+                </mat-form-field>
+              </div>
+              <div class="form-group mb-4">
+                <mat-form-field class="w-100">
                   <mat-label>Ticket Price</mat-label>
-                  <input matInput id="ticketPrice" type="text" [(ngModel)]="ticket.price" name="ticketPrice">
+                  <span matPrefix>₪&nbsp;</span>
+                  <input matInput id="ticketPrice" type="text" [(ngModel)]="ticket.price" name="ticketPrice" (ngModelChange)="checkTicketPrice()">
+                  <mat-error *ngIf="errorMessage">{{ errorMessage }}</mat-error>
+              </mat-form-field>                           
+              </div>
+              <div class="form-group mb-4">
+                <mat-form-field class="w-100">
+                  <mat-label>Date</mat-label>
+                  <input matInput id="date" type="date" [(ngModel)]="ticket.eventDate" name="date" style="text-align: left;">
                 </mat-form-field>
               </div>
               <div class="form-group mb-4">
                 <mat-form-field class="w-100">
                   <mat-label>Location</mat-label>
-                  <input matInput id="location" type="text" [(ngModel)]="ticket.location" name="location">
+                  <input matInput id="location" type="text" [(ngModel)]="ticket.location" name="location" readonly>
                 </mat-form-field>
-              </div>
+              </div>             
               <div class="form-group mb-4">
                 <mat-form-field class="w-100">
-                  <mat-label>Date</mat-label>
-                  <input matInput id="date" type="date" [(ngModel)]="ticket.eventDate" name="date">
+                  <mat-label>Event Description</mat-label>
+                  <textarea matInput id="eventDescription" [(ngModel)]="ticket.description" name="description" readonly></textarea>
                 </mat-form-field>
-              </div>
+              </div>             
             </div>
           </mat-tab>
         </mat-tab-group>
-        <mat-progress-spinner *ngIf="!fileUploaded" mode="indeterminate"></mat-progress-spinner>
         <div class="text-end">
           <button class="btn btn-primary mt-3" type="submit">Sell {{ tickets.length > 1 ? 'Tickets' : 'Ticket' }}</button>
         </div>
@@ -56,12 +69,7 @@
       </div>
     </div>
   </div>
-</div>
-
-<button (click)="downloadTicket('6481f22b6ce8d514bb83e5ea')">Download Ticket</button>
-
-
-  
+</div>  
 
 <!--<div class="container">
     <div class="row">

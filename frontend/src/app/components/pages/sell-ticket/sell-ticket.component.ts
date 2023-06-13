@@ -3,13 +3,20 @@ import { Router } from '@angular/router';
 import { TicketUploadService } from 'src/app/services/ticket-upload.service';
 import { UserService } from 'src/app/services/user.service';
 import { Ticket } from 'src/app/shared/interfaces/ITicket';
-import { User } from 'src/app/shared/models/User';
+import { trigger, state, style, animate, transition } from '@angular/animations';
 
 @Component({
   selector: 'app-sell-ticket',
   templateUrl: './sell-ticket.component.html',
-  styleUrls: ['./sell-ticket.component.css']
-})
+  animations: [
+    trigger('fade', [
+      transition('void => *', [
+        style({ opacity: 0 }),
+        animate(100)
+      ])
+    ])
+  ]
+ })
 export class SellTicketComponent implements OnInit {
   fileUploaded = false;
   ticketPrice = 0;
@@ -24,38 +31,47 @@ export class SellTicketComponent implements OnInit {
   isLoading = false;
   isEventDatePassedFlag = false;
   errorMessage: string = '';
+  originalPrice: number = 0;
 
   constructor(private ticketUploadService: TicketUploadService, private userSrvice:UserService, private router: Router) { }
 
   ngOnInit() {
     setTimeout(() => {
       this.isEventDatePassedFlag = false; // Hide the error box after 5 seconds
-    }, 5000);
+    }, 15000);
   }
 
   onFileSelected(event: Event) {
     const file = (event.target as HTMLInputElement).files;
     if (file) {
       this.isLoading = true;
+      this.errorMessage = '';
       for (let i = 0; i < file.length; i++) {
         this.ticketUploadService.uploadTicket(file[i]).subscribe({
           next: (response: any) => {
-            const tickets = response.tickets;
-            for (let i = 0; i < tickets.length; i++) {
-              const ticket = tickets[i];
-              if (this.isEventDatePassed(ticket.eventDate)) {
+            console.log(response);
+            const ticketResults = response.ticketResults.tickets;
+            for (let i = 0; i < ticketResults.length; i++) {
+              const ticketResult = ticketResults[i];
+              console.log(ticketResult);
+              console.log(ticketResult.valid);
+              if (this.isEventDatePassed(ticketResult.eventDate)) {
                 this.isEventDatePassedFlag = true;
+              } else if (!ticketResult.valid) {
+                this.errorMessage = ticketResult.errorMessage;
               } else {
                 this.fileUploaded = true;
-                this.tickets.push(ticket);
-                console.log(this.tickets);
+                ticketResult.eventDate = new Date(ticketResult.eventDate).toISOString().split('T')[0];
+                this.originalPrice = ticketResult.price;
+                this.tickets.push(ticketResult);
                 this.isLoading = false;
               }
             }
-          },          
+          },       
           error: error => {
             console.log(error);
             this.isLoading = false;
+            this.errorMessage = error.error.error;
           }
         });
       }
@@ -83,12 +99,10 @@ onSubmit() {
     });
 }
 
-
 resetForm() {
   this.tickets = [];
   this.fileUploaded = false;
 }
-
 
 isEventDatePassed(date: string): boolean {
   const today = new Date().setHours(0, 0, 0, 0);
@@ -96,16 +110,12 @@ isEventDatePassed(date: string): boolean {
   return selectedDate < today;
 }
 
-downloadTicket(fileId: string) {
-  console.log(fileId);
-  this.ticketUploadService.downloadTicket(fileId).subscribe((data: Blob) => {
-    const downloadURL = window.URL.createObjectURL(data);
-    const link = document.createElement('a');
-    link.href = downloadURL;
-    link.download = 'ticket.pdf';
-    link.click();
-  });
+checkTicketPrice() {
+  if (this.ticketPrice > this.originalPrice) {
+      this.errorMessage = 'Updated price cannot be more than the original price.';
+  } else {
+      this.errorMessage = '';
+  }
 }
-
 
 }

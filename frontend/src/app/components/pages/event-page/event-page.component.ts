@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, NgZone } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CartService } from 'src/app/services/cart.service';
 import { EventService } from 'src/app/services/event.service';
@@ -10,17 +10,23 @@ import { EventM } from 'src/app/shared/models/EventM';
   styleUrls: ['./event-page.component.css']
 })
 export class EventPageComponent implements OnInit {
+  map: any;
   eventm! : EventM;
   isFavorite: boolean = false;
   ticketAlert: boolean = false;
   isPortrait: boolean = false;
+  selectedTab: string = 'tickets';
 
-  constructor(activatedRoute: ActivatedRoute, eventService: EventService, private cartService: CartService, private router: Router) {
+  constructor(
+    activatedRoute: ActivatedRoute, 
+    eventService: EventService, 
+    private cartService: CartService, 
+    private router: Router) {
     activatedRoute.params.subscribe(params => {
       if(params.id) {
         eventService.getEventById(params.id).subscribe(serverEvent => {
           this.eventm = serverEvent;
-          if(this.eventm) { // Check if eventm is defined before accessing its properties
+          if(this.eventm) { 
             this.checkImageDimensions(this.eventm.image);
           }
         });
@@ -38,6 +44,7 @@ export class EventPageComponent implements OnInit {
   }
 
 ngOnInit(): void {
+
 }
 
   sellTicket() {
