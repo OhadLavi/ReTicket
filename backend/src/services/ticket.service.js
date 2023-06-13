@@ -1,19 +1,158 @@
 const fs = require('fs');
+const fsPromises = require('fs').promises;
 const { Event } = require('../models/event.model');
 const pdfjsLib = require('pdfjs-dist');
 const jsQR = require('jsqr');
-const { PDFParser } = require('pdf2json');
 const jimp = require('jimp');
 const sample_events = require('../data/events');
 const Ticket = require('../models/ticket.model');
 const { File } = require('../models/file.model');
+const pdfParse = require('pdf-parse');
+const path = require('path');
+const { writeFile } = require('fs');
+const pdfPoppler = require('pdf-poppler');
+const zxing = require('node-zxing')({ scale: 2 });
+// const { PDFParser } = require('pdf2json');
+
+async function processTicket(pdfBuffer, eventDate) {
+  const pdfPath = path.join(__dirname, '..', 'uploads', 'pdf', 'temp.pdf');
+  await fsPromises.writeFile(pdfPath, pdfBuffer);
+  const imageDir = path.join(__dirname, '..', 'uploads', 'images');
+  const imagePaths = await convertPdfToImage(pdfPath, imageDir);
+  const results = [];
+  let i = 0;
+  for (const imagePath of imagePaths) {
+    const qrCode = await detectAndReadQRCode(imagePath);
+    const barcode = await detectAndReadBarcode(imagePath);
+    const match = checkQRAndBarcodeMatch(qrCode, barcode);
+    const dateIsValid = checkDateIsValid(eventDate);
+    let errorMessage = '';
+    if (qrCode && barcode && !match) {
+      errorMessage = 'Error: QR Code and Barcode do not match';
+    } else if (!qrCode || !barcode) {
+      errorMessage = 'Error: A valid ticket should contain both a QR Code and a Barcode';
+    }
+    else if (!dateIsValid) {
+      errorMessage = 'Error: Ticket date is not valid';
+    }
+    const ticket = await parseTicketDetails(pdfBuffer, ++i);
+    ticket.valid = match && dateIsValid;
+    ticket.errorMessage = errorMessage;
+    results.push(ticket);
+    await fsPromises.unlink(imagePath); // Delete the temporary image file
+  }
+  await fsPromises.unlink(pdfPath); // Delete the temporary PDF file
+  return { validTickets: results.filter(ticket => ticket.valid).length, tickets: results };
+}
+
+async function convertPdfToImage(pdfPath, outputPath) {
+  let opts = {
+      format: 'jpeg',
+      out_dir: outputPath,
+      out_prefix: path.basename(pdfPath, path.extname(pdfPath)),
+      page: null
+  }
+  try {
+      let imagePaths = [];
+      await fsPromises.mkdir(opts.out_dir, { recursive: true });
+      await pdfPoppler.convert(pdfPath, opts);
+      imagePaths = fs.readdirSync(opts.out_dir)
+          .filter(filename => filename.startsWith(opts.out_prefix))
+          .map(filename => path.join(opts.out_dir, filename));
+      return imagePaths;
+  } catch (error) {
+      console.error('Error converting PDF to image: ', error);
+      return null;
+  }
+}
+
+async function detectAndReadQRCode(imagePath) {
+  const image = await jimp.read(imagePath);
+  const qrCode = jsQR(image.bitmap.data, image.bitmap.width, image.bitmap.height);
+  if (qrCode) {
+      return qrCode.data;
+  } else {
+      return null;
+  }
+}
+
+async function detectAndReadBarcode(imagePath) {
+  return new Promise((resolve, reject) => {
+    zxing.decode(imagePath, function(err, barcode){
+      if(err) {
+        reject(err);
+      } else {
+        resolve(barcode);
+      }
+    });
+  });
+}
+
+function checkQRAndBarcodeMatch(qrCode, barcode) {
+  return qrCode === barcode;
+}
+
+function checkDateIsValid(date) {
+  const currentDate = new Date();
+  return date >= currentDate;
+}
+
+
+async function parseTicketDetails(pdfBuffer) {
+  const data = await pdfParse(pdfBuffer);
+  const text = data.text;
+  const lines = data.text.split('\n');
+
+  const artistNameMatch = text.match(/Name:\s*(.*)/);
+  const dateAndTimeMatch = text.match(/(\d{2}\/\d{2}\/\d{2} - \d{2}:\d{2})/);
+  const gateMatch = text.match(/שער\s*(\d{1,2})/);
+
+  const artistName = artistNameMatch ? artistNameMatch[1] : null;
+  const dateAndTime = dateAndTimeMatch ? dateAndTimeMatch[1] : null;
+  const gate = gateMatch ? "שער " + gateMatch[1] : null;
+
+  let ticketPrice, block;
+
+  for (let i = 0; i < lines.length; i++) {
+    if (lines[i].includes('₪')) {
+      const priceMatch = lines[i-3].match(/(\d+\.\d{2})/);
+      ticketPrice = priceMatch ? priceMatch[1] : null;
+    } else if (lines[i].includes('Block:') && lines[i - 5]) {
+      block = lines[i - 5].trim();
+    }
+  }
+
+  // console.log('Band Name:', bandName);
+  // console.log('Date and Time:',dateAndTime);
+  // console.log('Ticket Price:', ticketPrice);
+  // console.log('Block:', block);
+  // console.log('Gate:', gate);
+
+  const [date, time] = dateAndTime.split(' - ');
+  const [month, day, year] = date.split('/');
+  const eventDate = new Date(`20${year}-${month}-${day}T${time}:00`).toISOString();
+
+  // Create a single ticket
+  const ticket = {
+    artists: artistName,
+    price: ticketPrice,
+    location: "Park hayarkon",
+    eventDate: eventDate,
+    fileName: 'ticket.pdf',
+    status: "On sale",
+    description: `Block: ${block}, Gate: ${gate}`
+  };
+
+  return ticket;
+}
+
+
 
 async function updateEventAvailableTickets(eventId, quantity) { 
   return await Event.findByIdAndUpdate(eventId, { $inc: { availableTickets: -quantity, soldTickets: quantity } }, { new: true }); 
 }
 
 async function updateTicketStatus(eventId, buyerId) {
-  console.log(eventId, buyerId);
   try {
     const soldDate = new Date().toISOString();
     const ticket = await Ticket.findOne({ eventId: eventId, isSold: false });
@@ -82,28 +221,28 @@ async function loadPdf(pdfPath) {
   return pdf;
 }
 
-async function extractQRCodeFromPDF(pdfPath) {
-  const pdfParser = new PDFParser();
-  pdfParser.on('pdfParser_dataError', (err) => console.error(err.parserError));
-  pdfParser.on('pdfParser_dataReady', (pdfData) => {
-    const image = pdfData.formImage.Pages[0].Texts.find((text) => {
-      return text.R[0].T === 'QRCode';
-    });
-    if (image) {
-      const imageData = Buffer.from(image.R[0].T, 'base64');
-      decodeQRCodeFromBuffer(imageData);
-    } else {
-      console.error('No QR code found in PDF');
-    }
-  });
-  pdfParser.loadPDF(pdfPath);
-}
+// async function extractQRCodeFromPDF(pdfPath) {
+//   const pdfParser = new PDFParser();
+//   pdfParser.on('pdfParser_dataError', (err) => console.error(err.parserError));
+//   pdfParser.on('pdfParser_dataReady', (pdfData) => {
+//     const image = pdfData.formImage.Pages[0].Texts.find((text) => {
+//       return text.R[0].T === 'QRCode';
+//     });
+//     if (image) {
+//       const imageData = Buffer.from(image.R[0].T, 'base64');
+//       decodeQRCodeFromBuffer(imageData);
+//     } else {
+//       console.error('No QR code found in PDF');
+//     }
+//   });
+//   pdfParser.loadPDF(pdfPath);
+// }
 
-async function processTicket(pdfPath, outputDir, pdfName) {
-  console.log('Processing ticket...');
-  extractQRCodeFromPDF(pdfPath);
-  return "text";
-}
+// async function processTicket(pdfPath, outputDir, pdfName) {
+//   console.log('Processing ticket...');
+//   extractQRCodeFromPDF(pdfPath);
+//   return "text";
+// }
 
 function generateRandomTicket() {
   const locations = ['Madison Square Garden', 'Wembley Stadium', 'Camp Nou', 'Old Trafford', 'Maracanã'];
@@ -146,5 +285,7 @@ module.exports = {
   getSellingTickets,
   getBoughtTickets,
   updateEventAvailableTickets,
-  updateTicketStatus
+  updateTicketStatus,
+  processTicket,
+  generateRandomTicket
 };

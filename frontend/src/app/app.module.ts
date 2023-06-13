@@ -30,7 +30,6 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatTabsModule } from '@angular/material/tabs';
@@ -81,7 +80,6 @@ import { ToastModule } from 'primeng/toast';
     MatGridListModule,
     MatSidenavModule,
     MatBadgeModule,
-    MatProgressSpinnerModule,
     MatIconModule,
     MatSnackBarModule,
     BrowserModule,
