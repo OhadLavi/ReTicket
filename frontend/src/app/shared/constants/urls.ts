@@ -4,7 +4,8 @@ export const URLS = {
     EVENT: {
         GET_ALL: `${BASE_URL}/api/events`,
         GET_BY_ID: (id: string) => `${BASE_URL}/api/events/id/${id}`,
-        GET_BY_SEARCH_TERM: (searchTerm: string) => `${BASE_URL}/api/events/search/${searchTerm}`
+        GET_BY_SEARCH_TERM: (searchTerm: string) => `${BASE_URL}/api/events/search/${searchTerm}`,
+        GET_EVENT_TRANSCRIBE_AUDIO_URL: `${BASE_URL}/api/events/transcribeAudio/`
     },
     USER: {
         GET_ALL: `${BASE_URL}/api/users`,

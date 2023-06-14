@@ -1,12 +1,17 @@
-<div class="text-center bg-image" style="background-image: url('https://mdbootstrap.com/img/new/slides/041.webp'); height: 400px;">
-    <div class="mask w-100 h-100" style="background-color: rgba(0, 0, 0, 0.6);">
-        <div class="d-flex justify-content-center align-items-center h-100">
-            <div class="text-white">
-                <h1 class="mb-3">Heading</h1>
-                <h4 class="mb-3">Subheading</h4> <a class="btn btn-outline-light btn-lg" href="#!" role="button">Call to action</a>
-            </div>
+<div class="text-center" style="height: 400px;">
+  <div class="mask w-100 h-100" style="background-color: rgba(0, 0, 0, 0.6);">
+    <div class="d-flex justify-content-center align-items-center h-100">
+      <div class="w-75">
+        <div class="input-group">
+          <mat-form-field class="example-full-width">
+            <input matInput placeholder="Search for an event, artist, venue or city" [(ngModel)]="searchTerm" (keyup)="searchEvents()">
+            <mat-icon matPrefix>search</mat-icon>
+            <mat-icon matSuffix>mic</mat-icon>
+          </mat-form-field>          
         </div>
+      </div>
     </div>
+  </div>
 </div>
 
 <section>

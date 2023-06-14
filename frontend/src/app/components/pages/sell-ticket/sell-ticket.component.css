@@ -25,3 +25,8 @@ mat-card-content:hover {
 .container{
     height: auto;
 }
+
+.error-field {
+    border-color: red !important;
+  }
+  

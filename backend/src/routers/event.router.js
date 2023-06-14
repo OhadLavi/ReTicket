@@ -28,31 +28,31 @@ router.get("/id/:eventId", asyncHandler(async (req, res) => {
   res.json(event);
 }));
 
-router.post("/transcribe", upload.single('audio'), async (req, res, next) => {
-  const fileName = req.file.path;
+// router.post("/transcribe", upload.single('audio'), async (req, res, next) => {
+//   const fileName = req.file.path;
 
-  const audio = {
-    content: fs.readFileSync(fileName).toString('base64'),
-  };
+//   const audio = {
+//     content: fs.readFileSync(fileName).toString('base64'),
+//   };
 
-  const config = {
-    encoding: 'LINEAR16',
-    sampleRateHertz: 16000,
-    languageCode: 'en-US',
-  };
+//   const config = {
+//     encoding: 'LINEAR16',
+//     sampleRateHertz: 16000,
+//     languageCode: 'en-US',
+//   };
 
-  const request = {
-    audio: audio,
-    config: config,
-  };
+//   const request = {
+//     audio: audio,
+//     config: config,
+//   };
 
-  const [response] = await client.recognize(request);
-  const transcription = response.results
-    .map(result => result.alternatives[0].transcript)
-    .join('\n');
+//   const [response] = await client.recognize(request);
+//   const transcription = response.results
+//     .map(result => result.alternatives[0].transcript)
+//     .join('\n');
   
-  res.send(transcription);
-});
+//   res.send(transcription);
+// });
 
 router.get("/seed", asyncHandler(async (req, res) => {
   const eventsCount = await Event.countDocuments();

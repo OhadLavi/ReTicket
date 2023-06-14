@@ -10,17 +10,22 @@ import { URLS } from '../shared/constants/urls';
 export class EventService {
 
   constructor(private http:HttpClient) { }
+  
   getAll(): Observable<EventM[]> {
     return this.http.get<EventM[]>(URLS.EVENT.GET_ALL);
   }
 
-  getAllEventsBySearchTerm(searchTerm:string) {
-    // return this.getAll().filter(food => food.name.toLocaleLowerCase().includes(searchTerm.toLocaleLowerCase()));
+  getAllEventsBySearchTerm(searchTerm:string): Observable<EventM[]> {
     return this.http.get<EventM[]>(URLS.EVENT.GET_BY_SEARCH_TERM(searchTerm));
   }
 
   getEventById(foodId:string):Observable<EventM> {
-    // return this.getAll().find(food => food.id === foodId) ?? new Food();
     return this.http.get<EventM>(URLS.EVENT.GET_BY_ID(foodId));
+  }
+
+  transcribeAudio(audioBlob: Blob): Observable<any> {
+    const formData = new FormData();
+    formData.append('audio', audioBlob);
+    return this.http.post(URLS.EVENT.GET_EVENT_TRANSCRIBE_AUDIO_URL, formData);
   }
 }
