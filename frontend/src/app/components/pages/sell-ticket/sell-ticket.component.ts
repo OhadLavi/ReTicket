@@ -4,6 +4,7 @@ import { TicketUploadService } from 'src/app/services/ticket-upload.service';
 import { UserService } from 'src/app/services/user.service';
 import { Ticket } from 'src/app/shared/interfaces/ITicket';
 import { trigger, state, style, animate, transition } from '@angular/animations';
+import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-sell-ticket',
@@ -49,12 +50,9 @@ export class SellTicketComponent implements OnInit {
       for (let i = 0; i < file.length; i++) {
         this.ticketUploadService.uploadTicket(file[i]).subscribe({
           next: (response: any) => {
-            console.log(response);
             const ticketResults = response.ticketResults.tickets;
             for (let i = 0; i < ticketResults.length; i++) {
               const ticketResult = ticketResults[i];
-              console.log(ticketResult);
-              console.log(ticketResult.valid);
               if (this.isEventDatePassed(ticketResult.eventDate)) {
                 this.isEventDatePassedFlag = true;
               } else if (!ticketResult.valid) {
@@ -62,14 +60,20 @@ export class SellTicketComponent implements OnInit {
               } else {
                 this.fileUploaded = true;
                 ticketResult.eventDate = new Date(ticketResult.eventDate).toISOString().split('T')[0];
-                this.originalPrice = ticketResult.price;
-                this.tickets.push(ticketResult);
+                this.tickets.push({
+                  ...ticketResult, 
+                  form: new FormGroup({
+                    'ticketPrice': new FormControl(
+                      ticketResult.price, 
+                      [Validators.required, Validators.min(1), Validators.max(ticketResult.price)]
+                    )
+                  })
+                });
                 this.isLoading = false;
               }
             }
-          },       
+          },
           error: error => {
-            console.log(error);
             this.isLoading = false;
             this.errorMessage = error.error.error;
           }
@@ -77,6 +81,7 @@ export class SellTicketComponent implements OnInit {
       }
     }
   }
+  
 
 onSubmit() {
     this.isLoading = true; 

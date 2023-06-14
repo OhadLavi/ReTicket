@@ -13,20 +13,27 @@ import { FormControl } from '@angular/forms';
 
 export class HomeComponent {
   events:EventM[] = [];
-  constructor(private eventService:EventService, activatedRoute:ActivatedRoute) {
-    let eventsObservable:Observable<EventM[]>;
-    activatedRoute.params.subscribe((params) => {
-      if (params.searchTerm)
-        eventsObservable = this.eventService.getAllEventsBySearchTerm(params.searchTerm);
-      else
-        eventsObservable = eventService.getAll();
+  searchTerm: string = '';
 
-      eventsObservable.subscribe((serverEvents) => {this.events = serverEvents;
-      console.log(this.events);});
+  constructor(private eventService:EventService, private activatedRoute:ActivatedRoute) {
+    this.activatedRoute.params.subscribe((params) => {
+      if (params.searchTerm)
+        this.searchTerm = params.searchTerm;
     });
   }
 
   ngOnInit(): void {
-  
+    this.searchEvents();
+  }
+
+  searchEvents(): void {
+    let eventsObservable:Observable<EventM[]>;
+    if (this.searchTerm)
+      eventsObservable = this.eventService.getAllEventsBySearchTerm(this.searchTerm);
+    else
+      eventsObservable = this.eventService.getAll();
+
+    eventsObservable.subscribe((serverEvents) => {this.events = serverEvents;
+    console.log(this.events);});
   }
 }
