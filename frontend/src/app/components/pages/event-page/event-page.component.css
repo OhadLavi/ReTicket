@@ -10,14 +10,6 @@
 .relative.vh-50 {
     border-bottom: 1px solid #59616b;
 }
-
-.header-content {
-    box-sizing: border-box;
-    max-width: 900px;
-    margin: 0 auto;
-    width: 100%;
-  }
-  
   
 .blur-container {
     position: absolute;
@@ -52,4 +44,39 @@ img.portrait {
 .text-shadow {
     color: white;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.nav-link {
+    transition: none;
+    color: white;
+}
+
+.nav-link.active  {
+    color: white;
+    font-weight: bold;
+    border-top: 0;
+    border-left: 0;
+    border-right: 0;
+    border-bottom: 2px solid #04b4f4;
+}
+
+.nav-tabs .nav-link.active {
+    color: #59616b;
+    border-top: 0;
+    border-left: 0;
+    border-right: 0;
+    border-bottom: 2px solid #04b4f4;
+}
+
+.nav-tabs .nav-link:not(.active):hover {
+    color: #59616b;
+    border-top: 0;
+    border-left: 0;
+    border-right: 0;
+    border-bottom: 0;
+}
+
+.card-text {
+    font-weight: 100;
+    font-size: 1rem;
 }

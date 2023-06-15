@@ -44,47 +44,47 @@ router.get("/", asyncHandler(async(req, res) => {
 }));
 
 router.post('/upload', upload.single('file'), async (req, res) => {
-    const { path: filePath, originalname } = req.file;
-    fs.readFile(filePath, async (err, buffer) => {
-        try {
+  const { path: filePath, originalname } = req.file;
+  fs.readFile(filePath, async (err, buffer) => {
+      try {
+          if (err) {
+              console.error(err);
+              return res.status(500).json({ error: 'Error reading the file' });
+          }
+          const newFile = new File({
+              data: buffer,
+              contentType: 'application/pdf',
+              name: originalname,
+          });
+          const savedFile = await newFile.save();
+          const savedFileId = savedFile._id;
+
+          const event = await getEventByNameDateLocation("Justin Bieber", "2023-09-12T19:00:00.000+00:00", "Wembley Stadium");
+          const eventId = event._id;          
+          const ticketResults = await processTicket(savedFile.data, event.date);
+          const event2 = await getEventByNameDateLocation(ticketResults.tickets[0].artists, ticketResults.tickets[0].eventDate, ticketResults.tickets[0].venue);
+          const eventId2 = event2._id;
+
+          // Add the event id to every ticket in the ticketResults
+          ticketResults.tickets.forEach(ticket => {
+              ticket.eventId = eventId2;
+          });
+
+          fs.unlink(filePath, (err) => {
             if (err) {
                 console.error(err);
-                return res.status(500).json({ error: 'Error reading the file' });
+                res.status(500).json({ error: 'Error: PDF processing failed, the file might be corrupted' });
+                return;
             }
-            const newFile = new File({
-                data: buffer,
-                contentType: 'application/pdf',
-                name: originalname,
-            });
-            const savedFile = await newFile.save();
-            const savedFileId = savedFile._id;
-
-            const event = await getEventByNameDateLocation("Justin Bieber", "2023-09-12T19:00:00.000+00:00", "Wembley Stadium");
-            const eventId = event._id;          
-            const ticketResults = await processTicket(savedFile.data, event.date);
-            console.log(ticketResults); 
-            console.log(ticketResults.tickets[0].artists);
-            console.log(ticketResults.tickets[0].eventDate);
-            console.log(ticketResults.tickets[0].venue);
-            const event2 = await getEventByNameDateLocation(ticketResults.tickets[0].artists, ticketResults.tickets[0].eventDate, ticketResults.tickets[0].venue);
-            const eventId2 = event2._id;
-            console.log(eventId2);
-
-            fs.unlink(filePath, (err) => {
-              if (err) {
-                  console.error(err);
-                  res.status(500).json({ error: 'Error: PDF processing failed, the file might be corrupted' });
-                  return;
-              }
-          });          
-          const tickets = await generateRandomTicket(savedFileId, eventId);
-          return res.json({ ticketResults: ticketResults });
-          //res.status(201).json({ message: 'File uploaded and saved' });
-      } catch (error) {
-          console.error(error);
-          return res.status(500).json({ error: 'Error: PDF processing failed, the file might be corrupted' });
-      }
-  });
+        });          
+        const tickets = await generateRandomTicket(savedFileId, eventId);
+        return res.json({ ticketResults: ticketResults });
+        //res.status(201).json({ message: 'File uploaded and saved' });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: 'Error: PDF processing failed, the file might be corrupted' });
+    }
+});
 });
 
 router.post('/submit', async (req, res) => {
