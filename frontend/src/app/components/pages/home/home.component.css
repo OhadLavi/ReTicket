@@ -15,3 +15,31 @@ body.dark-theme > section {
    .ms-n5 {
     margin-left: -40px;
 }
+
+.mat-form-field-appearance-fill .mat-form-field-flex {
+  border-radius: 5px 5px 0 0;
+  border-bottom: none;
+}
+
+button[aria-label="Voice search"]:active {
+  color: rgb(212, 49, 49);
+}
+
+.mic-container {
+  position: relative;
+}
+
+.mic-container.recording {
+  animation: scaling 1.5s infinite;
+}
+
+.mic-icon {
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes scaling {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}

@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "complete-land-389022",
+  "private_key_id": "2517e1d2f2e2029570b1a8a8a562bd0a2c03667d",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCKXgk7s6fJkSjg\noRWKvMGQMNesv1TVOtPcmAHmJecBt/dClUhVhzm05pkUns1lSV1Hv78ryVGDjUL6\nqDB+Pwx3v0uma4Mb7gpHf8CCQF2j5g6AyRv3brn3ldttU2Bx6h/H6gN2JTTAKYQQ\n2gOOQAyarfwrIxk9Ss7XGLIJ8txhqgHIunpc2DPE+BkpZ363KmRdkXYtuvvSLO6d\nen81e2dBqzNvNkr0siXNtZv4IgdSlZ36iIdrZQcGtpbXzWoBxbaA3begXDc0mwBe\n0eOKmhLjK/LYpuwSkO0jxD4CYyKF0TtghI8jzAtssBro7zlysMb0F8l3bBa0z3lC\nDuPyS085AgMBAAECggEACnycCIlSMyWsSnIK9uvdY7c/8VjC7jI6MmLW6gF/Y5L0\ny3gS9mB8UCiV+4kZmg6YYkK3E3N7mRPQuryaiEbxA/Zcnm1Rj4FYCBk3lueX8T8T\nZFFZrEQZFhmmer+x9JBA/l7PClpBiDrdRoWvdU2HZwW+sepEFHAiAw1dGQHuD/y9\nAhbEYrjb7NRwwywtoYMw/Pm7C11sVRy/9eeFVmYwuB+E1u49s0dAY1UgHwVuOCsh\nwWafh1/vc7VjJwNsyQYi9SwKwaDffGE8UoblFF3tpI2zvQ87etsBIu/Z08oDhs02\nT6hUIy0Sp9KiNkMoHDuSsbAbCG/XJh+ZxDAgmV2MLQKBgQDBJ3F+K6bewLQY/DFO\nyI1GwqjF3CFnTDzHxmxTDx/7qYxPRL0VRXzUReMt0ywuMZRdCo0tb1kt62c3POBv\neJYByrW6Fm5/BizKWd1N+zaEk2jWY74Bs0reWR90etES5kaXz3oc4thYgp91uREv\nVN+yBZ8mvBnPoWn2854bj/EnDwKBgQC3YzDXAaj5mbaYcjodSl1IelmcuoL4Oc8c\nV/vqLrsf0GPnzVYUDa8S095qbQlelkrOLnsFJkkJAX8oiiU4J5/2GaD1dsZWPfVd\nW1NV181rPUsB7P/6SyXlqmFVUzbEYlNHa2ItoLPmnU6LD70jP30gaVpykLRG3xid\n5CuTRb1lNwKBgQC9JhUcCz9ET82N0hmvHvJKYwHHkMQdVikHMaaOx/b4CZbfYV8Q\n35VYgn/wNiXDrsWtP1H1Nl9MeoP/MdxPDPVJF+tSKflW5wMhvVLctK80sO4vVEmT\nfLJKf1gwRr1LFrn2nDTm6LYYJwJk1DCh+yl8Ockas4VLMLSGIxenwhPTvQKBgF/R\n2RwOhv7b/RdMX+ccCv+qxhXpMjOG6RuTMVJcVnO6C+l7VaWmvLpmr4kGLeYZOz7d\n9HNtXK3y9UD2ZZogwijxnTOEev9m4kSESlfJKVEGNqHr9pgOGeAVlUPi9fPIuGDR\nz/utQzKVMQviDl5TdwqvYY4I49lACnm9VbNetiYjAoGAZ2+2tLTN+AQFlDm9MP45\nRGMTXiFrTfz5gASDMpDBeF+mrvmVF4VS/G9IQzlBhfrFg1hpjbcNxe6rlVn/5t2e\nGVmF3P+7hbyUTkzXpWPg1hRmVoV4J4Zm5+T/Yg/wiMdQ1gP2vpe0yfDi8xbIMBe+\ntjP73NBXF3RCIqtzfto0LLI=\n-----END PRIVATE KEY-----\n",
+  "client_email": "reticketservice@complete-land-389022.iam.gserviceaccount.com",
+  "client_id": "106243498862956415061",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/reticketservice%40complete-land-389022.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
