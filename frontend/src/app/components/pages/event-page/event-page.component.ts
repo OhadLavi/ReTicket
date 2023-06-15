@@ -48,7 +48,7 @@ ngOnInit(): void {
 }
 
   sellTicket() {
-    // Your sellTicket logic here
+    this.router.navigate(['/sellTicket']);
   }
 
   buyTicket() {
@@ -57,10 +57,10 @@ ngOnInit(): void {
   }
 
   toggleFavorite() {
-    this.isFavorite = !this.isFavorite; // Toggle the favorite state
+    this.isFavorite = !this.isFavorite;
   }
 
   toggleAlert() {
-    this.ticketAlert = !this.ticketAlert; // Toggle the ticket alert state
+    this.ticketAlert = !this.ticketAlert;
   }
 }

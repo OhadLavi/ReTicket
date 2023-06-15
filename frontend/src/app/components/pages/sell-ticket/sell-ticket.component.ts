@@ -33,6 +33,9 @@ export class SellTicketComponent implements OnInit {
   isEventDatePassedFlag = false;
   errorMessage: string = '';
   originalPrice: number = 0;
+  ticketPriceControls: FormControl[] = [];
+  ticketPriceValidators: Validators[] = [];
+
 
   constructor(private ticketUploadService: TicketUploadService, private userSrvice:UserService, private router: Router) { }
 
@@ -60,15 +63,21 @@ export class SellTicketComponent implements OnInit {
               } else {
                 this.fileUploaded = true;
                 ticketResult.eventDate = new Date(ticketResult.eventDate).toISOString().split('T')[0];
-                this.tickets.push({
-                  ...ticketResult, 
-                  form: new FormGroup({
-                    'ticketPrice': new FormControl(
-                      ticketResult.price, 
-                      [Validators.required, Validators.min(1), Validators.max(ticketResult.price)]
-                    )
-                  })
-                });
+                this.tickets.push(ticketResult);
+                
+                // Create a new form control for the ticket price and add it to the array
+                this.ticketPriceControls.push(
+                  new FormControl(
+                    ticketResult.price, 
+                    [Validators.required, Validators.min(1), Validators.max(ticketResult.price)]
+                  )
+                );
+                
+                // Create a validator for the ticket price and add it to the array
+                this.ticketPriceValidators.push(
+                  [Validators.required, Validators.min(1), Validators.max(ticketResult.price)]
+                );
+                
                 this.isLoading = false;
               }
             }
@@ -80,8 +89,7 @@ export class SellTicketComponent implements OnInit {
         });
       }
     }
-  }
-  
+  }  
 
 onSubmit() {
     this.isLoading = true; 

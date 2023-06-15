@@ -32,14 +32,14 @@
                 </mat-form-field>
               </div>
               <div class="form-group mb-4">
-                <mat-form-field class="w-100" [ngClass]="{'error-field': ticket.form.controls.ticketPrice.invalid && ticket.form.controls.ticketPrice.touched}">
+                <mat-form-field class="w-100" [ngClass]="{'error-field': ticketPriceControls[i].invalid && ticketPriceControls[i].touched}">
                   <mat-label>Ticket Price</mat-label>
                   <span matPrefix>₪&nbsp;</span>
-                  <input matInput id="ticketPrice" [formControl]="ticket.form.controls.ticketPrice">
-                  <mat-error *ngIf="ticket.form.controls.ticketPrice.errors?.max">Invalid price. The price cannot be higher than the original.</mat-error>
-                  <mat-error *ngIf="ticket.form.controls.ticketPrice.errors?.min">Invalid price. The price cannot be negative.</mat-error>
+                  <input matInput id="ticketPrice" [formControl]="ticketPriceControls[i]">
+                  <mat-error *ngIf="ticketPriceControls[i].errors?.max">Invalid price. The price cannot be higher than the original.</mat-error>
+                  <mat-error *ngIf="ticketPriceControls[i].errors?.min">Invalid price. The price cannot be negative.</mat-error>
                 </mat-form-field>
-              </div>         
+              </div>                     
               <div class="form-group mb-4">
                 <mat-form-field class="w-100">
                   <mat-label>Date</mat-label>
