@@ -2,17 +2,23 @@
   <div class="mask w-100 h-100" style="background-color: rgba(0, 0, 0, 0.6);">
     <div class="d-flex justify-content-center align-items-center h-100">
       <div class="w-75">
-        <div class="input-group">
-          <mat-form-field class="example-full-width">
-            <input matInput placeholder="Search for an event, artist, venue or city" [(ngModel)]="searchTerm" (keyup)="searchEvents()">
-            <mat-icon matPrefix>search</mat-icon>
-            <mat-icon matSuffix>mic</mat-icon>
-          </mat-form-field>          
-        </div>
+        <mat-form-field class="w-100" appearance="fill">
+          <input matInput placeholder="Search for an event, artist, venue or city" [(ngModel)]="searchTerm" (keyup)="searchEvents()">
+          <mat-icon matPrefix>search</mat-icon>
+          <button mat-icon-button matSuffix aria-label="Clear search" (click)="clearSearch()" *ngIf="searchTerm.length > 0">
+            <mat-icon>close</mat-icon>
+          </button>  
+          <button mat-icon-button matSuffix aria-label="Voice search" (mousedown)="startRecording()" (mouseup)="stopRecording()">
+            <div class="mic-container" [class.recording]="isRecording">
+              <mat-icon class="mic-icon">mic</mat-icon>
+            </div>
+          </button>                   
+        </mat-form-field>
       </div>
     </div>
   </div>
 </div>
+
 
 <section>
     <div class="row row-cols-1 row-cols-md-5 g-4 p-5">

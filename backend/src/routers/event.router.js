@@ -84,7 +84,7 @@ router.post('/transcribeAudio', upload.single('audio'), async (req, res) => {
   const client = new speech.SpeechClient({
     projectId: process.env.PROJECT_ID,
     keyFilename: './keyfile.json'
-});
+  });
   const audio = {
     content: req.file.buffer.toString('base64'),
   };
