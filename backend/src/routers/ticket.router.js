@@ -6,6 +6,7 @@ const { File } = require('../models/file.model');
 const GridFsStorage = require('multer-gridfs-storage').GridFsStorage;
 const { Event } = require('../models/event.model');
 const pdfjsLib = require('pdfjs-dist');
+const mongoose = require('mongoose');
 const jsQR = require('jsqr');
 const router = express.Router();
 const asyncHandler = require('express-async-handler');
@@ -68,9 +69,9 @@ router.post('/upload', upload.single('file'), async (req, res) => {
 
           // Add the event id to every ticket in the ticketResults
           ticketResults.tickets.forEach(ticket => {
-              ticket.eventId = eventId2;
+              ticket.eventId = eventId2.toString();
           });
-
+          console.log(ticketResults);
           fs.unlink(filePath, (err) => {
             if (err) {
                 console.error(err);
@@ -91,12 +92,14 @@ router.post('/upload', upload.single('file'), async (req, res) => {
 router.post('/submit', async (req, res) => {
   try {
     const tickets = req.body.tickets;
+    console.log(tickets);
     const sellerId = req.body.sellerId;
+    let event = "";
     if (!sellerId)
         return res.status(400).json({ error: 'Seller ID is required.' });
     const newTickets = await Promise.all(tickets.map(async ({ eventId, eventDate, location, price, fileIds, description }) => {
         const newTicket = await Ticket.create({
-          eventId: eventId,
+          eventId: new mongoose.Types.ObjectId(eventId),
           eventDate,
           location,
           price,
@@ -106,11 +109,11 @@ router.post('/submit', async (req, res) => {
           fileIds,
           description
         });
-        await Event.findByIdAndUpdate(eventId, { $inc: { availableTickets: 1 } });
+        event = await Event.findByIdAndUpdate(eventId, { $inc: { availableTickets: 1 } });
         return newTicket;
     }));
 
-    const event = await Event.findById(eventId);
+    //const event = await Event.findById(eventId);
     if (event.availableTickets > 0 && event.waitingList.length > 0) {
       const userToNotify = event.waitingList.find(
         user => !user.notifiedAt || new Date().getTime() - user.notifiedAt.getTime() > 60*60*1000

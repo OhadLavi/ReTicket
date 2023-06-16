@@ -43,3 +43,29 @@ button[aria-label="Voice search"]:active {
   50% { transform: scale(1.2); }
   100% { transform: scale(1); }
 }
+
+.event-image {
+  width: 100%; 
+  max-height: 200px;
+  background-position: top center;
+  object-position: top;
+  object-fit: cover;
+}
+
+.btn-fill {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+}
+
+.btn-rounded {
+  border-radius: 0 0 0.5rem 0.5rem;
+}
+
+.my-material-icons {
+    width: 15px;
+    height: 15px;
+    font-size: 15px;
+}

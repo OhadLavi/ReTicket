@@ -21,18 +21,35 @@
 
 
 <section>
-    <div class="row row-cols-1 row-cols-md-5 g-4 p-5">
-      <div class="col" *ngFor="let event of events">
-        <div class="card h-100">
-          <img [src]="event.image" class="card-img-top" [alt]="event.name" />
-          <div class="card-body">
-            <h5 class="card-title">{{event.name}}</h5>
-            <p class="card-text">{{event.description}}</p>
+  <div class="row row-cols-1 row-cols-md-5 g-4 p-5" *ngIf="events.length > 0; else noResults">
+    <div class="col" *ngFor="let event of events | paginate: { itemsPerPage: 20, currentPage: p }">  
+      <div class="card h-100">
+        <img [src]="event.image" class="card-img-top event-image" [alt]="event.name" />
+        <div class="card-body">
+          <div class="row">
+            <div class="col">
+              <h5 class="card-title">{{ event.name }}</h5>
+            </div>
           </div>
-          <div class="card-footer">
-            <small class="text-muted"><a [routerLink]="'/event/' + event.id" class="btn btn-primary"><i class="fa-regular fa-cart-shopping"></i>View Details</a></small>
+          <div class="row">
+            <div class="col">
+              <mat-icon class="my-material-icons">calendar_today</mat-icon> {{ event.date | date:'EEEE, MMM d, h:mm a' }}
+            </div>
           </div>
+          <div class="row">
+            <div class="col text-muted">
+              {{ event.venue }}, {{ event.location }}
+            </div>
+          </div>
+        </div>
+        <div class="card-footer px-0 py-0">
+          <a [routerLink]="'/event/' + event.id" class="btn btn-primary w-100 h-100 btn-fill btn-lg btn-rounded">View Details</a>
         </div>
       </div>
     </div>
+  </div>
+  <pagination-controls (pageChange)="p = $event"></pagination-controls>
+<ng-template #noResults>
+  <p>No results found.</p>
+</ng-template>
 </section>
