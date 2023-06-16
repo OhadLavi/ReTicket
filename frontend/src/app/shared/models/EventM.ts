@@ -10,5 +10,5 @@ export class EventM {
     availableTickets!: number;
     soldTickets!: number;
     wantedTickets!: number;
+    isInWaitingList!: boolean;
 }
-  

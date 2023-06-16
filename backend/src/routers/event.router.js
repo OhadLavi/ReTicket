@@ -11,6 +11,7 @@ const stringSimilarity = require('string-similarity');
 const levenshtein = require('fast-levenshtein');
 const natural = require('natural');
 const fs = require('fs');
+const mongoose = require('mongoose');
 
 router.get("/", asyncHandler(async (req, res) => {
   const events = await Event.find();
@@ -74,11 +75,57 @@ router.get("/search/:searchTerm?", asyncHandler(async (req, res) => {
   res.json(similarEvents);
 }));
 
-
 router.get("/id/:eventId", asyncHandler(async (req, res) => {
   const event = await Event.findById(req.params.eventId);
   res.json(event);
 }));
+
+router.get("/checkInWaitingList/:eventId/:userId", asyncHandler(async (req, res) => {
+  const event = await Event.findById(req.params.eventId);
+  if (!event) {
+    return res.status(404).json({message: 'Event not found'});
+  }
+  const userId = req.params.userId;  
+  const isInWaitingList = event.waitingList.some(user => user.userId.equals(userId));
+  console.log(isInWaitingList);
+  res.json(isInWaitingList);
+}));
+
+
+router.post("/id/:eventId/waitingList", asyncHandler(async (req, res) => {
+  const userId = req.body.userId;
+  const event = await Event.findById(req.params.eventId);
+  if (!event) {
+    return res.status(404).json({message: 'Event not found'});
+  }
+  const isAlreadyInList = event.waitingList.some(waitingUser => waitingUser.userId.equals(userId));
+  if (!isAlreadyInList) {
+    event.waitingList.push({userId});
+    await event.save();
+    return res.json(event);
+  } else {
+    return res.status(400).json({message: 'You are already in the waiting list'});
+  }
+}));
+
+router.delete("/id/:eventId/waitingList/:userId", asyncHandler(async (req, res) => {
+  const userId = req.params.userId;
+  console.log(userId);
+  const event = await Event.findById(req.params.eventId);
+  if (!event) {
+    return res.status(404).json({message: 'Event not found'});
+  }
+  try {
+    event.waitingList = event.waitingList.filter(waitingUser => waitingUser.userId.toString() !== userId);
+    console.log(event.waitingList);
+    await event.save();
+  }
+  catch (err) {
+    return res.status(400).json({message: 'You are not in the waiting list'});
+  }
+  return res.json(event);
+}));
+
 
 router.post('/transcribeAudio', upload.single('audio'), async (req, res) => {
   const client = new speech.SpeechClient({

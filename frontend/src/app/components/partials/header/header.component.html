@@ -37,7 +37,7 @@
 	<button mat-button *ngIf="!isAuth" [routerLink]="['/login']" mat-button class="login-button">Login</button>
 	<button mat-button *ngIf="!isAuth" [routerLink]="['/register']" mat-button class="login-button">Register</button>
    <button mat-icon-button (click)="toggleControl.setValue(!toggleControl.value)">
-	<mat-icon>{{toggleControl.value ? 'brightness_7' : 'brightness_3'}}</mat-icon>	  
+	<mat-icon class="rotate-icon">{{toggleControl.value ? 'brightness_7' : 'brightness_3'}}</mat-icon>	  
 	<!-- <i class="fas" [ngClass]="{'fa-moon': !toggleControl.value, 'fa-sun': toggleControl.value}"></i> -->
   </button>
   </mat-toolbar>

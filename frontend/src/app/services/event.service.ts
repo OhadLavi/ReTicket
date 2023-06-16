@@ -28,4 +28,19 @@ export class EventService {
     formData.append('audio', audioBlob);
     return this.http.post(URLS.EVENT.GET_EVENT_TRANSCRIBE_AUDIO_URL, formData);
   }
+
+  checkUserInWaitingList(eventId: string, userId: string): Observable<boolean> {
+    console.log("here");
+    return this.http.get<boolean>(URLS.EVENT.GET_CHECK_IN_WAITING_LIST_URL(eventId, userId));
+  }
+  
+  addToWaitingList(eventId: string, userId: string): Observable<EventM> {
+    console.log(URLS.EVENT.GET_ADD_TO_WAITING_LIST_URL(eventId), {userId});
+    return this.http.post<EventM>(URLS.EVENT.GET_ADD_TO_WAITING_LIST_URL(eventId), {userId});
+  }
+
+  removeFromWaitingList(eventId: string, userId: string): Observable<EventM> {
+    return this.http.delete<EventM>(URLS.EVENT.GET_REMOVE_FROM_WAITING_LIST_URL(eventId, userId));
+  }
+  
 }

@@ -9,6 +9,7 @@ const pdfjsLib = require('pdfjs-dist');
 const jsQR = require('jsqr');
 const router = express.Router();
 const asyncHandler = require('express-async-handler');
+const { sendNotifcationEmail } = require('../services/email.service');
 const { getEventByNameDateLocation } = require('../services/event.service');
 const { getSellingTickets, getBoughtTickets } = require('../services/ticket.service');
 const storage = multer.diskStorage({
@@ -108,6 +109,38 @@ router.post('/submit', async (req, res) => {
         await Event.findByIdAndUpdate(eventId, { $inc: { availableTickets: 1 } });
         return newTicket;
     }));
+
+    const event = await Event.findById(eventId);
+    if (event.availableTickets > 0 && event.waitingList.length > 0) {
+      const userToNotify = event.waitingList.find(
+        user => !user.notifiedAt || new Date().getTime() - user.notifiedAt.getTime() > 60*60*1000
+      );
+      if (userToNotify) {
+        userToNotify.notifiedAt = new Date();
+        await event.save();
+
+        const user = await User.findById(userToNotify.userId);
+        const message = `A ticket for ${event.name} is now available!`;
+        const subject = "New Notification";
+        await sendNotifcationEmail(user.email, subject, message);
+
+        setTimeout(async () => {
+          const event = await Event.findById(eventId);
+          if (event.availableTickets > 0 && event.waitingList.length > 0) {
+            const nextUserToNotify = event.waitingList.find(
+              user => !user.notifiedAt || new Date().getTime() - user.notifiedAt.getTime() > 60*60*1000
+            );
+            if (nextUserToNotify) {
+              nextUserToNotify.notifiedAt = new Date();
+              await event.save();
+
+              const nextUser = await User.findById(nextUserToNotify.userId);
+              await sendNotifcationEmail(nextUser.email, subject, message);
+            }
+          }
+        }, 60*60*1000);
+      }
+    }
     
     res.status(201).json(newTickets);
   } catch (err) {
@@ -115,7 +148,6 @@ router.post('/submit', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
-
 
 router.get('/getUserTickets/:userId', asyncHandler(async(req, res) => {
   const userId = req.params.userId;
