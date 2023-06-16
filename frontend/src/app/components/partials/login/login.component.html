@@ -10,6 +10,14 @@
                 <mat-form-field appearance="fill" class="w-100">
                   <mat-label>Email</mat-label>
                   <input matInput formControlName="email" type="email" required>
+                  <mat-error class="d-flex" *ngIf="fc.email.invalid">
+                    <div *ngIf="fc.email.errors.required">
+                      Email is required.
+                    </div>
+                    <div *ngIf="fc.email.errors.email">
+                      Please enter a valid email.
+                    </div>
+                  </mat-error>
                 </mat-form-field>
               </div>
             </div>
@@ -18,6 +26,9 @@
                 <mat-form-field appearance="fill" class="w-100">
                   <mat-label>Password</mat-label>
                   <input matInput formControlName="password" type="password" required>
+                  <mat-error class="d-flex" *ngIf="fc.password.invalid">
+                    Password is required.
+                  </mat-error>
                 </mat-form-field>
               </div>
             </div>
@@ -37,17 +48,18 @@
                   Login with Google
                 </button>
               </div>
-            </div>
-            <div class="row mt-3">
               <div class="form-group text-center">
                 <button mat-raised-button color="primary">
                   <mat-icon>login</mat-icon>
                   Login with Facebook
                 </button>
-              </div>
+              </div>              
             </div>
           </div>
           <p class="text-center text-muted mt-5 mb-0">Don't have an account? <a routerLink="/register" class="fw-bold text-body"><u>Sign Up</u></a></p>
+          <div *ngIf="loginError" class="alert alert-danger mt-3 mx-2">
+            {{ loginError }}
+          </div>
         </mat-card-content>
       </mat-card>
     </div>

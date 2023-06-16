@@ -55,7 +55,7 @@ export class HomeComponent {
   startRecording(): void {
     console.log('start recording');
     this.sendDummyAudio();
-    // this.isRecording = true;
+    this.isRecording = true;
     // const mediaConstraints = { video: false, audio: true };
     // navigator.mediaDevices.getUserMedia(mediaConstraints).then(this.processRecording.bind(this));
   }

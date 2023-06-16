@@ -53,7 +53,7 @@ export class EventPageComponent implements OnInit {
   }
 
   ngOnInit() {
-    
+
   }  
   
   sellTicket() {
@@ -61,8 +61,11 @@ export class EventPageComponent implements OnInit {
   }
 
   buyTicket() {
-    this.cartService.addToCart(this.eventm);
-    //this.router.navigate(['/cart']);
+    if (this.userService.isAuth()) {
+      this.cartService.addToCart(this.eventm);
+    } else {
+      this.router.navigate(['/login']);
+    }
   }
 
   toggleFavorite() {

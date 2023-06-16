@@ -47,10 +47,6 @@
               </div>
             </div>
             <div class="row">
-              <mat-error *ngIf="emailInUseError">Email is already in use</mat-error>
-              <mat-error *ngIf="passwordMismatchError">Passwords do not match</mat-error>
-            </div>
-            <div class="row">
               <div class="col-md-12">
                 <div class="form-group text-right">
                   <button mat-raised-button color="primary" class="float-end btn-lg">Register</button>
@@ -77,6 +73,12 @@
             </div>
           </div>
           <p class="text-center text-muted mt-5 mb-0">Already have an account? <a routerLink="/login" class="fw-bold text-body"><u>Login here</u></a></p>
+          <div *ngIf="emailInUseError" class="alert alert-danger mt-3 mx-2">
+            Email is already in use
+          </div>
+          <div *ngIf="passwordMismatchError" class="alert alert-danger mt-3 mx-2">
+            Passwords do not match
+          </div>
         </mat-card-content>
       </mat-card>
     </div>
