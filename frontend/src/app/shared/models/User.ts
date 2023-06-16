@@ -5,4 +5,5 @@ export class User {
     name!: string;
     token!: string;
     imageURL!: string;
+    balance!: number;
 }

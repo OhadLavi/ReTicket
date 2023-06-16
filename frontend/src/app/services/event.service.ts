@@ -3,6 +3,7 @@ import { EventM } from '../shared/models/EventM';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { URLS } from '../shared/constants/urls';
+import { Ticket } from '../shared/interfaces/ITicket';
 
 @Injectable({
   providedIn: 'root'
@@ -21,6 +22,10 @@ export class EventService {
 
   getEventById(eventId:string):Observable<EventM> {
     return this.http.get<EventM>(URLS.EVENT.GET_BY_ID(eventId));
+  }
+
+  findTickets(eventId: string, quantity: number): Observable<Ticket[]> {
+    return this.http.get<Ticket[]>(URLS.EVENT.GET_TICKETS_URL(eventId, quantity));
   }
 
   transcribeAudio(audioBlob: Blob): Observable<any> {

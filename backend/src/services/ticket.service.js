@@ -14,7 +14,7 @@ const pdfPoppler = require('pdf-poppler');
 const zxing = require('node-zxing')({ scale: 2 });
 // const { PDFParser } = require('pdf2json');
 
-async function processTicket(pdfBuffer, eventDate) {
+async function processTicket(pdfBuffer, eventDate, savedFileId) {
   const pdfPath = path.join(__dirname, '..', 'uploads', 'pdf', 'temp.pdf');
   await fsPromises.writeFile(pdfPath, pdfBuffer);
   const imageDir = path.join(__dirname, '..', 'uploads', 'images');
@@ -35,14 +35,57 @@ async function processTicket(pdfBuffer, eventDate) {
     else if (!dateIsValid) {
       errorMessage = 'Error: Ticket date is not valid';
     }
-    const ticket = await parseTicketDetails(pdfBuffer, ++i);
+    const ticket = await parseTicketDetails(pdfBuffer, ++i, savedFileId);
     ticket.valid = match && dateIsValid;
     ticket.errorMessage = errorMessage;
     results.push(ticket);
-    await fsPromises.unlink(imagePath); // Delete the temporary image file
+    await fsPromises.unlink(imagePath);
   }
-  await fsPromises.unlink(pdfPath); // Delete the temporary PDF file
+  await fsPromises.unlink(pdfPath);
   return { validTickets: results.filter(ticket => ticket.valid).length, tickets: results };
+}
+
+async function parseTicketDetails(pdfBuffer, i, savedFileId) {
+  const data = await pdfParse(pdfBuffer);
+  const text = data.text;
+  const lines = data.text.split('\n');
+
+  const artistNameMatch = text.match(/Name:\s*(.*)/);
+  const dateAndTimeMatch = text.match(/(\d{2}\/\d{2}\/\d{2} - \d{2}:\d{2})/);
+  const gateMatch = text.match(/שער\s*(\d{1,2})/);
+
+  const artistName = artistNameMatch ? artistNameMatch[1] : null;
+  const dateAndTime = dateAndTimeMatch ? dateAndTimeMatch[1] : null;
+  const gate = gateMatch ? "שער " + gateMatch[1] : null;
+
+  let ticketPrice, block;
+
+  for (let i = 0; i < lines.length; i++) {
+    if (lines[i].includes('₪')) {
+      const priceMatch = lines[i-3].match(/(\d+\.\d{2})/);
+      ticketPrice = priceMatch ? priceMatch[1] : null;
+    } else if (lines[i].includes('Block:') && lines[i - 5]) {
+      block = lines[i - 5].trim();
+    }
+  }
+  const [date, time] = dateAndTime.split(' - ');
+  const [month, day, year] = date.split('/');
+  const eventDate = new Date(`20${year}-${month}-${day}T${time}:00`).toISOString();
+  
+  console.log("fileId: " + savedFileId);
+
+  const ticket = {
+    artists: artistName,
+    price: ticketPrice,
+    venue: "Park hayarkon",
+    eventDate: eventDate,
+    fileName: 'ticket.pdf',
+    status: "On sale",
+    description: `Block: ${block}, Gate: ${gate}`,
+    fileIds: [savedFileId]
+  };
+
+  return ticket;
 }
 
 async function convertPdfToImage(pdfPath, outputPath) {
@@ -95,55 +138,6 @@ function checkQRAndBarcodeMatch(qrCode, barcode) {
 function checkDateIsValid(date) {
   const currentDate = new Date();
   return date >= currentDate;
-}
-
-
-async function parseTicketDetails(pdfBuffer) {
-  const data = await pdfParse(pdfBuffer);
-  const text = data.text;
-  const lines = data.text.split('\n');
-
-  const artistNameMatch = text.match(/Name:\s*(.*)/);
-  const dateAndTimeMatch = text.match(/(\d{2}\/\d{2}\/\d{2} - \d{2}:\d{2})/);
-  const gateMatch = text.match(/שער\s*(\d{1,2})/);
-
-  const artistName = artistNameMatch ? artistNameMatch[1] : null;
-  const dateAndTime = dateAndTimeMatch ? dateAndTimeMatch[1] : null;
-  const gate = gateMatch ? "שער " + gateMatch[1] : null;
-
-  let ticketPrice, block;
-
-  for (let i = 0; i < lines.length; i++) {
-    if (lines[i].includes('₪')) {
-      const priceMatch = lines[i-3].match(/(\d+\.\d{2})/);
-      ticketPrice = priceMatch ? priceMatch[1] : null;
-    } else if (lines[i].includes('Block:') && lines[i - 5]) {
-      block = lines[i - 5].trim();
-    }
-  }
-
-  // console.log('Band Name:', bandName);
-  // console.log('Date and Time:',dateAndTime);
-  // console.log('Ticket Price:', ticketPrice);
-  // console.log('Block:', block);
-  // console.log('Gate:', gate);
-
-  const [date, time] = dateAndTime.split(' - ');
-  const [month, day, year] = date.split('/');
-  const eventDate = new Date(`20${year}-${month}-${day}T${time}:00`).toISOString();
-
-  // Create a single ticket
-  const ticket = {
-    artists: artistName,
-    price: ticketPrice,
-    venue: "Park hayarkon",
-    eventDate: eventDate,
-    fileName: 'ticket.pdf',
-    status: "On sale",
-    description: `Block: ${block}, Gate: ${gate}`
-  };
-
-  return ticket;
 }
 
 async function updateEventAvailableTickets(eventId, quantity) { 

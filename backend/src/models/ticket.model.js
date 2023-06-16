@@ -18,5 +18,13 @@ const ticketSchema = new mongoose.Schema({
     toJSON: {virtuals: true},
     toObject: {virtuals: true}
   });
+  
+  ticketSchema.statics.findCheapestTickets = function (eventId, quantity) {
+    return this.find({ eventId: eventId, isSold: false })
+        .sort({ price: 1 })
+        .limit(Number(quantity));
+};
 
-module.exports = mongoose.model('Ticket', ticketSchema);
+const Ticket = mongoose.model('Ticket', ticketSchema);
+
+module.exports = Ticket;

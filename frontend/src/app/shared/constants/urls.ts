@@ -8,7 +8,8 @@ export const URLS = {
         GET_EVENT_TRANSCRIBE_AUDIO_URL: `${BASE_URL}/api/events/transcribeAudio/`,
         GET_CHECK_IN_WAITING_LIST_URL: (eventId: string, userId: string) => `${BASE_URL}/api/events/checkInWaitingList/${eventId}/${userId}`,
         GET_ADD_TO_WAITING_LIST_URL: (id: string) => `${BASE_URL}/api/events/id/${id}/waitingList`,
-        GET_REMOVE_FROM_WAITING_LIST_URL: (eventId: string, userId: string) => `${BASE_URL}/api/events/id/${eventId}/waitingList/${userId}`
+        GET_REMOVE_FROM_WAITING_LIST_URL: (eventId: string, userId: string) => `${BASE_URL}/api/events/id/${eventId}/waitingList/${userId}`,
+        GET_TICKETS_URL: (eventId: string, quantity: number) => `${BASE_URL}/api/events/cheapestTickets/${eventId}/${quantity}`,
     },
     USER: {
         GET_ALL: `${BASE_URL}/api/users`,

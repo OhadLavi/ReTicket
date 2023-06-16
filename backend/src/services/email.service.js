@@ -51,13 +51,13 @@ async function sendEmail(mailOptions) {
   });
 }
 
-
 async function sendTicketsEmail(order, email) {
   const itemsWithDetails = await Promise.all(
     order.items.map(async (item, index) => {
       const eventDetails = await findEventDetailsByEventId(item.event);
       const ticket = await Ticket.findOne({ eventId: item.event, buyer: order.userId });
-      const file = await File.findById(ticket.fileIds[0]);
+      console.log(ticket);
+      const file = await File.findById(ticket.fileIds[0].toString());
       const fileData = Buffer.from(file.data).toString('base64');
       const event = {
         start: [new Date(eventDetails.date).getFullYear(), new Date(eventDetails.date).getMonth()+1, new Date(eventDetails.date).getDate()],

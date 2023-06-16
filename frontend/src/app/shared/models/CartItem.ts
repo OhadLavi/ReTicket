@@ -1,9 +1,10 @@
+import { Ticket } from "../interfaces/ITicket";
 import { EventM } from "./EventM";
 
 export class CartItem {
-    constructor(public eventM:EventM) {
+    constructor(public eventM:EventM, public ticket:Ticket) {
         this.event = eventM.id;
-        this.price = eventM.price;
+        this.price = ticket.price;
         this.quantity = 1;
     }
 

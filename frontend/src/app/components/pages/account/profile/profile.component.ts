@@ -18,9 +18,11 @@ export class ProfileComponent implements OnInit {
   userForm!: UntypedFormGroup;
   photoForm!: UntypedFormGroup;
   user!: User;
-
+  userBalance!: number; 
+  
   constructor(private formBuilder: UntypedFormBuilder, private userService: UserService, private snackBar: MatSnackBar) {
     this.user = userService.currentUser;
+    this.userBalance = this.user.balance;
     console.log(this.user.imageURL);
   }
 
@@ -110,8 +112,6 @@ export class ProfileComponent implements OnInit {
     }
   }
   
-
-
   saveUser() {
     console.log("saveUser");
     this.submitted = true;
@@ -126,7 +126,6 @@ export class ProfileComponent implements OnInit {
 
   }
 
-  // File Upload
   imageURL: string | undefined;
   fileChange(event: any) {
     let fileList: any = (event.target as HTMLInputElement);
