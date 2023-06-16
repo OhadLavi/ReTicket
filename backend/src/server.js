@@ -41,8 +41,10 @@ app.use('/api/tickets', ticketRouter);
 //start server
 app.listen(port, () => { 
     console.log(`Server is running on port: ${port}`);
-    //scrapeWebsite('eventim');
-    //scrapeWebsite('tmisrael');
+    setInterval(() => {
+        // scrapeWebsite('eventim');
+        scrapeWebsite('tmisrael');
+    }, 1000 * 60 * 60 * 24); 
  });
 
 // Disable strict mode for queries in Mongoose
@@ -66,7 +68,6 @@ app.get('/google/redirect', (req, res) => {
         if (err) return console.error('Error retrieving access token', err);
         oAuth2Client.setCredentials(token);
 
-        // Store the token to disk for later program executions
         fs.writeFile(TOKEN_PATH, JSON.stringify(token), (err) => {
             if (err) return console.error(err);
             console.log('Token stored to', TOKEN_PATH);

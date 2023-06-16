@@ -39,6 +39,7 @@ import { OrderTrackComponent } from './components/pages/order-track/order-track.
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { ButtonModule } from 'primeng/button';
 import { ToastModule } from 'primeng/toast';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 @NgModule({
   declarations: [
@@ -85,7 +86,8 @@ import { ToastModule } from 'primeng/toast';
     BrowserModule,
     BrowserAnimationsModule,
     ToastModule,
-    ButtonModule
+    ButtonModule,
+    NgxPaginationModule
   ],
   exports: [
     MatBadgeModule

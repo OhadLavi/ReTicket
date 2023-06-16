@@ -20,7 +20,8 @@ export class HomeComponent {
   circleDashoffset: number = this.circleCircumference;
   isFilling: boolean = false;
   isRecording: boolean = false;
-
+  p: number = 1;
+  
   constructor(private eventService:EventService, private activatedRoute:ActivatedRoute) {
     this.activatedRoute.params.subscribe((params) => {
       if (params.searchTerm)

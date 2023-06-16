@@ -87,7 +87,6 @@ router.get("/checkInWaitingList/:eventId/:userId", asyncHandler(async (req, res)
   }
   const userId = req.params.userId;  
   const isInWaitingList = event.waitingList.some(user => user.userId.equals(userId));
-  console.log(isInWaitingList);
   res.json(isInWaitingList);
 }));
 
@@ -110,14 +109,12 @@ router.post("/id/:eventId/waitingList", asyncHandler(async (req, res) => {
 
 router.delete("/id/:eventId/waitingList/:userId", asyncHandler(async (req, res) => {
   const userId = req.params.userId;
-  console.log(userId);
   const event = await Event.findById(req.params.eventId);
   if (!event) {
     return res.status(404).json({message: 'Event not found'});
   }
   try {
     event.waitingList = event.waitingList.filter(waitingUser => waitingUser.userId.toString() !== userId);
-    console.log(event.waitingList);
     await event.save();
   }
   catch (err) {

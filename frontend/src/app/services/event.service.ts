@@ -19,8 +19,8 @@ export class EventService {
     return this.http.get<EventM[]>(URLS.EVENT.GET_BY_SEARCH_TERM(searchTerm));
   }
 
-  getEventById(foodId:string):Observable<EventM> {
-    return this.http.get<EventM>(URLS.EVENT.GET_BY_ID(foodId));
+  getEventById(eventId:string):Observable<EventM> {
+    return this.http.get<EventM>(URLS.EVENT.GET_BY_ID(eventId));
   }
 
   transcribeAudio(audioBlob: Blob): Observable<any> {
