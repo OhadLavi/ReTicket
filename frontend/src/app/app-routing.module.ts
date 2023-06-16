@@ -23,7 +23,7 @@ const routes: Routes = [
   { path: 'track/:orderId' , component: OrderTrackComponent, canActivate: [AuthGuard] },
   { path: 'event/:id', component: EventPageComponent },
   { path: 'account', loadChildren: () => import('./components/pages/account/account.module').then(m => m.AccountModule), canActivate: [AuthGuard] },
-  { path: 'sellTicket', component: SellTicketComponent},
+  { path: 'sellTicket', component: SellTicketComponent, canActivate: [AuthGuard]},
   { path: 'ticketInMarket', component: TicketInMarketComponent}
 ];
 

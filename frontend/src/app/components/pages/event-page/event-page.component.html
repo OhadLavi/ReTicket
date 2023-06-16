@@ -1,5 +1,5 @@
 <div *ngIf="eventm">
-  <div class="relative vh-50">
+  <div class="relative">
     <div class="blur-container">
       <div class="bg-blur" [style.backgroundImage]="'url(' + eventm.image + ')'"></div>
     </div>
@@ -21,7 +21,7 @@
   </div>
     <div class="row justify-content-center mx-0">
       <div class="col-12 mx-0 px-0" style="border-bottom: 1px solid #59616b;">
-        <div class="card rounded shadow w-100" style="background-color: transparent; color: white">
+        <div class="card rounded shadow w-100 transparent text-white">
           <div class="row justify-content-center mx-0">
             <div class="col-12 col-md-8 col-lg-6 mx-0 px-0">
           <div class="card-header d-flex justify-content-center align-items-center w-100 px-0">
@@ -29,10 +29,10 @@
               <div class="nav-wrapper">
                 <ul class="nav nav-tabs border-0" style="font-size: 1.2rem;">
                   <li class="nav-item">
-                    <a class="nav-link" [class.active]="selectedTab === 'tickets'" (click)="selectedTab = 'tickets'" style="background-color: transparent;">Tickets</a>
+                    <a class="nav-link bg-transparent" [class.active]="selectedTab === 'tickets'" (click)="selectedTab = 'tickets'" [ngClass]="{'cursor-pointer': selectedTab !== 'tickets'}">Tickets</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" [class.active]="selectedTab === 'info'" (click)="selectedTab = 'info'" style="background-color: transparent;">Info</a>
+                    <a class="nav-link bg-transparent" [class.active]="selectedTab === 'info'" (click)="selectedTab = 'info'" [ngClass]="{'cursor-pointer': selectedTab !== 'info'}">Info</a>
                   </li>
                 </ul>
               </div>

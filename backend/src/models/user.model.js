@@ -4,7 +4,7 @@ const userSchema = new mongoose.Schema({
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    imageURL: { type: String, default: 'https://via.placeholder.com/150' }
+    imageURL: { type: String }
   }, {
     timestamps: true,
     toJSON: {virtuals: true},
