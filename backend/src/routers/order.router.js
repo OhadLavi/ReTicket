@@ -7,6 +7,7 @@ const router = express.Router();
 const { sendTicketsEmail } = require('../services/email.service');
 const { updateEventAvailableTickets, updateTicketStatus } = require('../services/ticket.service');
 const Ticket = require('../models/ticket.model');
+const User = require('../models/user.model');
 const { File } = require('../models/file.model');
 
 router.use(auth);
@@ -39,6 +40,9 @@ router.post('/pay', asyncHandler(async (req, res) => {
       console.log(item.event);
       await updateEventAvailableTickets(item.eventM, item.quantity);
       await updateTicketStatus(item.event, order.userId);
+      const ticket = await Ticket.findOne({ eventId: item.event }).exec();
+      await User.findByIdAndUpdate(ticket.seller, { $inc: { balance: item.price * item.quantity } }).exec();
+       
     }));
     order.paymentId = paymentId;
     order.orderStatus = OrderStatus.PAYED;
@@ -55,7 +59,6 @@ router.post('/pay', asyncHandler(async (req, res) => {
     return res.status(500).send('Failed to update tickets and event details.');
   }
 }));
-
 
 router.get('/track/:id', asyncHandler(async (req, res) => {
   const order = await OrderModel.findById(req.params.id);

@@ -35,7 +35,6 @@ export class EventPageComponent implements OnInit {
             this.eventService.checkUserInWaitingList(this.eventm.id, this.userService.currentUser.id)
             .subscribe((isInWaitingList: boolean) => {
               this.isInWaitingList = isInWaitingList;
-              console.log(this.isInWaitingList);
             });
           }
         });
@@ -44,7 +43,6 @@ export class EventPageComponent implements OnInit {
   }
 
   checkImageDimensions(imgSrc: string) {
-    console.log("hi");
     const img = new Image();
     img.onload = () => {
       this.isPortrait = img.height >= img.width || img.width >= img.height;
@@ -60,13 +58,13 @@ export class EventPageComponent implements OnInit {
     this.router.navigate(['/sellTicket']);
   }
 
-  buyTicket() {
+  buyTicket(quantity: number) {
     if (this.userService.isAuth()) {
-      this.cartService.addToCart(this.eventm);
+      this.cartService.addToCart(this.eventm, quantity);
     } else {
       this.router.navigate(['/login']);
     }
-  }
+  }  
 
   toggleFavorite() {
     this.isFavorite = !this.isFavorite;

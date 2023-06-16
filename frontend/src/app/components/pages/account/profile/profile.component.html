@@ -9,7 +9,17 @@
       <section class="col-lg-9 pt-lg-4 pb-4 mb-3">
         <div class="pt-2 px-4 ps-lg-0 pe-xl-5">
           <h1 class="h3 mb-4 pt-2 text-center text-sm-start">Profile Settings</h1>
-          <div class="bg-dark rounded-3 p-4 mb-4 text-center text-sm-start">
+          <div class="row align-items-center border rounded p-4 mx-0">
+            <div class="col-6">
+              <label class="form-label h4" for="profile-balance">Balance</label>
+              <p class="form-control-plaintext">${{ userBalance || '0.00' }}</p>
+            </div>
+            <div class="col-6 d-flex justify-content-end">
+              <button class="btn btn-primary" type="button">Move to PayPal</button>
+            </div>
+          </div>
+                
+          <div class="bg-dark rounded-3 p-4 mt-2 mb-4 text-center text-sm-start">        
             <div class="d-flex flex-sm-row flex-column align-items-sm-start align-items-center">
               <img class="rounded mb-sm-0 mb-3 img-thumbnail" [src]="'http://localhost:5000/' + user.imageURL" style="width: 90px; height: 90px; object-fit: cover;" alt="Themesbrand" id="user_profile">
               <div class="ms-n2 ps-sm-4">

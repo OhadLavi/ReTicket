@@ -3,6 +3,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { Cart } from '../shared/models/Cart';
 import { CartItem } from '../shared/models/CartItem';
 import { EventM } from '../shared/models/EventM';
+import { EventService } from './event.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,23 +11,34 @@ import { EventM } from '../shared/models/EventM';
 export class CartService {
   private cart:Cart = this.getCartFromLocalStorage();
   private cartSubject: BehaviorSubject<Cart> = new BehaviorSubject(this.cart);
-  constructor() { }
+  constructor(private eventService:EventService) { }
 
-  addToCart(eventM:EventM):void {
-    let cartItem = null;
-    try {
-      cartItem = this.cart.items.find(item => item.eventM.id === eventM.id);
-    } catch (e) {
-      this.emptyCartInLocalStorage();
-    }
-    finally {
-      if (cartItem)
-        return;
-    }
-    this.cart.items.push(new CartItem(eventM));
-    console.log(this.cart);
-    this.updateCartToLocalStorage();
+  // addToCart(eventM:EventM):void {
+  //   let cartItem = null;
+  //   try {
+  //     cartItem = this.cart.items.find(item => item.eventM.id === eventM.id);
+  //   } catch (e) {
+  //     this.emptyCartInLocalStorage();
+  //   }
+  //   finally {
+  //     if (cartItem)
+  //       return;
+  //   }
+  //   this.cart.items.push(new CartItem(eventM));
+  //   console.log(this.cart);
+  //   this.updateCartToLocalStorage();
+  // }
+
+  addToCart(eventM:EventM, quantity:number):void {
+    this.eventService.findTickets(eventM.id, quantity).subscribe(tickets => {
+      for (let ticket of tickets) {
+        let cartItem = new CartItem(eventM, ticket);
+        this.cart.items.push(cartItem);
+      }
+      this.updateCartToLocalStorage();
+    });
   }
+  
 
   removeFromCart(eventId:string):void {
     this.cart.items = this.cart.items.filter(item => item.eventM.id !== eventId);

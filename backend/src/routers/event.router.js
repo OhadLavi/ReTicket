@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const sample_events = require('../data/events');
 const { Event } = require('../models/event.model');
+const Ticket = require('../models/ticket.model');
 const asyncHandler = require('express-async-handler');
 const multer = require('multer');
 const speech = require('@google-cloud/speech');
@@ -123,6 +124,23 @@ router.delete("/id/:eventId/waitingList/:userId", asyncHandler(async (req, res) 
   return res.json(event);
 }));
 
+router.get("/cheapestTickets/:eventId/:quantity", asyncHandler(async (req, res) => {
+  const eventId = req.params.eventId;
+  const quantity = req.params.quantity;
+  const tickets = await Ticket.findCheapestTickets(eventId, quantity);
+  if (tickets.length === 0) {
+    const event = await Event.findById(eventId);
+    return res.status(404).json({
+      message: `No available tickets for the event: ${event.name}.`
+    });
+  } else if (tickets.length < quantity) {
+    return res.status(400).json({
+      tickets: tickets,
+      message: `Only ${tickets.length} ticket(s) available. Not enough to meet your request of ${quantity} tickets.`
+    });
+  }
+  res.json(tickets);
+}));
 
 router.post('/transcribeAudio', upload.single('audio'), async (req, res) => {
   const client = new speech.SpeechClient({

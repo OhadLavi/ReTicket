@@ -61,9 +61,11 @@ router.post('/upload', upload.single('file'), async (req, res) => {
           const savedFile = await newFile.save();
           const savedFileId = savedFile._id;
 
+          console.log("savedFileId: " + savedFileId);
+
           const event = await getEventByNameDateLocation("Justin Bieber", "2023-09-12T19:00:00.000+00:00", "Wembley Stadium");
           const eventId = event._id;          
-          const ticketResults = await processTicket(savedFile.data, event.date);
+          const ticketResults = await processTicket(savedFile.data, event.date, savedFileId);
           const event2 = await getEventByNameDateLocation(ticketResults.tickets[0].artists, ticketResults.tickets[0].eventDate, ticketResults.tickets[0].venue);
           const eventId2 = event2._id;
 
@@ -97,6 +99,7 @@ router.post('/submit', async (req, res) => {
     let event = "";
     if (!sellerId)
         return res.status(400).json({ error: 'Seller ID is required.' });
+    console.log(tickets);
     const newTickets = await Promise.all(tickets.map(async ({ eventId, eventDate, location, price, fileIds, description }) => {
         const newTicket = await Ticket.create({
           eventId: new mongoose.Types.ObjectId(eventId),
