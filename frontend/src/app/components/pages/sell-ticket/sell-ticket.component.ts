@@ -36,12 +36,11 @@ export class SellTicketComponent implements OnInit {
   ticketPriceControls: FormControl[] = [];
   ticketPriceValidators: Validators[] = [];
 
-
   constructor(private ticketUploadService: TicketUploadService, private userSrvice:UserService, private router: Router) { }
 
   ngOnInit() {
     setTimeout(() => {
-      this.isEventDatePassedFlag = false; // Hide the error box after 5 seconds
+      this.isEventDatePassedFlag = false;
     }, 15000);
   }
 
@@ -54,6 +53,7 @@ export class SellTicketComponent implements OnInit {
         this.ticketUploadService.uploadTicket(file[i]).subscribe({
           next: (response: any) => {
             const ticketResults = response.ticketResults.tickets;
+            console.log(ticketResults);
             for (let i = 0; i < ticketResults.length; i++) {
               const ticketResult = ticketResults[i];
               if (this.isEventDatePassed(ticketResult.eventDate)) {
@@ -64,16 +64,12 @@ export class SellTicketComponent implements OnInit {
                 this.fileUploaded = true;
                 ticketResult.eventDate = new Date(ticketResult.eventDate).toISOString().split('T')[0];
                 this.tickets.push(ticketResult);
-                
-                // Create a new form control for the ticket price and add it to the array
                 this.ticketPriceControls.push(
                   new FormControl(
                     ticketResult.price, 
                     [Validators.required, Validators.min(1), Validators.max(ticketResult.price)]
                   )
                 );
-                
-                // Create a validator for the ticket price and add it to the array
                 this.ticketPriceValidators.push(
                   [Validators.required, Validators.min(1), Validators.max(ticketResult.price)]
                 );
@@ -130,7 +126,5 @@ checkTicketPrice(ticket: Ticket) {
     this.errorMessage = '';
   }
 }
-
-
 
 }
