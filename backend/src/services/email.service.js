@@ -30,10 +30,7 @@ const oAuth2Client = new google.auth.OAuth2(client_id, client_secret, redirect_u
 oAuth2Client.setCredentials(token);
 const calendar = google.calendar({ version: 'v3', auth: oAuth2Client });
 
-async function sendEmail(order, email) {
-  console.log("sendEmail");
-  
-  // Create email transporter
+async function sendEmail(mailOptions) {
   const transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
     port: 587,
@@ -45,6 +42,17 @@ async function sendEmail(order, email) {
 
   transporter.verify().then(console.log).catch(console.error);
 
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.error('Error sending email:', error);
+    } else {
+      console.log('Email sent:', info.response);
+    }
+  });
+}
+
+
+async function sendTicketsEmail(order, email) {
   const itemsWithDetails = await Promise.all(
     order.items.map(async (item, index) => {
       const eventDetails = await findEventDetailsByEventId(item.event);
@@ -102,15 +110,11 @@ async function sendEmail(order, email) {
     `,
     attachments: attachments
   };
-  
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      console.error('Error sending email:', error);
-    } else {
-      console.log('Email sent:', info.response);
-    }
-  });
+
+  sendEmail(mailOptions);
 }
+
+
 
 async function findEventDetailsByEventId(eventId) {
   try {
@@ -126,6 +130,18 @@ async function findEventDetailsByEventId(eventId) {
   }
 }
 
+async function sendNotifcationEmail(email, subject, message) {
+  const mailOptions = {
+    from: process.env.EMAIL_ADDRESS,
+    to: email,
+    subject: subject,
+    html: message,
+  };
+
+  sendEmail(mailOptions);
+}
+
 module.exports = {
-  sendEmail
+  sendTicketsEmail,
+  sendNotifcationEmail,
 };

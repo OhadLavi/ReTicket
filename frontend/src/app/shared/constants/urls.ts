@@ -5,7 +5,10 @@ export const URLS = {
         GET_ALL: `${BASE_URL}/api/events`,
         GET_BY_ID: (id: string) => `${BASE_URL}/api/events/id/${id}`,
         GET_BY_SEARCH_TERM: (searchTerm: string) => `${BASE_URL}/api/events/search/${searchTerm}`,
-        GET_EVENT_TRANSCRIBE_AUDIO_URL: `${BASE_URL}/api/events/transcribeAudio/`
+        GET_EVENT_TRANSCRIBE_AUDIO_URL: `${BASE_URL}/api/events/transcribeAudio/`,
+        GET_CHECK_IN_WAITING_LIST_URL: (eventId: string, userId: string) => `${BASE_URL}/api/events/checkInWaitingList/${eventId}/${userId}`,
+        GET_ADD_TO_WAITING_LIST_URL: (id: string) => `${BASE_URL}/api/events/id/${id}/waitingList`,
+        GET_REMOVE_FROM_WAITING_LIST_URL: (eventId: string, userId: string) => `${BASE_URL}/api/events/id/${eventId}/waitingList/${userId}`
     },
     USER: {
         GET_ALL: `${BASE_URL}/api/users`,

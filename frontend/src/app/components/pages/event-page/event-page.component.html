@@ -66,7 +66,6 @@
                       <button class="btn btn-secondary ml-2"
                       [ngStyle]="{'background-color': (eventm.availableTickets === 0 ? 'gray' : '#007BFF')}"
                       [attr.disabled]="eventm.availableTickets === 0 ? 'disabled' : null"
-                      *ngIf="eventm.availableTickets === 0"
                       data-bs-toggle="tooltip" data-bs-placement="bottom" title="No available tickets"
                       (click)="buyTicket()">Buy Tickets</button>                    
                   </div>
@@ -80,8 +79,8 @@
                   <span class="text-muted">Get notified when a ticket becomes available</span>
                 </div>
                 <div class="custom-control custom-switch">
-                  <mat-slide-toggle #bellSwitch></mat-slide-toggle>
-                </div>                                                        
+                  <mat-slide-toggle [checked]="isInWaitingList" (change)="toggleWaitingList()"></mat-slide-toggle>
+                </div>                                                                     
               </div>
               
               <div class="mt-3">
