@@ -68,7 +68,19 @@ const eventSchema = new mongoose.Schema({
     required: [false, 'Event registeredUsersCount is required'],
     min: [0, 'Event registeredUsersCount cannot be less than 0'],
     default: 0
-  }
+  },
+  waitingList: [
+    {
+      userId: { 
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+      },
+      notifiedAt: {
+        type: Date
+      }
+    }
+  ]
 }, {
   timestamps: true,
   toJSON: {virtuals: true},
