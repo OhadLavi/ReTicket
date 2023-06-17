@@ -87,6 +87,12 @@ const eventSchema = new mongoose.Schema({
   toObject: {virtuals: true}
 });
 
+eventSchema.statics.getNonExpiredEvents = function() {
+  const currentDate = new Date();
+  currentDate.setHours(0, 0, 0, 0);
+  return this.find({ date: { $gte: currentDate } });
+};
+
 const Event = mongoose.model('Event', eventSchema);
 
 module.exports = { Event };

@@ -9,12 +9,12 @@
       <section class="col-lg-9 pt-lg-4 pb-4 mb-3">
         <div class="pt-2 px-4 ps-lg-0 pe-xl-5">
           <h1 class="h3 mb-4 pt-2 text-center text-sm-start">Profile Settings</h1>
-          <div class="row align-items-center border rounded p-4 mx-0">
+          <div class="row align-items-center border rounded p-4 mx-0" *ngIf="userBalance > 0">
             <div class="col-6">
               <label class="form-label h4" for="profile-balance">Balance</label>
               <p class="form-control-plaintext">{{ userBalance || '0.00' | currency }}</p>
             </div>
-            <div class="col-6 d-flex justify-content-end" *ngIf="userBalance > 0">
+            <div class="col-6 d-flex justify-content-end">
               <button class="btn btn-primary" type="button" (click)="moveToPaypal()">
                 <i class="fab fa-paypal"></i> Move to PayPal
               </button>
