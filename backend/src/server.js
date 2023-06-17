@@ -26,12 +26,14 @@ const usersRouter = require('./routers/user.router');
 const eventRouter = require('./routers/event.router');
 const orderRouter = require('./routers/order.router');
 const ticketRouter = require('./routers/ticket.router');
+const notificationRouter = require('./routers/notification.router');
 
 //use routes
 app.use('/api/users', usersRouter);
 app.use('/api/events', eventRouter);
 app.use('/api/orders', orderRouter);
 app.use('/api/tickets', ticketRouter);
+app.use('/api/notifications', notificationRouter);
 
 //serve static assets if in production
 // if(process.env.NODE_ENV === 'production'){

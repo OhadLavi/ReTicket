@@ -114,8 +114,6 @@ async function sendTicketsEmail(order, email) {
   sendEmail(mailOptions);
 }
 
-
-
 async function findEventDetailsByEventId(eventId) {
   try {
     const event = await Event.findById(eventId);

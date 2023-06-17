@@ -10,6 +10,7 @@ import { ProfileComponent } from './profile/profile.component';
 import { TicketsComponent } from './tickets/tickets.component';
 import { NotificationsComponent } from './notifications/notifications.component';
 import { DefaultButtonComponent } from '../../partials/default-button/default-button.component';
+import {MatIconModule } from '@angular/material/icon';
 // import { MyCollectionComponent } from './my-collection/my-collection.component';
 // import { FavoriteComponent } from './favorite/favorite.component';
 // import { NotificationComponent } from './notification/notification.component';
@@ -30,7 +31,8 @@ import { DefaultButtonComponent } from '../../partials/default-button/default-bu
     FormsModule,
     ReactiveFormsModule,
     NgbNavModule,
-    NgbTooltipModule
+    NgbTooltipModule,
+    MatIconModule
   ]
 })
 export class AccountModule {
