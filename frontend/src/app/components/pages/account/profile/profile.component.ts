@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 import { UserService } from 'src/app/services/user.service';
 import { User } from 'src/app/shared/models/User';
-import { SnackbarService } from 'src/app/services/snackbar.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-profile',
@@ -18,42 +17,36 @@ export class ProfileComponent implements OnInit {
   userForm!: UntypedFormGroup;
   photoForm!: UntypedFormGroup;
   user!: User;
-  userBalance!: number; 
+  userBalance!: number;
+  paymentSuccess!: boolean;
+  paymentId!: string;
+  token!: string;
+  payerId!: string;
   
-  constructor(private formBuilder: UntypedFormBuilder, private userService: UserService, private snackBar: MatSnackBar) {
+  constructor(private formBuilder: UntypedFormBuilder, private userService: UserService, private snackBar: MatSnackBar, private route: ActivatedRoute) {
     this.user = userService.currentUser;
     this.userBalance = this.user.balance;
+    console.log(this.user.balance);
     console.log(this.user.imageURL);
   }
 
   ngOnInit(): void {
     //this.imageURL = this.user.imageURL;
-    console.log(this.user);
-    // When the user clicks on the button, scroll to the top of the document
     document.body.scrollTop = 0;
     document.documentElement.scrollTop = 0;
 
-    // Remove header account and wallet button
     document.querySelector('.account')?.classList.add('d-none')
     document.querySelector('.wallet')?.classList.add('d-none')
     document.querySelector('.connectwallet')?.classList.add('d-none')
-
-    //Remove mail subscription footer
     document.querySelector('.footer .bg-dark')?.classList.remove('mt-n10', 'pt-10')
     document.querySelector('.footer.bg-secondary')?.classList.add('d-none')
 
-    /**
-    * BreadCrumb
-    */
     this.breadCrumbItems = [
       { label: 'Home', link: '/' },
       { label: 'Marketplace', link: '/' },
       { label: 'Single Project', active: true, link: '/Single Project' }
     ];
 
-    /**
-   * Form Validation
-   */
     this.userForm = this.formBuilder.group({
       name: [this.user.name, [Validators.required]],
       username: [''],
@@ -67,11 +60,23 @@ export class ProfileComponent implements OnInit {
     this.photoForm = this.formBuilder.group({
       photo: ['']
     });
+
+    this.route.queryParams.subscribe(params => {
+      if (Object.keys(params).length > 0) {
+        this.paymentSuccess = params['success'] === 'true' ? true : false;
+        this.paymentId = params['paymentId'];
+        this.token = params['token'];
+        this.payerId = params['PayerID'];
+    
+        if (this.paymentSuccess) {
+          console.log('Payment successful!');
+        } else {
+          console.log('Payment failed!');
+        }
+      }
+    });    
   }
 
-  /**
- * Form data get
- */
   get form() {
     return this.userForm.controls;
   }
@@ -142,4 +147,21 @@ export class ProfileComponent implements OnInit {
     // Clear the selected file from the file input element
   }  
 
+  moveToPaypal() {
+    this.userService.moveToPaypal(this.user.id, this.user.email, this.userBalance)
+    .subscribe(res => {
+      console.log(res);
+      if (res && res.payout && res.payout.batch_header && res.payout.batch_header.payout_batch_id) {
+        console.log(res);
+        this.openSnackBarSuccess('Payment successful! The batch ID is ' + res.payout.batch_header.payout_batch_id);
+        this.userService.updateUserBalanceInLocalStorage(0);
+        this.userBalance = 0;
+      }
+    },
+    error => {
+      this.openSnackBarSuccess('Error occurred while paying user:' + error);
+      console.log('Error occurred while paying user:', error);
+    });
+}
+  
 }

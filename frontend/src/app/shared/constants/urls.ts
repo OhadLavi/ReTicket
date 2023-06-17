@@ -16,7 +16,8 @@ export const URLS = {
         GET_BY_ID: (id: string) => `${BASE_URL}/api/users/${id}`,
         GET_BY_SEARCH_TERM: (searchTerm: string) => `${BASE_URL}/api/users/search/${searchTerm}`,
         GET_USER_UPDATE_URL: (id: string) => `${BASE_URL}/api/users/update/${id}`,
-        GET_USER_PHOTO_UPDATE_URL: (id: string) => `${BASE_URL}/api/users/update/photo/${id}`
+        GET_USER_PHOTO_UPDATE_URL: (id: string) => `${BASE_URL}/api/users/update/photo/${id}`,
+        GET_USER_MOVE_TO_PAYPAL_URL: `${BASE_URL}/api/users/moveToPaypal/`
     },
     LOGIN: {
         GET_LOGIN_URL: `${BASE_URL}/api/users/login`,
