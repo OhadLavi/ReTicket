@@ -67,7 +67,6 @@ router.get("/search/:searchTerm?", asyncHandler(async (req, res) => {
       return res.status(500).json({ message: "No results" });
     }
   }
-  
   res.json(similarEvents);
 }));
 
@@ -138,28 +137,65 @@ router.get("/cheapestTickets/:eventId/:quantity", asyncHandler(async (req, res) 
 }));
 
 router.post('/transcribeAudio', upload.single('audio'), async (req, res) => {
-  const client = new speech.SpeechClient({
-    projectId: process.env.PROJECT_ID,
-    keyFilename: './keyfile.json'
-  });
-  const audio = {
-    content: req.file.buffer.toString('base64'),
-  };
-  const config = {
-    encoding: 'MP3',
-    sampleRateHertz: 16000,
-    languageCode: 'en-US',
-  };
-  const request = {
-    audio: audio,
-    config: config,
-  };
+  try {
+    const client = new speech.SpeechClient({
+      projectId: process.env.PROJECT_ID,
+      keyFilename: './keyfile.json'
+    });
 
-  const [response] = await client.recognize(request);
-  const transcription = response.results
-      .map(result => result.alternatives[0].transcript)
-      .join('\n');
-  res.send({ transcription });
+    const audio = {
+      content: req.file.buffer.toString('base64'),
+    };
+
+    const configEn = {
+      encoding: 'MP3',
+      sampleRateHertz: 48000,
+      languageCode: 'en-US',
+    };
+
+    const configHe = {
+      encoding: 'MP3',
+      sampleRateHertz: 48000,
+      languageCode: 'he-IL',
+    };
+
+    const requestEn = {
+      audio: audio,
+      config: configEn,
+    };
+
+    const [responseEn] = await client.recognize(requestEn);
+
+    const transcriptionEn = responseEn.results
+        .map(result => result.alternatives[0].transcript)
+        .join('\n');
+
+    const confidenceEn = responseEn.results
+        .map(result => result.alternatives[0].confidence)
+        .reduce((a, b) => a + b, 0) / responseEn.results.length;
+    console.log(confidenceEn);
+    let transcription = transcriptionEn;
+
+    if (confidenceEn < 0.6) {
+      const requestHe = {
+        audio: audio,
+        config: configHe,
+      };
+
+      const [responseHe] = await client.recognize(requestHe);
+
+      const transcriptionHe = responseHe.results
+        .map(result => result.alternatives[0].transcript)
+        .join('\n');
+
+      transcription = transcriptionHe;
+    }
+
+    res.send({ transcription });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send({ error: 'An error occurred while transcribing the audio.' });
+  }
 });
 
 // router.post("/transcribe", upload.single('audio'), async (req, res, next) => {
