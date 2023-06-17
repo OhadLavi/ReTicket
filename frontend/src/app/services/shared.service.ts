@@ -1,11 +1,18 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { URLS } from '../shared/constants/urls';
+import { Notification } from '../shared/models/Notification';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SharedService {
   private orderData: any;
+  private notificationsSubject: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
+  public notifications$: Observable<any[]> = this.notificationsSubject.asObservable();
+
+  constructor(private http: HttpClient) { }
 
   setOrderData(data: any): void {
     const binaryString = window.atob(data.fileData);
@@ -21,5 +28,9 @@ export class SharedService {
   getOrderData(): any {
     return this.orderData;
   }
+
+  fetchNotifications(userId: string): Observable<Notification[]> {
+    return this.http.get<Notification[]>(URLS.NOTIFICATION.GET_NOTIFICATIONS_BY_USER_ID_URL(userId));
+  } 
   
 }

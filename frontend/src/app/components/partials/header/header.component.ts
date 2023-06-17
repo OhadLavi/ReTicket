@@ -1,5 +1,5 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { Component, OnInit, HostBinding, Input, ViewChild  } from '@angular/core';
+import { Component, OnInit, HostBinding, Input, ViewChild, ChangeDetectorRef  } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatSidenav } from '@angular/material/sidenav';
 import { CartService } from 'src/app/services/cart.service';
@@ -7,6 +7,8 @@ import { ThemeService } from 'src/app/services/theme.service';
 import { UserService } from 'src/app/services/user.service';
 import { User } from 'src/app/shared/models/User';
 import { faBell } from '@fortawesome/free-solid-svg-icons';
+import { SharedService } from 'src/app/services/shared.service';
+import { Notification } from 'src/app/shared/models/Notification';
 
 @Component({
   selector: 'app-header',
@@ -20,21 +22,27 @@ export class HeaderComponent implements OnInit {
   public isCollapsed = true;
   user!:User;
   @ViewChild('snav') sidenav!: MatSidenav;
+  notifications: Notification[] = [];
+  notificationCount = 0;
 
-  constructor(cartService:CartService, private userService:UserService, public themeService: ThemeService, private overlay: OverlayContainer) {
-    cartService.getCartObservable().subscribe((newCart)=>{
-      this.cartQuantity = newCart.totalCount;
-    })
-
-    userService.userObservable.subscribe((user)=>{
-      if (user.id) {
-        this.user = user;
-      }
-    });
-  }
+  constructor(
+    private cartService: CartService,
+    private userService: UserService,
+    private sharedService: SharedService,
+    private cd: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
-    this.user = this.userService.currentUser; // Set initial user value
+    this.cartService.getCartObservable().subscribe((newCart) => {
+      this.cartQuantity = newCart.totalCount;
+    });
+
+    this.userService.userObservable.subscribe((user) => {
+      if (user.id) {
+        this.user = user;
+        this.loadNotifications(user.id);
+      }
+    });
   }
 
   toggle() {
@@ -47,6 +55,19 @@ export class HeaderComponent implements OnInit {
 
   get isAuth() {
     return this.userService.isAuth();
+  }
+
+  toggleNotifications() {
+    this.loadNotifications(this.userService.currentUser.id);
+  }
+
+  loadNotifications(userId: string) {
+    this.sharedService.fetchNotifications(userId).subscribe((notifications) => {
+      this.notifications = notifications;
+      this.notificationCount = notifications.length;
+      console.log(this.notificationCount);
+      this.cd.detectChanges();
+    });
   }
 
 }

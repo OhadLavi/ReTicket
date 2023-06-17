@@ -28,9 +28,29 @@
 		  <a (click)="logout()">Logout</a>
 		</button>
 	  </mat-menu>
-	<button *ngIf="isAuth" mat-icon-button class="example-icon" aria-label="Example icon-button with share icon">
-		<mat-icon matBadge="1" matBadgeColor="warn" matBadgeHidden="badgeCounter==0">notifications</mat-icon>
-	</button>
+	  <button *ngIf="isAuth" mat-icon-button class="example-icon" aria-label="Example icon-button with share icon" [matMenuTriggerFor]="notificationsMenu">
+		<mat-icon matBadge="{{ notificationCount }}" matBadgeColor="warn">notifications</mat-icon>
+	  </button>
+	  
+	  <mat-menu #notificationsMenu="matMenu" class="notification-dropdown">
+		<div *ngIf="notifications.length; else noNotification">
+		  <div *ngFor="let notification of notifications; let isLast=last" class="menu-item-container" [ngClass]="{'last-item': isLast}">
+			<mat-menu-item>
+			  <div>
+				{{ notification.message }} 
+				<a *ngIf="notification.type == 'PURCHASED'" [routerLink]="['/event', notification.eventId]" class="buy-tickets-link">Buy Tickets</a>.
+			  </div>
+			</mat-menu-item>
+			<div class="date-container">
+			  {{ notification.createdAt | date:'dd.MM HH:mm' }}
+			</div>
+		  </div>
+		</div>
+		<ng-template #noNotification>
+		  <div>No notifications.</div>
+		</ng-template>
+	  </mat-menu>
+	  
 	<button *ngIf="isAuth" [routerLink]="['/cart']" mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
 	  <mat-icon matBadge="{{ cartQuantity }}" matBadgeColor="warn" [matBadgeHidden]="cartQuantity === 0">shopping_cart</mat-icon>
 	</button>

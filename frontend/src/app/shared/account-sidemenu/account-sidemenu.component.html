@@ -18,16 +18,16 @@
           <a class="nav-link-style d-flex align-items-center px-4 py-3 menulist" routerLink="/account/tickets">
             <i class="fas fa-ticket-alt me-2"></i>
             Tickets
-            <span class="fs-sm text-muted ms-auto">1</span>
+            <span class="fs-sm text-muted ms-auto" *ngIf="ticketCount > 0">{{ ticketCount }}</span>
           </a>
         </li>
         <li class="border-bottom mb-0">
           <a class="nav-link-style d-flex align-items-center px-4 py-3 menulist" routerLink="/account/notifications">
             <i class="fas fa-bell me-2"></i>
             Notifications
-            <span class="fs-sm text-muted ms-auto">3</span>
+            <span class="fs-sm text-muted ms-auto" *ngIf="notificationCount > 0">{{ notificationCount }}</span>
           </a>
-        </li>
+        </li>            
         <li class="border-bottom mb-0">
           <a class="nav-link-style d-flex align-items-center px-4 py-3 menulist" routerLink="/account/favorite">
             <i class="fas fa-heart me-2"></i>

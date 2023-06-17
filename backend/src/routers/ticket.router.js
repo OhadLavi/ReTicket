@@ -3,8 +3,11 @@ const multer = require('multer');
 const fs = require('fs');
 const Ticket = require('../models/ticket.model');
 const { File } = require('../models/file.model');
+const UserModel = require('../models/user.model');
+const Notification = require('../models/notification.model');
 const GridFsStorage = require('multer-gridfs-storage').GridFsStorage;
 const { Event } = require('../models/event.model');
+const { NotificationType } = require('../constants/notification_type');
 const pdfjsLib = require('pdfjs-dist');
 const mongoose = require('mongoose');
 const jsQR = require('jsqr');
@@ -117,18 +120,24 @@ router.post('/submit', async (req, res) => {
     }));
 
     //const event = await Event.findById(eventId);
+    console.log("test1");
     if (event.availableTickets > 0 && event.waitingList.length > 0) {
+      console.log("test2");
       const userToNotify = event.waitingList.find(
         user => !user.notifiedAt || new Date().getTime() - user.notifiedAt.getTime() > 60*60*1000
       );
       if (userToNotify) {
+        console.log("test3");
         userToNotify.notifiedAt = new Date();
         await event.save();
 
-        const user = await User.findById(userToNotify.userId);
-        const message = `A ticket for ${event.name} is now available!`;
+        const user = await UserModel.findById(userToNotify.userId);
+        const userWaitingForTicketsNotificationMessage = `A ticket for ${event.name} is now available!`;
         const subject = "New Notification";
-        await sendNotifcationEmail(user.email, subject, message);
+        await sendNotifcationEmail(user.email, subject, userWaitingForTicketsNotificationMessage);
+
+        const sellerNotification = new Notification({ userId: user._id, message: userWaitingForTicketsNotificationMessage, eventId: event._id, type: NotificationType.other });
+        await sellerNotification.save();
 
         setTimeout(async () => {
           const event = await Event.findById(eventId);

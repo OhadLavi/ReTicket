@@ -38,6 +38,9 @@ export const URLS = {
         GET_TICKET_SUBMIT_URL: `${BASE_URL}/api/tickets/submit/`,
         GET_TICKET_REVIEW_URL: (id:string) => `${BASE_URL}/api/tickets/review/${id}`,
         GET_TICKET_DOWNLOAD_URL: (id:string) => `${BASE_URL}/api/tickets/getTicketFile/${id}`
+    },
+    NOTIFICATION: {
+        GET_NOTIFICATIONS_BY_USER_ID_URL: (userId: string) => `${BASE_URL}/api/notifications/user/${userId}`,
     }
 };
 

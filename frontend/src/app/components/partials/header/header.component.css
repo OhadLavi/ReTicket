@@ -39,6 +39,33 @@
   transform: rotate(160deg);
 }
 
+.menu-item-container {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+}
+
+.menu-item-container.last-item {
+  border-bottom: none;
+}
+
+.date-container {
+  text-align: right;
+  font-size: 0.8em;
+  color: #888;
+}
+
+.notification-dropdown {
+  width: 350px; /* Set the dropdown width to your preference */
+}
+
+.buy-tickets-link {
+  color: blue;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
 
 .login-button {
   border-width: 1px;

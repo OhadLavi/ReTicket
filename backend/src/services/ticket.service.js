@@ -7,9 +7,11 @@ const jimp = require('jimp');
 const sample_events = require('../data/events');
 const Ticket = require('../models/ticket.model');
 const { File } = require('../models/file.model');
+const Notification = require('../models/notification.model');
 const pdfParse = require('pdf-parse');
 const path = require('path');
 const { writeFile } = require('fs');
+const { NotificationType } = require('../constants/notification_type');
 const pdfPoppler = require('pdf-poppler');
 const zxing = require('node-zxing')({ scale: 2 });
 // const { PDFParser } = require('pdf2json');
@@ -150,6 +152,16 @@ async function updateTicketStatus(eventId, buyerId) {
     const ticket = await Ticket.findOne({ eventId: eventId, isSold: false });
     if(!ticket) {
       throw new Error('No available tickets found for this event');
+    }
+
+    const event = await Event.findById(eventId);
+    if (!event) {
+      console.error('Event not found');
+    }
+    else {
+      const sellerNotificationMessage = `You have sold a ticket for ${event.name}'s concert`;
+      const sellerNotification = new Notification({ userId: ticket.seller, message: sellerNotificationMessage, eventId: eventId, type: NotificationType.purchase });
+      await sellerNotification.save();
     }
     return await Ticket.findByIdAndUpdate(ticket._id, { isSold: true, buyer: buyerId, soldDate }, { new: true });
   } catch(err) {

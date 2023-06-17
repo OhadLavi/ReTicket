@@ -1,22 +1,32 @@
 <div class="container mb-5 pb-3">
     <div class="bg-light shadow-lg rounded-3 overflow-hidden">
-        <div class="row">
-            <!-- Sidebar -->
-            <aside class="col-lg-3 pe-xl-5">
-                <app-account-sidemenu></app-account-sidemenu>
-            </aside>
-            <!-- Content -->
-            <section class="col-lg-9 pt-lg-4 pb-4 mb-3">
-                <div class="pt-2 px-4 ps-lg-0 pe-xl-5">
-                    <h1 class="h3 mb-4 pt-2 text-center text-sm-start">Profile Settings</h1>
-                    <div class="bg-secondary rounded-3 p-4 mb-4 text-center text-sm-start">
-                        <div class="d-flex flex-sm-row flex-column align-items-sm-start align-items-center">
-                            <p>hi</p>
-                        </div>
-                    </div>
+      <div class="row">
+        <!-- Sidebar -->
+        <aside class="col-lg-3 pe-xl-5">
+          <app-account-sidemenu></app-account-sidemenu>
+        </aside>
+        <!-- Content -->
+        <section class="col-lg-9 pt-lg-4 pb-4 mb-3">
+            <div class="pt-2 px-4 ps-lg-0 pe-xl-5">
+              <h1 class="h3 mb-4 pt-2 text-center text-sm-start">Notifications</h1>
+              <div *ngFor="let notification of notifications" class="card rounded p-3 mb-3">
+                <div class="row align-items-center">
+                  <div class="col">
+                    <p class="mb-0">{{ notification.message }}</p>
+                    <small class="text-muted d-block">{{ notification.createdAt | date:'dd.MM.yy HH:mm' }}</small>
+                  </div>
+                  <div *ngIf="notification.type !== 'PURCHASE'" class="col-auto text-end">
+                    <button mat-stroked-button color="primary" [routerLink]="['/event', notification.eventId]" class="btn btn-outline-info d-flex align-items-center">
+                        <mat-icon>book_online</mat-icon> Purchase Ticket
+                      </button>
+                  </div>
                 </div>
-            </section>
-        </div>
+              </div>
+            </div>
+          </section>
+          
+                  
+      </div>
     </div>
   </div>
   
