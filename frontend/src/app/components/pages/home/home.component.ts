@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component, NgZone } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { EventService } from 'src/app/services/event.service';
@@ -16,13 +16,11 @@ export class HomeComponent {
   events:EventM[] = [];
   searchTerm: string = '';
   private recorder: any;
-  circleCircumference: number = 2 * Math.PI * 10;
-  circleDashoffset: number = this.circleCircumference;
-  isFilling: boolean = false;
   isRecording: boolean = false;
+  stream!: MediaStream;
   p: number = 1;
   
-  constructor(private eventService:EventService, private activatedRoute:ActivatedRoute) {
+  constructor(private eventService:EventService, private activatedRoute:ActivatedRoute, private ngZone: NgZone) {
     this.activatedRoute.params.subscribe((params) => {
       if (params.searchTerm)
         this.searchTerm = params.searchTerm;
@@ -40,48 +38,56 @@ export class HomeComponent {
     else
       eventsObservable = this.eventService.getAll();
 
-    eventsObservable.subscribe((serverEvents) => {this.events = serverEvents;
-    console.log(this.events);});
-  }
-
-  sendDummyAudio(): void {
-    fetch('assets/dummy-audio.mp3')
-      .then(response => response.blob())
-      .then(blob => this.eventService.transcribeAudio(blob).subscribe((res) => {
-        this.searchTerm = res.transcription;
-        this.searchEvents();
-      }));
+    eventsObservable.subscribe(
+      (serverEvents) => {
+        this.events = serverEvents;
+        console.log(this.events);
+      },
+      (error) => {
+        if (error.status === 500 && error.error.message === 'No results') {
+          this.events = [];
+        } else {
+          console.error(error);
+        }
+      }
+    );
   }
 
   startRecording(): void {
-    console.log('start recording');
-    this.sendDummyAudio();
-    this.isRecording = true;
-    // const mediaConstraints = { video: false, audio: true };
-    // navigator.mediaDevices.getUserMedia(mediaConstraints).then(this.processRecording.bind(this));
-  }
-
-  private processRecording(stream: MediaStream): void {
-    console.log('process recording');
-    this.recorder = new RecordRTC(stream, { type: 'audio' });
-    this.recorder.startRecording();
+    navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
+      this.stream = stream;
+      this.recorder = new RecordRTC(stream, { type: 'audio' });
+      this.recorder.startRecording();
+      this.isRecording = true;
+    }).catch((err) => {
+      console.error('Could not start recording: ', err);
+    });
   }
 
   stopRecording(): void {
-    console.log('stop recording');
-    this.isRecording = false;
     if (this.recorder) {
+      this.isRecording = false;
       this.recorder.stopRecording(() => {
-        this.sendToServer(this.recorder.getBlob());
+        console.log('stopped recording');
+        let blob = this.recorder.getBlob();
+        this.sendToServer(blob);
+        this.stream.getTracks().forEach(track => track.stop());
+        this.recorder = null;
       });
     }
   }
 
   private sendToServer(blob: Blob): void {
-    this.eventService.transcribeAudio(blob).subscribe((res) => {
-      this.searchTerm = res.transcription;
-      this.searchEvents();
-    });
+    if (blob.size > 100) {
+      this.eventService.transcribeAudio(blob).subscribe((res) => {
+        this.ngZone.run(() => {
+          this.searchTerm = res.transcription;
+          this.searchEvents();
+        });
+      });
+    } else {
+      console.log('Audio stream is empty, not sending to server.');
+    }
   }
 
   clearSearch() {
@@ -89,4 +95,29 @@ export class HomeComponent {
     this.searchEvents();
   }
 
+
+    // startRecording(): void {
+  //   console.log('start recording');
+  //   this.isRecording = true;
+  //   const mediaConstraints = { video: false, audio: true };
+  //   navigator.mediaDevices.getUserMedia(mediaConstraints).then(this.processRecording.bind(this));
+  //   document.addEventListener('mouseup', this.stopRecording.bind(this));
+  // }
+
+  // private processRecording(stream: MediaStream): void {
+  //   console.log('process recording');
+  //   this.recorder = new RecordRTC(stream, { type: 'audio' });
+  //   this.recorder.startRecording();
+  // }
+
+  // stopRecording(): void {
+  //   console.log('stop recording');
+  //   this.isRecording = false;
+  //   if (this.recorder) {
+  //     this.recorder.stopRecording(() => {
+  //       this.sendToServer(this.recorder.getBlob());
+  //     });
+  //   }
+  //   document.removeEventListener('mouseup', this.stopRecording.bind(this));
+  // }
 }
