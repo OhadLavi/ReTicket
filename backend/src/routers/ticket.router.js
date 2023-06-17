@@ -124,7 +124,9 @@ router.post('/submit', async (req, res) => {
       const userToNotify = event.waitingList.find(
         user => !user.notifiedAt || new Date().getTime() - user.notifiedAt.getTime() > 60*60*1000
       );
-      if (userToNotify) {;
+      if (userToNotify) {
+        const index = event.waitingList.indexOf(userToNotify);
+        event.waitingList.splice(index, 1);
         userToNotify.notifiedAt = new Date();
         await event.save();
 
@@ -136,7 +138,7 @@ router.post('/submit', async (req, res) => {
         const sellerNotification = new Notification({ userId: user._id, message: userWaitingForTicketsNotificationMessage, eventId: event._id, type: NotificationType.other });
         await sellerNotification.save();
 
-        setTimeout(async () => {
+        const timeout = setTimeout(async () => {
           const event = await Event.findById(event._id);
           if (event.availableTickets > 0 && event.waitingList.length > 0) {
             const nextUserToNotify = event.waitingList.find(
@@ -146,9 +148,11 @@ router.post('/submit', async (req, res) => {
               nextUserToNotify.notifiedAt = new Date();
               await event.save();
 
-              const nextUser = await User.findById(nextUserToNotify.userId);
+              const nextUser = await UserModel.findById(nextUserToNotify.userId);
               await sendNotifcationEmail(nextUser.email, subject, message);
             }
+          } else {
+            clearTimeout(timeout);
           }
         }, 60*60*1000);
       }
