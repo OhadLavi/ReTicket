@@ -7,6 +7,12 @@ const UserModel = require('../models/user.model');
 const bcrypt = require('bcryptjs');
 const multer = require('multer');
 const path = require('path');
+const paypal = require('paypal-rest-sdk');
+paypal.configure({
+    'mode': process.env.PAYPAL_MODE,
+    'client_id': process.env.PAYPAL_CLIENT_ID,
+    'client_secret': process.env.PAYPAL_SECRET
+});
 
 router.post("/register", asyncHandler(async(req, res) => {
     console.log("register" + req.body);
@@ -101,10 +107,55 @@ const storage = multer.diskStorage({
     }
 }));
 
+router.post("/moveToPaypal", asyncHandler(async (req, res) => {
+    const { userId, userEmail, amount } = req.body;
+
+    const sender_batch_id = 'PAYOUT_' + new Date().getTime() + '_' + Math.floor(Math.random() * 1000);
+
+    const create_payout_json = {
+        "sender_batch_header": {
+          "sender_batch_id": sender_batch_id,
+          "email_subject": "You have a payment"
+        },
+        "items": [
+          {
+            "recipient_type": "EMAIL",
+            "amount": {
+              "value": amount,
+              "currency": "USD"
+            },
+            "receiver": userEmail,
+            "note": "Thank you.",
+            "sender_item_id": "item_3"
+          }
+        ]
+      };    
+
+      paypal.payout.create(create_payout_json, async function (error, payout) {
+        if (error) {
+          console.log(error.response);
+          throw error;
+        } else {
+          console.log("Create Payout Response");
+          console.log(payout);
+    
+          // Set user balance to 0
+          try {
+            const updatedUser = await UserModel.findOneAndUpdate({ _id: userId }, { balance: 0 }, { new: true });
+            console.log("User balance updated successfully", updatedUser);
+          } catch (err) {
+            console.log("Something went wrong when updating the user balance", err);
+          }
+    
+          res.json({payout: payout});
+        }
+      });
+}));
+
 const generateTokenResponse = (user) => {
     const token = jwt.sign(
       { id: user.id, email: user.email }, process.env.JWT_SECRET,
-      { expiresIn: "1h" }
+      { expiresIn: "12h" }
     );
 
     return {
@@ -112,7 +163,8 @@ const generateTokenResponse = (user) => {
         email: user.email,
         name: user.name,
         token: token,
-        imageURL: user.imageURL
+        imageURL: user.imageURL,
+        balance: user.balance
       };
 };
 

@@ -12,11 +12,13 @@
           <div class="row align-items-center border rounded p-4 mx-0">
             <div class="col-6">
               <label class="form-label h4" for="profile-balance">Balance</label>
-              <p class="form-control-plaintext">${{ userBalance || '0.00' }}</p>
+              <p class="form-control-plaintext">{{ userBalance || '0.00' | currency }}</p>
             </div>
-            <div class="col-6 d-flex justify-content-end">
-              <button class="btn btn-primary" type="button">Move to PayPal</button>
-            </div>
+            <div class="col-6 d-flex justify-content-end" *ngIf="userBalance > 0">
+              <button class="btn btn-primary" type="button" (click)="moveToPaypal()">
+                <i class="fab fa-paypal"></i> Move to PayPal
+              </button>
+            </div>            
           </div>
                 
           <div class="bg-dark rounded-3 p-4 mt-2 mb-4 text-center text-sm-start">        

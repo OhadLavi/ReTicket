@@ -134,4 +134,14 @@ export class UserService {
     window.location.href = "/";
   }
 
+  moveToPaypal(userId: string, userEmail: string, amount: number): Observable<any> {
+    return this.http.post<any>(URLS.USER.GET_USER_MOVE_TO_PAYPAL_URL, {userId, userEmail, amount});
+  }
+
+  updateUserBalanceInLocalStorage(newBalance: number) {
+    let user = this.getUserFromLocalStorage();
+    user.balance = newBalance;
+    this.setUserToLocalStorage(user);
+  }
+  
 }

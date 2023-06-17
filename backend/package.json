@@ -46,6 +46,7 @@
     "nodemon": "^2.0.22",
     "osmosis": "^1.1.10",
     "path": "^0.12.7",
+    "paypal-rest-sdk": "^1.8.1",
     "pdf-export-images": "^1.0.9",
     "pdf-image": "^2.0.0",
     "pdf-img-convert": "^1.2.1",

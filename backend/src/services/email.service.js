@@ -3,9 +3,9 @@ const { google } = require('googleapis');
 const fs = require('fs');
 const ics = require('ics');
 const { Event } = require('../models/event.model');
-require('dotenv').config();
 const Ticket = require('../models/ticket.model');
 const { File } = require('../models/file.model');
+require('dotenv').config();
 
 const credentials = {
     "web": {
