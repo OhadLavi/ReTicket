@@ -13,22 +13,6 @@ export class CartService {
   private cartSubject: BehaviorSubject<Cart> = new BehaviorSubject(this.cart);
   constructor(private eventService:EventService) { }
 
-  // addToCart(eventM:EventM):void {
-  //   let cartItem = null;
-  //   try {
-  //     cartItem = this.cart.items.find(item => item.eventM.id === eventM.id);
-  //   } catch (e) {
-  //     this.emptyCartInLocalStorage();
-  //   }
-  //   finally {
-  //     if (cartItem)
-  //       return;
-  //   }
-  //   this.cart.items.push(new CartItem(eventM));
-  //   console.log(this.cart);
-  //   this.updateCartToLocalStorage();
-  // }
-
   addToCart(eventM:EventM, quantity:number):void {
     this.eventService.findTickets(eventM.id, quantity).subscribe(tickets => {
       for (let ticket of tickets) {
@@ -39,9 +23,8 @@ export class CartService {
     });
   }
   
-
-  removeFromCart(eventId:string):void {
-    this.cart.items = this.cart.items.filter(item => item.eventM.id !== eventId);
+  removeFromCart(ticketId:string):void {
+    this.cart.items = this.cart.items.filter(item => item.ticket.id !== ticketId);
     this.updateCartToLocalStorage();
   }
 
@@ -104,5 +87,22 @@ export class CartService {
     this.cart.couponApplied = false;
     this.setCartToLocalStorage();
   }
+
+    // addToCart(eventM:EventM):void {
+  //   let cartItem = null;
+  //   try {
+  //     cartItem = this.cart.items.find(item => item.eventM.id === eventM.id);
+  //   } catch (e) {
+  //     this.emptyCartInLocalStorage();
+  //   }
+  //   finally {
+  //     if (cartItem)
+  //       return;
+  //   }
+  //   this.cart.items.push(new CartItem(eventM));
+  //   console.log(this.cart);
+  //   this.updateCartToLocalStorage();
+  // }
+
 
 }

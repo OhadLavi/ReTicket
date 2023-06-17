@@ -32,7 +32,7 @@ export class CartComponent implements OnInit{
   }
 
   removeFromCart(cartItem:CartItem) {
-    this.cartService.removeFromCart(cartItem.eventM.id);
+    this.cartService.removeFromCart(cartItem.ticket.id);
   }
 
   changeQuantity(cartItem:CartItem, quantityInString:string) {

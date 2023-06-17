@@ -120,14 +120,11 @@ router.post('/submit', async (req, res) => {
     }));
 
     //const event = await Event.findById(eventId);
-    console.log("test1");
     if (event.availableTickets > 0 && event.waitingList.length > 0) {
-      console.log("test2");
       const userToNotify = event.waitingList.find(
         user => !user.notifiedAt || new Date().getTime() - user.notifiedAt.getTime() > 60*60*1000
       );
-      if (userToNotify) {
-        console.log("test3");
+      if (userToNotify) {;
         userToNotify.notifiedAt = new Date();
         await event.save();
 
@@ -140,7 +137,7 @@ router.post('/submit', async (req, res) => {
         await sellerNotification.save();
 
         setTimeout(async () => {
-          const event = await Event.findById(eventId);
+          const event = await Event.findById(event._id);
           if (event.availableTickets > 0 && event.waitingList.length > 0) {
             const nextUserToNotify = event.waitingList.find(
               user => !user.notifiedAt || new Date().getTime() - user.notifiedAt.getTime() > 60*60*1000

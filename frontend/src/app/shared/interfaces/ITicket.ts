@@ -1,4 +1,5 @@
 export interface Ticket {
+    id: string;
     eventId: string;
     eventDate: string;
     location: string;
