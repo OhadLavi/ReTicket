@@ -131,6 +131,7 @@ export class UserService {
   logout() {
     this.userSubject.next(new User());
     localStorage.removeItem('user');
+    localStorage.removeItem('Cart');
     window.location.href = "/";
   }
 
