@@ -15,21 +15,16 @@ const fs = require('fs');
 const mongoose = require('mongoose');
 
 router.get("/", asyncHandler(async (req, res) => {
-  const events = await Event.find();
+  const events = await Event.getNonExpiredEvents();
   res.json(events);
 }));
 
 router.get("/search/:searchTerm?", asyncHandler(async (req, res) => {
   const { searchTerm } = req.params;
-
-  if (!searchTerm) {
-    const allEvents = await Event.find();
-    return res.json(allEvents);
-  }
-
+  let allEvents = await Event.getNonExpiredEvents();
+  if (!searchTerm) return res.json(allEvents);
   let similarityScores = [];
   const searchTermWords = searchTerm.toLowerCase().replace(/[^\w\s]/gi, ' ').split(' ');
-  const allEvents = await Event.find();
   const similarityThreshold = 0.8;
   const weights = { name: 0.6, location: 0.2, venue: 0.2 };
   let maxScoreEvent = { event: null, score: 0 };

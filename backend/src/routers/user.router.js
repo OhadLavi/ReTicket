@@ -81,7 +81,6 @@ router.get("/seed", asyncHandler(async (req, res) => {
     res.send("Seed data created");
 }));
 
-// Specify the storage engine
 const storage = multer.diskStorage({
     destination: 'uploads/',
     filename: function (req, file, cb) {
@@ -139,7 +138,6 @@ router.post("/moveToPaypal", asyncHandler(async (req, res) => {
           console.log("Create Payout Response");
           console.log(payout);
     
-          // Set user balance to 0
           try {
             const updatedUser = await UserModel.findOneAndUpdate({ _id: userId }, { balance: 0 }, { new: true });
             console.log("User balance updated successfully", updatedUser);
