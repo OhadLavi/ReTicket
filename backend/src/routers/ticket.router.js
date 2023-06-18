@@ -12,6 +12,7 @@ const pdfjsLib = require('pdfjs-dist');
 const mongoose = require('mongoose');
 const jsQR = require('jsqr');
 const router = express.Router();
+const { PDFDocument } = require('pdf-lib');
 const asyncHandler = require('express-async-handler');
 const { sendNotifcationEmail } = require('../services/email.service');
 const { getEventByNameDateLocation } = require('../services/event.service');
@@ -50,59 +51,47 @@ router.get("/", asyncHandler(async(req, res) => {
 
 router.post('/upload', upload.single('file'), async (req, res) => {
   const { path: filePath, originalname } = req.file;
-  fs.readFile(filePath, async (err, buffer) => {
-      try {
-          if (err) {
-              console.error(err);
-              return res.status(500).json({ error: 'Error reading the file' });
-          }
-          const newFile = new File({
-              data: buffer,
-              contentType: 'application/pdf',
-              name: originalname,
-          });
-          const savedFile = await newFile.save();
-          const savedFileId = savedFile._id;
-
-          console.log("savedFileId: " + savedFileId);
-
-          const event = await getEventByNameDateLocation("Justin Bieber", "2023-09-12T19:00:00.000+00:00", "Wembley Stadium");
-          const eventId = event._id;          
-          const ticketResults = await processTicket(savedFile.data, event.date, savedFileId);
-          const event2 = await getEventByNameDateLocation(ticketResults.tickets[0].artists, ticketResults.tickets[0].eventDate, ticketResults.tickets[0].venue);
-          const eventId2 = event2._id;
-
-          // Add the event id to every ticket in the ticketResults
-          ticketResults.tickets.forEach(ticket => {
-              ticket.eventId = eventId2.toString();
-          });
-          console.log(ticketResults);
-          fs.unlink(filePath, (err) => {
-            if (err) {
-                console.error(err);
-                res.status(500).json({ error: 'Error: PDF processing failed, the file might be corrupted' });
-                return;
-            }
-        });          
-        const tickets = await generateRandomTicket(savedFileId, eventId);
-        return res.json({ ticketResults: ticketResults });
-        //res.status(201).json({ message: 'File uploaded and saved' });
-    } catch (error) {
-        console.error(error);
+  try {
+    const fileBuffer = fs.readFileSync(filePath);
+    const pdfDoc = await PDFDocument.load(fileBuffer);
+    const pages = pdfDoc.getPages();
+    const ticketResults = { tickets: [] };
+    for (let i = 0; i < pages.length; i++) {
+      const pdfDocSingle = await PDFDocument.create();
+      const [copiedPage] = await pdfDocSingle.copyPages(pdfDoc, [i]);
+      pdfDocSingle.addPage(copiedPage);
+      const pdfBytes = await pdfDocSingle.save();
+      const pdfBuffer = Buffer.from(pdfBytes);
+      const ticketResult = await processTicket(pdfBuffer);
+      if (!ticketResult)
         return res.status(500).json({ error: 'Error: PDF processing failed, the file might be corrupted' });
+      const event = await getEventByNameDateLocation(ticketResult.tickets[0].artists, ticketResult.tickets[0].eventDate, ticketResult.tickets[0].venue);
+      if (!event)
+        return res.status(500).json({ error: 'Error: PDF processing failed, the file might be corrupted' });
+      const eventId = event._id;
+      ticketResult.tickets.forEach(ticket => {
+        ticket.eventId = eventId.toString();
+      });
+      ticketResults.tickets.push(...ticketResult.tickets);
     }
-});
+    fs.unlinkSync(filePath);
+    return res.status(200).json({ ticketResults: ticketResults });
+  } catch (error) {
+    console.error(error);
+    fs.unlink(filePath, (err) => {
+      if (err) console.error(err);
+    });
+    return res.status(500).json({ error: 'Error: PDF processing failed, the file might be corrupted' });
+  }
 });
 
 router.post('/submit', async (req, res) => {
   try {
     const tickets = req.body.tickets;
-    console.log(tickets);
     const sellerId = req.body.sellerId;
     let event = "";
     if (!sellerId)
         return res.status(400).json({ error: 'Seller ID is required.' });
-    console.log(tickets);
     const newTickets = await Promise.all(tickets.map(async ({ eventId, eventDate, location, price, fileIds, description }) => {
         const newTicket = await Ticket.create({
           eventId: new mongoose.Types.ObjectId(eventId),

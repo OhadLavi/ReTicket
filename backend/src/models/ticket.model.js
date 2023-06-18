@@ -12,7 +12,8 @@ const ticketSchema = new mongoose.Schema({
     seller: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     buyer: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: false },
     fileIds: [{ type: String, required: true }],
-    description: { type: String, required: false }
+    description: { type: String, required: false },
+    orderId: { type: mongoose.Schema.Types.ObjectId, ref: 'Order', required: false },
   }, {
     timestamps: true,
     toJSON: {virtuals: true},

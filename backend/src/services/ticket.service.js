@@ -16,7 +16,7 @@ const pdfPoppler = require('pdf-poppler');
 const zxing = require('node-zxing')({ scale: 2 });
 // const { PDFParser } = require('pdf2json');
 
-async function processTicket(pdfBuffer, eventDate, savedFileId) {
+async function processTicket(pdfBuffer) {
   const pdfPath = path.join(__dirname, '..', 'uploads', 'pdf', 'temp.pdf');
   await fsPromises.writeFile(pdfPath, pdfBuffer);
   const imageDir = path.join(__dirname, '..', 'uploads', 'images');
@@ -27,18 +27,19 @@ async function processTicket(pdfBuffer, eventDate, savedFileId) {
     const qrCode = await detectAndReadQRCode(imagePath);
     const barcode = await detectAndReadBarcode(imagePath);
     const match = checkQRAndBarcodeMatch(qrCode, barcode);
-    const dateIsValid = checkDateIsValid(eventDate);
+    //const dateIsValid = checkDateIsValid(eventDate);
     let errorMessage = '';
     if (qrCode && barcode && !match) {
       errorMessage = 'Error: QR Code and Barcode do not match';
     } else if (!qrCode || !barcode) {
       errorMessage = 'Error: A valid ticket should contain both a QR Code and a Barcode';
     }
-    else if (!dateIsValid) {
-      errorMessage = 'Error: Ticket date is not valid';
-    }
-    const ticket = await parseTicketDetails(pdfBuffer, ++i, savedFileId);
-    ticket.valid = match && dateIsValid;
+    // else if (!dateIsValid) {
+    //   errorMessage = 'Error: Ticket date is not valid';
+    // }
+    const ticket = await parseTicketDetails(pdfBuffer, ++i);
+    ticket.valid = match 
+    //&& dateIsValid;
     ticket.errorMessage = errorMessage;
     results.push(ticket);
     await fsPromises.unlink(imagePath);
@@ -47,7 +48,7 @@ async function processTicket(pdfBuffer, eventDate, savedFileId) {
   return { validTickets: results.filter(ticket => ticket.valid).length, tickets: results };
 }
 
-async function parseTicketDetails(pdfBuffer, i, savedFileId) {
+async function parseTicketDetails(pdfBuffer, i) {
   const data = await pdfParse(pdfBuffer);
   const text = data.text;
   const lines = data.text.split('\n');
@@ -72,23 +73,27 @@ async function parseTicketDetails(pdfBuffer, i, savedFileId) {
       block += "\n" + lines[i-2].trim();
       block += "\n" + lines[i-1].trim();
     }
-    console.log("line " + i + " " + lines[i]);
   }
   const [date, time] = dateAndTime.split(' - ');
   const [month, day, year] = date.split('/');
   const eventDate = new Date(`20${year}-${month}-${day}T${time}:00`).toISOString();
   
-  console.log("fileId: " + savedFileId);
+  const newFile = new File({
+    data: pdfBuffer,
+    contentType: 'application/pdf',
+    name: `Ticket For ${artistName}`,
+  });
+  const savedFile = await newFile.save();
 
   const ticket = {
     artists: artistName,
     price: ticketPrice,
     venue: "Park hayarkon",
     eventDate: eventDate,
-    fileName: 'ticket.pdf',
     status: "On sale",
     description: `Gate: ${gate}, Block: ${block}`,
-    fileIds: [savedFileId]
+    fileName: 'ticket.pdf',
+    fileIds: [savedFile._id]
   };
 
   return ticket;
@@ -150,12 +155,14 @@ async function updateEventAvailableTickets(eventId, quantity) {
   return await Event.findByIdAndUpdate(eventId, { $inc: { availableTickets: -quantity, soldTickets: quantity } }, { new: true }); 
 }
 
-async function updateTicketStatus(eventId, buyerId) {
+async function updateTicketStatus(eventId, buyerId, orderId, quantity) {
+  console.log('updating ticket status');
   try {
     const soldDate = new Date().toISOString();
-    const ticket = await Ticket.findOne({ eventId: eventId, isSold: false });
-    if(!ticket) {
-      throw new Error('No available tickets found for this event');
+    const tickets = await Ticket.find({ eventId: eventId, isSold: false }).limit(quantity);
+    console.log('found tickets: ', tickets);
+    if(tickets.length < quantity) {
+      throw new Error('Not enough available tickets for this event');
     }
 
     const event = await Event.findById(eventId);
@@ -163,16 +170,33 @@ async function updateTicketStatus(eventId, buyerId) {
       console.error('Event not found');
     }
     else {
-      const sellerNotificationMessage = `You have sold a ticket for ${event.name}'s concert`;
-      const sellerNotification = new Notification({ userId: ticket.seller, message: sellerNotificationMessage, eventId: eventId, type: NotificationType.purchase });
+      const sellerNotificationMessage = `You have sold ${quantity} ticket(s) for ${event.name}'s concert`;
+      const sellerNotification = new Notification({ userId: tickets[0].seller, message: sellerNotificationMessage, eventId: eventId, type: NotificationType.purchase });
       await sellerNotification.save();
     }
-    return await Ticket.findByIdAndUpdate(ticket._id, { isSold: true, buyer: buyerId, soldDate }, { new: true });
+
+    const updatedTickets = await Promise.all(tickets.map((ticket) => {
+      console.log('updating ticket: ', ticket._id);
+      return Ticket.findByIdAndUpdate(ticket._id, 
+        { 
+          $set: {
+            isSold: true, 
+            buyer: buyerId, 
+            soldDate: soldDate,
+            orderId: orderId
+          } 
+        }, 
+        { new: true }
+      );      
+    }));
+
+    return updatedTickets;
   } catch(err) {
     console.error(err);
     throw new Error('Failed to update ticket status');
   }
 }
+
 
 async function getSellingTickets(userId) {
   const tickets = await Ticket.find({ seller: userId }).populate('eventId').populate('fileIds');
