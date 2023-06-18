@@ -14,6 +14,7 @@ export class LoginComponent implements OnInit {
   isSubmitted = false;
   returnUrl = '';
   loginError: string | null = null;
+  hidePassword = true;
   
   constructor(private formBuilder:FormBuilder, private userService:UserService, private actiavtedRouter:ActivatedRoute, private router:Router) {
     // this.userService.removeUserFromLocalStorage();
@@ -53,6 +54,14 @@ export class LoginComponent implements OnInit {
         }
       }
     );
+  }
+
+  onGoogleSignIn() {
+    // this.userService.googleLogin()
+    //   .then(() => {
+        
+    //   })
+    //   .catch(err => console.error(err));
   }
   
 

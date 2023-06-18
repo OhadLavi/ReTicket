@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { TicketUploadService } from 'src/app/services/ticket-upload.service';
 import { UserService } from 'src/app/services/user.service';
@@ -9,6 +9,7 @@ import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angula
 @Component({
   selector: 'app-sell-ticket',
   templateUrl: './sell-ticket.component.html',
+  styleUrls: ['./sell-ticket.component.css'],
   animations: [
     trigger('fade', [
       transition('void => *', [
@@ -19,6 +20,7 @@ import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angula
   ]
  })
 export class SellTicketComponent implements OnInit {
+  uploadedFiles: File[] = [];
   fileUploaded = false;
   ticketPrice = 0;
   tickets: Ticket[] = [];
@@ -35,8 +37,14 @@ export class SellTicketComponent implements OnInit {
   originalPrice: number = 0;
   ticketPriceControls: FormControl[] = [];
   ticketPriceValidators: Validators[] = [];
+  uploadSuccess = false;
+  containerHeight!: string;
 
-  constructor(private ticketUploadService: TicketUploadService, private userSrvice:UserService, private router: Router) { }
+  constructor(
+    private ticketUploadService: TicketUploadService,
+    private userSrvice:UserService, 
+    private router: Router,
+    private el: ElementRef) { }
 
   ngOnInit() {
     setTimeout(() => {
@@ -47,6 +55,8 @@ export class SellTicketComponent implements OnInit {
   onFileSelected(event: Event) {
     const file = (event.target as HTMLInputElement).files;
     if (file) {
+      let container = this.el.nativeElement.querySelector('#upload-container');
+      this.containerHeight = getComputedStyle(container).height;
       this.isLoading = true;
       this.errorMessage = '';
       for (let i = 0; i < file.length; i++) {
@@ -61,7 +71,6 @@ export class SellTicketComponent implements OnInit {
               } else if (!ticketResult.valid) {
                 this.errorMessage = ticketResult.errorMessage;
               } else {
-                this.fileUploaded = true;
                 ticketResult.eventDate = new Date(ticketResult.eventDate).toISOString().split('T')[0];
                 this.tickets.push(ticketResult);
                 this.ticketPriceControls.push(
@@ -73,8 +82,9 @@ export class SellTicketComponent implements OnInit {
                 this.ticketPriceValidators.push(
                   [Validators.required, Validators.min(1), Validators.max(ticketResult.price)]
                 );
-                
                 this.isLoading = false;
+                this.uploadSuccess = true;
+                setTimeout(() => { this.fileUploaded = true; this.uploadSuccess = false; }, 1200);
               }
             }
           },
@@ -85,7 +95,14 @@ export class SellTicketComponent implements OnInit {
         });
       }
     }
-  }  
+  } 
+
+  removeFile(index: number) {
+    this.uploadedFiles.splice(index, 1);
+    if (!this.uploadedFiles.length) {
+      this.fileUploaded = false;
+    }
+  }
 
 onSubmit() {
     this.isLoading = true; 

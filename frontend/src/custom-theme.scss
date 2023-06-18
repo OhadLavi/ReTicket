@@ -2,40 +2,37 @@
 @import "@angular/material/theming";
 @include mat.core();
 
-$my-custom-level: mat.define-typography-level(
-  $font-family: Roboto,
-  $font-weight: 400,
-  $font-size: 1.2rem,
-  $line-height: 1,
-  $letter-spacing: normal,
-);
+$ReTicket-primary: mat.define-palette(mat.$blue-palette, 500, 100, 900);
+$ReTicket-accent: mat.define-palette(mat.$blue-grey-palette, A200, A100, A400);
+$ReTicket-warn: mat.define-palette(mat.$red-palette);
 
-$frontend2-primary: mat.define-palette(mat.$teal-palette, 500, 100, 900);
-$frontend2-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
-$frontend2-warn: mat.define-palette(mat.$red-palette);
-
-$frontend2-theme: mat.define-light-theme((
+$ReTicket-theme: mat.define-light-theme((
   color: (
-    primary: $frontend2-primary,
-    accent: $frontend2-accent,
-    warn: $frontend2-warn,
+    primary: $ReTicket-primary,
+    accent: $ReTicket-accent,
+    warn: $ReTicket-warn,
   )
 ));
 
-@include mat.all-component-themes($frontend2-theme);
+@include mat.all-component-themes($ReTicket-theme);
 
-$frontend2-dark-theme: mat.define-dark-theme((
+$ReTicket-dark-theme: mat.define-dark-theme((
   color: (
-    primary: $frontend2-primary,
-    accent: $frontend2-accent,
-    warn: $frontend2-warn,
+    primary: $ReTicket-primary,
+    accent: $ReTicket-accent,
+    warn: $ReTicket-warn,
   )
 ));
 
 .darkMode {
-  @include mat.all-component-themes($frontend2-dark-theme);
+  @include mat.all-component-themes($ReTicket-dark-theme);
 }
 
-:root {
-  --color-primary: #{mat-color($frontend2-primary)};
-}
+// .lightMode {
+//   @include mat.all-component-themes($ReTicket-theme);
+// }
+
+// :root {
+//   --color-primary: #{mat-color($ReTicket-primary)};
+// }
+

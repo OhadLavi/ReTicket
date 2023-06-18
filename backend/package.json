@@ -25,6 +25,7 @@
     "fast-levenshtein": "^3.0.0",
     "fontconfig": "^0.5.0",
     "fs": "^0.0.1-security",
+    "google-auth-library": "^8.8.0",
     "googleapis": "^118.0.0",
     "graphicsmagick": "^0.0.1",
     "gridfs-stream": "^1.1.1",

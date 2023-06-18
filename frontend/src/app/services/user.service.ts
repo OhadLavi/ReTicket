@@ -14,6 +14,8 @@ import { IUserUpdateProfile } from '../shared/interfaces/IUserUpdateProfile';
 export class UserService {
   private userSubject = new BehaviorSubject<User>(this.getUserFromLocalStorage());
   public userObservable:Observable<User>;
+  private readonly darkModeLSKey = 'DARK_MODE_ON';
+
   constructor(private http:HttpClient) { 
     this.userObservable = this.userSubject.asObservable();
   }
@@ -132,6 +134,7 @@ export class UserService {
     this.userSubject.next(new User());
     localStorage.removeItem('user');
     localStorage.removeItem('Cart');
+    localStorage.removeItem(this.darkModeLSKey);
     window.location.href = "/";
   }
 
@@ -143,6 +146,15 @@ export class UserService {
     let user = this.getUserFromLocalStorage();
     user.balance = newBalance;
     this.setUserToLocalStorage(user);
+  }
+
+  setThemePreference(isDarkMode: boolean) {
+    localStorage.setItem(this.darkModeLSKey, String(isDarkMode));
+  }
+
+  getThemePreference(): boolean {
+    const savedPref = localStorage.getItem(this.darkModeLSKey);
+    return savedPref !== null ? savedPref === 'true' : true;
   }
   
 }

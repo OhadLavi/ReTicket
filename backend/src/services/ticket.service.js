@@ -66,9 +66,13 @@ async function parseTicketDetails(pdfBuffer, i, savedFileId) {
     if (lines[i].includes('₪')) {
       const priceMatch = lines[i-3].match(/(\d+\.\d{2})/);
       ticketPrice = priceMatch ? priceMatch[1] : null;
-    } else if (lines[i].includes('Block:') && lines[i - 5]) {
-      block = lines[i - 5].trim();
+    } else if (lines[i].includes('Block:') && lines[i]) {
+      block = lines[i-4].trim();
+      block += "\n" + lines[i-3].trim();
+      block += "\n" + lines[i-2].trim();
+      block += "\n" + lines[i-1].trim();
     }
+    console.log("line " + i + " " + lines[i]);
   }
   const [date, time] = dateAndTime.split(' - ');
   const [month, day, year] = date.split('/');
@@ -83,7 +87,7 @@ async function parseTicketDetails(pdfBuffer, i, savedFileId) {
     eventDate: eventDate,
     fileName: 'ticket.pdf',
     status: "On sale",
-    description: `Block: ${block}, Gate: ${gate}`,
+    description: `Gate: ${gate}, Block: ${block}`,
     fileIds: [savedFileId]
   };
 

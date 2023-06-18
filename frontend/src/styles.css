@@ -1,5 +1,3 @@
-@import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
-
 html, body {
     min-height: 100vh;
     height: 100%;
@@ -8,9 +6,8 @@ html, body {
 }
 
 :host {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    top: 0;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    overflow: auto;
 }

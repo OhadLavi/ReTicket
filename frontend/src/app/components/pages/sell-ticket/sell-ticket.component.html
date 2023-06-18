@@ -2,12 +2,25 @@
   <div class="row bg-white rounded shadow-sm p-4 mb-4">
     <div class="col-md-9 mx-auto">
       <h2 class="text-center">Upload Ticket File</h2>
-      <div id="upload-container" *ngIf="!fileUploaded" class="card my-4 border-dashed" [@fade]>
+      <div id="upload-container" *ngIf="!fileUploaded && !isLoading && !uploadSuccess" class="card my-4 border-dashed" [@fade]>
         <div class="card-body text-center p-4">
+          <mat-icon class="m-auto icon-display" aria-hidden="false">cloud_upload</mat-icon>
           <p class="my-2">Drag and drop your file here</p>
-          <p>or</p>
+          <p class="mt-1 h6">Or</p>
           <input type="file" id="file-input" class="my-2" (change)="onFileSelected($event)" accept=".pdf,.doc,.docx">
           <p class="my-2">Supported file types: .pdf, .png, .jpg .jpeg</p>
+        </div>
+      </div>
+      <div id="uploading-container" *ngIf="isLoading && !uploadSuccess" [style.height]="containerHeight" class="card my-4 border-dashed d-flex justify-content-center align-items-center" [@fade]>
+        <div class="card-body text-center p-4 d-flex flex-direction-column justify-content-center align-items-center">
+          <mat-spinner [diameter]="35"></mat-spinner>
+          <p id="uploading-text" class="my-2 h4">Uploading file<span class="dots"></span></p>
+        </div>
+      </div>
+      
+      <div id="uploaded-container" *ngIf="uploadSuccess && !fileUploaded" [style.height]="containerHeight" class="card my-4 border-dashed d-flex justify-content-center align-items-center" [@fade]>
+        <div class="card-body text-center p-4 d-flex justify-content-center align-items-center">
+          <mat-icon class="m-auto icon-display" aria-hidden="false">done</mat-icon>
         </div>
       </div>
       <div *ngIf="isEventDatePassedFlag" class="alert alert-danger mt-4">
@@ -16,7 +29,7 @@
           <div>The event date has already passed.</div>
         </div>
       </div>
-      <form id="ticket-info-form" *ngIf="fileUploaded" (ngSubmit)="onSubmit()" class="my-4 border rounded p-4" [@fade]>
+      <form id="ticket-info-form" *ngIf="fileUploaded && !isLoading && !uploadSuccess" (ngSubmit)="onSubmit()" class="my-4 border rounded p-4" [@fade]>
         <p>
           <a class="btn btn-link" (click)="resetForm()">
             <i class="fas fa-arrow-left"></i> Back to Upload
@@ -55,8 +68,8 @@
               <div class="form-group mb-4">
                 <mat-form-field class="w-100">
                   <mat-label>Event Description</mat-label>
-                  <textarea matInput id="eventDescription" [(ngModel)]="ticket.description" name="description" readonly></textarea>
-                </mat-form-field>
+                  <textarea matInput id="eventDescription" [(ngModel)]="ticket.description" name="description" rows="4" readonly></textarea>
+              </mat-form-field>              
               </div>             
             </div>
           </mat-tab>

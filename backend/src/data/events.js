@@ -8,9 +8,7 @@ const events = [
         image: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/OneRepublic_2015_Tour_%28cropped%29.jpg/1200px-OneRepublic_2015_Tour_%28cropped%29.jpg",
         price: 100,
         availableTickets: 100,
-        soldTickets: 0,
-        registeredUsers: [],
-        registeredUsersCount: 0
+        soldTickets: 0
     },
     {
         name: "The Weeknd",
@@ -21,9 +19,7 @@ const events = [
         image: "https://upload.wikimedia.org/wikipedia/commons/a/a0/The_Weeknd_Portrait_by_Brian_Ziff.jpg",
         price: 150,
         availableTickets: 200,
-        soldTickets: 0,
-        registeredUsers: [],
-        registeredUsersCount: 0
+        soldTickets: 0
     },
     {
         name: "Justin Bieber",
@@ -34,9 +30,7 @@ const events = [
         image: "https://media.vanityfair.com/photos/63d16b6b14e07ec307e8d624/3:2/w_2994,h_1996,c_limit/GettyImages-1414522654.jpg",
         price: 120,
         availableTickets: 150,
-        soldTickets: 0,
-        registeredUsers: [],
-        registeredUsersCount: 0
+        soldTickets: 0
     },
     {
         name: "Ariana Grande",
@@ -47,9 +41,7 @@ const events = [
         image: "https://hips.hearstapps.com/hmg-prod/images/episode-0862-pictured-singer-ariana-grande-performs-no-news-photo-953566612-1551210521.jpg?crop=0.766xw:0.575xh;0.0753xw,0.255xh&resize=1200:*",
         price: 100,
         availableTickets: 100,
-        soldTickets: 0,
-        registeredUsers: [],
-        registeredUsersCount: 0
+        soldTickets: 0
     },
     {
         name: "BTS",
@@ -60,9 +52,7 @@ const events = [
         image: "https://i.scdn.co/image/ab6761610000e5eb5704a64f34fe29ff73ab56bb",
         price: 100,
         availableTickets: 100,
-        soldTickets: 0,
-        registeredUsers: [],
-        registeredUsersCount: 0
+        soldTickets: 0
     },
     {
         name: "Harry Styles",
@@ -73,9 +63,7 @@ const events = [
         image: "https://m.media-amazon.com/images/M/MV5BMTUxMzU2MTk1OF5BMl5BanBnXkFtZTgwNzg4NjAwMzI@._V1_.jpg",
         price: 100,
         availableTickets: 100,
-        soldTickets: 0,
-        registeredUsers: [],
-        registeredUsersCount: 0
+        soldTickets: 0
     },
     {
         name: "Dua Lipa",
@@ -86,9 +74,7 @@ const events = [
         image: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/DuaLipaO2020522_%28101_of_110%29_%2852052470251%29_%28cropped%29.jpg/1200px-DuaLipaO2020522_%28101_of_110%29_%2852052470251%29_%28cropped%29.jpg",
         price: 100,
         availableTickets: 100,
-        soldTickets: 0,
-        registeredUsers: [],
-        registeredUsersCount: 0
+        soldTickets: 0
     },
     {
         name: "Ed Sheeran",
@@ -99,9 +85,7 @@ const events = [
         image: "https://lh3.googleusercontent.com/jQoBIAS6JjFGpcqQY1M_Mh3AasOvFENCdVRxkgax1a0K6qiq7AgE3MbJ6Jtt-Jndcarvoawmrg66KTny=w2880-h1200-p-l90-rj",
         price: 100,
         availableTickets: 100,
-        soldTickets: 0,
-        registeredUsers: [],
-        registeredUsersCount: 0
+        soldTickets: 0
     },
     {
         name: "Taylor Swift",
@@ -112,9 +96,7 @@ const events = [
         image: "https://pyxis.nymag.com/v1/imgs/67c/875/52bd43d25619788121137d066059738be4-taylor-swift.jpg",
         price: 100,
         availableTickets: 100,
-        soldTickets: 0,
-        registeredUsers: [],
-        registeredUsersCount: 0
+        soldTickets: 0
     }
 ];
         

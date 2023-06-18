@@ -1,3 +1,17 @@
+
+:host {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    overflow: auto;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .mat-mdc-form-field-error {
+    font-size: 0.85rem;
+  }
+  
 .gradient-custom {
     /* fallback for old browsers */
     background: #6a11cb;

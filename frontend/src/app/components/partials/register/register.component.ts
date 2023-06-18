@@ -17,13 +17,15 @@ export class RegisterComponent implements OnInit {
   returnUrl: '';
   emailInUseError = false;
   passwordMismatchError = false;
+  hidePassword = true;
+  hideConfirmPassword = true;
+  generalError = false;
 
   constructor(
     private formBuilder: FormBuilder,
     private userService: UserService,
     private activatedRoute: ActivatedRoute,
-    private router: Router,
-    //private authenticationService: AuthenticationService
+    private router: Router
   ) { 
     this.returnUrl = this.activatedRoute.snapshot.queryParams.returnUrl || '/';
   }
@@ -31,8 +33,8 @@ export class RegisterComponent implements OnInit {
   ngOnInit(): void {
     this.registerForm = this.formBuilder.group({
       name: ['', [Validators.required, Validators.minLength(2)]],
-      password: ['', [Validators.required, Validators.minLength(4)]],
-      confirmPassword: ['', [Validators.required, Validators.minLength(4)]],
+      password: ['', [Validators.required, Validators.minLength(1)]],
+      confirmPassword: ['', [Validators.required, Validators.minLength(1)]],
       email: ['', [Validators.required, Validators.email]]
     }, {
       validator: PasswordsMatchValidator('password', 'confirmPassword')
@@ -46,28 +48,34 @@ export class RegisterComponent implements OnInit {
     this.isSubmitted = true;
     this.emailInUseError = false;
     this.passwordMismatchError = false;
-    
+  
     if (this.registerForm.invalid) {
       return;
     }
-    
+  
     const fv = this.registerForm.value;
     const user: IUserRegister = {
       name: fv.name,
       password: fv.password,
-      confirmPassword: fv.confirmPassword,
       email: fv.email
     };
-    
+  
     this.userService.register(user).subscribe(
       user => {
         this.router.navigateByUrl(this.returnUrl);
       },
       error => {
-        if (error.status === 400) {
+        if (error.status === 400 && error.error.error === 'User already exists') {
           this.emailInUseError = true;
+          this.fc.email.markAsTouched();
+          this.fc.email.setErrors({'emailInUse': true});
+        } else if (error.status === 500 && error.error.error === 'Error registering user') {
+          this.generalError = true;
         }
       }
     );
   }
+
+
+  
 }

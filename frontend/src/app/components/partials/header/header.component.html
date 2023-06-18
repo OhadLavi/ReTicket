@@ -8,26 +8,25 @@
 		<img [src]="'http://localhost:5000/' + user.imageURL" class="user-image">
 		Profile
 	</button>
-	  <mat-menu #menu="matMenu">
-		<button mat-menu-item>
-		  <mat-icon>account_circle</mat-icon>
-		  <span [routerLink]="['/account/profile']">Profile</span>
+	<mat-menu #menu="matMenu">
+		<button mat-menu-item [routerLink]="['/account/profile']">
+			<mat-icon>account_circle</mat-icon>
+			<span>Profile</span>
 		</button>
-		<button mat-menu-item>
+		<button mat-menu-item [routerLink]="['/sellTicket']">
 			<mat-icon>receipt</mat-icon>
-			<span [routerLink]="['/sellTicket']">Sell a Ticket</span>
-		  </button>
-		  
-		  <button mat-menu-item>
-			<mat-icon>event</mat-icon>
-			<span [routerLink]="['/account/tickets']">My Tickets</span>
-		  </button>
-		  
-		<button mat-menu-item>
-		  <mat-icon>exit_to_app</mat-icon>
-		  <a (click)="logout()">Logout</a>
+			<span>Sell a Ticket</span>
 		</button>
-	  </mat-menu>
+		<button mat-menu-item [routerLink]="['/account/tickets']">
+			<mat-icon>event</mat-icon>
+			<span>My Tickets</span>
+		</button>
+		<button mat-menu-item (click)="logout()">
+			<mat-icon>exit_to_app</mat-icon>
+			<span>Logout</span>
+		</button>
+	</mat-menu>
+	
 	  <button *ngIf="isAuth" mat-icon-button class="example-icon" aria-label="Example icon-button with share icon" [matMenuTriggerFor]="notificationsMenu">
 		<mat-icon matBadge="{{ notificationCount }}" matBadgeColor="warn">notifications</mat-icon>
 	  </button>
