@@ -2,7 +2,7 @@
   <div class="row justify-content-center">
     <div class="col-md-6">
       <mat-card class="rounded">
-        <mat-card-title class="text-center mb-4">Create an Account</mat-card-title>
+        <mat-card-title class="text-center pt-4 mb-4">Create an Account</mat-card-title>
         <mat-card-content>
           <form [formGroup]="registerForm" (ngSubmit)="submit()">
             <div class="row mb-3">
@@ -22,6 +22,7 @@
                   <input matInput type="email" formControlName="email" required email>
                   <mat-error *ngIf="fc.email.errors?.required">Email is required</mat-error>
                   <mat-error *ngIf="fc.email.errors?.email">Invalid email format</mat-error>
+                  <mat-error *ngIf="fc.email.errors?.emailInUse">Email is already in use</mat-error>
                 </mat-form-field>
               </div>
             </div>
@@ -29,7 +30,10 @@
               <div class="col-md-12">
                 <mat-form-field appearance="fill" class="w-100">
                   <mat-label>Password</mat-label>
-                  <input matInput type="password" formControlName="password" required minlength="4">
+                  <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password" required >
+                  <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword">
+                    <mat-icon>{{hidePassword ? 'visibility' : 'visibility_off'}}</mat-icon>
+                  </button>
                   <mat-error *ngIf="fc.password.errors?.required">Password is required</mat-error>
                   <mat-error *ngIf="fc.password.errors?.minlength">Password should have at least 4 characters</mat-error>
                 </mat-form-field>
@@ -39,10 +43,13 @@
               <div class="col-md-12">
                 <mat-form-field appearance="fill" class="w-100">
                   <mat-label>Confirm Password</mat-label>
-                  <input matInput type="password" formControlName="confirmPassword" required minlength="4">
+                  <input matInput [type]="hideConfirmPassword ? 'password' : 'text'" formControlName="confirmPassword" required >
+                  <button mat-icon-button matSuffix (click)="hideConfirmPassword = !hideConfirmPassword; $event.stopPropagation(); $event.preventDefault()">
+                    <mat-icon>{{hideConfirmPassword ? 'visibility' : 'visibility_off'}}</mat-icon>
+                  </button>
                   <mat-error *ngIf="fc.confirmPassword.errors?.required">Confirm Password is required</mat-error>
                   <mat-error *ngIf="fc.confirmPassword.errors?.minlength">Confirm Password should have at least 4 characters</mat-error>
-                  <mat-error *ngIf="fc.confirmPassword.errors?.passwordsMismatch">Passwords do not match</mat-error>
+                  <mat-error *ngIf="fc.confirmPassword.errors?.passwordsMatch">Passwords do not match</mat-error>
                 </mat-form-field>
               </div>
             </div>
@@ -73,12 +80,9 @@
             </div>
           </div>
           <p class="text-center text-muted mt-5 mb-0">Already have an account? <a routerLink="/login" class="fw-bold text-body"><u>Login here</u></a></p>
-          <div *ngIf="emailInUseError" class="alert alert-danger mt-3 mx-2">
-            Email is already in use
-          </div>
-          <div *ngIf="passwordMismatchError" class="alert alert-danger mt-3 mx-2">
-            Passwords do not match
-          </div>
+          <div *ngIf="generalError" class="alert alert-danger mt-3 mx-2">
+            An error occurred while registering. Please try again.
+          </div>          
         </mat-card-content>
       </mat-card>
     </div>

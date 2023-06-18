@@ -1,21 +1,57 @@
+:host {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    overflow: auto;
+  }
+  
 /* Dashed border for mat-card-content */
 mat-card-content {
-    border: 3px dashed #717386;
-    transition: border-color 0.25s ease-in-out;
+
 }
+
+
 
 mat-card-content:hover {
     border-color: #292a3a; /* Change to the desired color */
 }
 
+.icon-display {
+    transform: scale(2);
+    color: #9ca3af;
+ }
+
+ .dots:after {
+    content: '';
+    display: inline-block;
+    animation: dots 1s steps(5, end) infinite;
+  }
+  
+  @keyframes dots {
+    0%, 20% { content: '.'; }
+    40% { content: '..'; }
+    60% { content: '...'; }
+    80%, 100% { content: ''; }
+  }
+
+  #uploading-container .card-body {
+    flex-direction: column;
+  }
+  
+  
 /* Color change on hover */
 #upload-container {
-    background-color: #fff; /* Change as per your requirement */
+    background-color: #f9fafb; /* Change as per your requirement */
+    border: 3px dashed #eaecef;
+    transition: border-color 0.25s ease-in-out;
+    cursor: pointer;
 }
 
 /* Color change on hover */
 #upload-container:hover {
-    background-color: #e0e0e0; /* Change as per your requirement */
+    background-color: #f3f4f6; /* Change as per your requirement */
+    border-color: #dbdee3; /* Change to the desired color */
+    transition: background-color 0.25s ease-in-out;
 }
 
 .highlight-on-drag-over:hover {

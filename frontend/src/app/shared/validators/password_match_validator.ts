@@ -1,7 +1,7 @@
 import { AbstractControl } from '@angular/forms';
 
 export function PasswordsMatchValidator(password: string, confirmPassword: string) {
-    const validator = (control: AbstractControl) => {
+    return (control: AbstractControl) => {
         const passwordControl = control.get(password);
         const confirmPasswordControl = control.get(confirmPassword);
 
@@ -9,21 +9,19 @@ export function PasswordsMatchValidator(password: string, confirmPassword: strin
             return null;
         }
 
-        if(passwordControl.value != confirmPasswordControl.value) {
-            confirmPasswordControl.setErrors({passwordsMatch: true});
-        }
-        else {
+        if (passwordControl.value !== confirmPasswordControl.value) {
+            confirmPasswordControl.setErrors({ passwordsMatch: true });
+            return { passwordsMatch: true };  // return error here.
+        } else {
             const errors = confirmPasswordControl.errors;
-            if(errors) {
+            if (errors) {
                 delete errors.passwordsMatch;
-                if(!Object.keys(errors).length) {
+                if (!Object.keys(errors).length) {
                     confirmPasswordControl.setErrors(null);
                 }
             }
-            else {
-                return null;
-            }
         }
-        return validator;
+
+        return null;  // If validation is successful, return null
     }
 }

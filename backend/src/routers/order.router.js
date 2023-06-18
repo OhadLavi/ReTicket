@@ -47,7 +47,7 @@ router.post('/pay', asyncHandler(async (req, res) => {
     order.paymentId = paymentId;
     order.orderStatus = OrderStatus.PAYED;
     await order.save();
-    //await sendTicketsEmail(order, order.email);
+    await sendTicketsEmail(order, order.email);
     const tickets = await Promise.all(order.items.map(async item => {
       return await Ticket.findOne({ eventId: item.event, buyer: order.userId });
     }));

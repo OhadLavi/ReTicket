@@ -7,6 +7,7 @@ const UserModel = require('../models/user.model');
 const bcrypt = require('bcryptjs');
 const multer = require('multer');
 const path = require('path');
+const { OAuth2Client } = require('google-auth-library');
 const paypal = require('paypal-rest-sdk');
 paypal.configure({
     'mode': process.env.PAYPAL_MODE,
@@ -15,34 +16,36 @@ paypal.configure({
 });
 
 router.post("/register", asyncHandler(async(req, res) => {
-    console.log("register" + req.body);
-    const {name, password, confirmPassword, email} = req.body;
-    const user = await UserModel.findOne({email});
-    if(user){
-        res.status(400).json({error: "User already exists"});
-        return;
-    }
-    const encrypedPassword = await bcrypt.hash(password, 10);
-    try{
-        photo = './uploads/user.png';
-        const newUser = await UserModel.create({name, email: email.toLowerCase(), password: encrypedPassword, imageURL: photo});
-        res.status(200).json(generateTokenResponse(newUser));
-    } catch(err){
-        console.log(err);
-        res.status(500).json({error: "Error registering user"});
-    }
+  console.log("register" + req.body);
+  const {name, password, confirmPassword, email} = req.body;
+  const user = await UserModel.findOne({email});
+  if(user){
+      res.status(400).json({error: "User already exists"});
+      return;
+  }
+  const encrypedPassword = await bcrypt.hash(password, 10);
+  try{
+      photo = './uploads/user.png';
+      const newUser = await UserModel.create({name, email: email.toLowerCase(), password: encrypedPassword, imageURL: photo});
+      res.status(200).json(generateTokenResponse(newUser));
+  } catch(err){
+      console.log(err);
+      res.status(500).json({error: "Error registering user"});
+  }
 }));
 
 router.post("/login", asyncHandler(
-    async (req,res) => {
-        const {email, password} = req.body;
-        const user = await UserModel.findOne({email});
-        if(user){
-            res.status(200).json(generateTokenResponse(user));
-        } else{
-            res.status(401).json({error: "Invalid login. Please check your email and password."});
-        }
-}));
+  async (req, res) => {
+      const { email, password } = req.body;
+      const user = await UserModel.findOne({ email });
+      if (user && await user.isValidPassword(password)) {
+          res.status(200).json(generateTokenResponse(user));
+      } else {
+          res.status(401).json({ error: "Invalid login. Please check your email and password." });
+      }
+  }
+));
+
 
 router.put("/update/:id", asyncHandler(async (req, res) => {
     console.log("update user");

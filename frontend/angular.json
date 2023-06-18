@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "frontend2": {
+    "reticket": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -13,7 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/frontend2",
+            "outputPath": "dist/reticket",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": [
@@ -66,10 +66,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "frontend2:build:production"
+              "browserTarget": "reticket:build:production"
             },
             "development": {
-              "browserTarget": "frontend2:build:development"
+              "browserTarget": "reticket:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -77,7 +77,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "frontend2:build"
+            "browserTarget": "reticket:build"
           }
         },
         "test": {

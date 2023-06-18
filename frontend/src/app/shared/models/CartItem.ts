@@ -8,7 +8,7 @@ export class CartItem {
     constructor(public eventM:EventM, public ticket:Ticket) {
         this.event = eventM.id;
         this.ticketId = ticket.id;
-        this.price = (ticket.price / this.exchangeRate);
+        this.price = (Math.round(ticket.price / this.exchangeRate * 100) / 100);
         this.quantity = 1;
     }
 

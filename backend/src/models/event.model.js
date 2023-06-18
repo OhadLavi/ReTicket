@@ -59,16 +59,6 @@ const eventSchema = new mongoose.Schema({
     min: [0, 'Event wantedTickets cannot be less than 0'],
     default: 0
   },
-  registeredUsers: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
-  }],
-  registeredUsersCount: {
-    type: Number,
-    required: [false, 'Event registeredUsersCount is required'],
-    min: [0, 'Event registeredUsersCount cannot be less than 0'],
-    default: 0
-  },
   waitingList: [
     {
       userId: { 
