@@ -52,42 +52,51 @@ async function sendEmail(mailOptions) {
 }
 
 async function sendTicketsEmail(order, email) {
-  const itemsWithDetails = await Promise.all(
-    order.items.map(async (item, index) => {
-      const eventDetails = await findEventDetailsByEventId(item.event);
-      const ticket = await Ticket.findOne({ eventId: item.event, buyer: order.userId });
-      console.log(ticket);
-      const file = await File.findById(ticket.fileIds[0].toString());
-      const fileData = Buffer.from(file.data).toString('base64');
+  const itemsGroupedByEvent = order.items.reduce((groupedItems, item) => {
+      (groupedItems[item.event] = groupedItems[item.event] || []).push(item);
+      return groupedItems;
+  }, {});
+  const itemsWithDetails = await Promise.all(Object.entries(itemsGroupedByEvent).map(async ([eventId, items]) => {
+      const eventDetails = await findEventDetailsByEventId(eventId);
+      const tickets = await Ticket.find({ eventId, buyer: order.userId, orderId: order._id });
+
       const event = {
-        start: [new Date(eventDetails.date).getFullYear(), new Date(eventDetails.date).getMonth()+1, new Date(eventDetails.date).getDate()],
-        duration: { hours: 2 },
-        title: eventDetails.name,
-        description: `Location: ${eventDetails.location}\nPrice: ${order.items[index].price}`,
-        location: eventDetails.location,
+          start: [new Date(eventDetails.date).getFullYear(), new Date(eventDetails.date).getMonth() + 1, new Date(eventDetails.date).getDate()],
+          duration: { hours: 2 },
+          title: eventDetails.name,
+          description: `Location: ${eventDetails.location}\nPrice: ${items[0].price}`,
+          location: eventDetails.location,
       };
       const { error, value } = ics.createEvent(event);
       if (error) {
-        console.log("error creating ics: " + error);
-        return;
+          console.log("error creating ics: " + error);
+          return;
       }
+      
+      const ticketsDetails = await Promise.all(tickets.map(async (ticket) => {
+          const file = await File.findById(ticket.fileIds[0].toString());
+          const fileData = Buffer.from(file.data).toString('base64');
+          return { data: fileData, contentType: file.contentType, name: file.name };
+      }));
+      
+      // Return the details of this group of tickets
+      return { ...items[0], eventDetails, icsEvent: value, ticketFiles: ticketsDetails };
+  }));
 
-      return { ...item, eventDetails, icsEvent: value, ticketFile: { data: fileData, contentType: file.contentType, name: file.name } };
-    })
-  );
+  const itemsWithDetailsFlattened = itemsWithDetails.flat();
 
-  const attachments = itemsWithDetails.map((item, index) => ([
+  const attachments = itemsWithDetailsFlattened.map((item, index) => ([
     {
       filename: `${item.eventDetails.name}.ics`,
       content: item.icsEvent,
       contentType: 'text/calendar',
     },
-    {
-      filename: item.ticketFile.name,
-      content: item.ticketFile.data,
-      contentType: item.ticketFile.contentType,
+    ...item.ticketFiles.map(ticketFile => ({
+      filename: ticketFile.name,
+      content: ticketFile.data,
+      contentType: ticketFile.contentType,
       encoding: 'base64'
-    }
+    }))
   ])).flat();
 
   const mailOptions = {
@@ -96,13 +105,13 @@ async function sendTicketsEmail(order, email) {
     subject: `Your Tickets for ${order.items.length} events`,
     html: `
       <h1>Your Tickets Details</h1>
-      ${itemsWithDetails.map((item, index) => {
+      ${itemsWithDetailsFlattened.map((item, index) => {
         return `
           <div style="margin: 1em; padding: 1em; border: 1px solid #ddd; dir: ltr;">
             <h2>${item.eventDetails.name}</h2>
             <p><strong>Event Date:</strong> ${new Date(item.eventDetails.date).toLocaleDateString()}</p>
             <p><strong>Location:</strong> ${item.eventDetails.location}</p>
-            <p><strong>Price:</strong> ${order.items[index].price}</p>
+            <p><strong>Price:</strong> </p>
             <p>See attached files to add this event to your calendar and view your ticket.</p>
           </div>
         `;
@@ -110,7 +119,6 @@ async function sendTicketsEmail(order, email) {
     `,
     attachments: attachments
   };
-
   sendEmail(mailOptions);
 }
 

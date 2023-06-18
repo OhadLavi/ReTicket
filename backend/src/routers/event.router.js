@@ -173,7 +173,6 @@ router.post('/transcribeAudio', upload.single('audio'), async (req, res) => {
     const confidenceEn = responseEn.results
         .map(result => result.alternatives[0].confidence)
         .reduce((a, b) => a + b, 0) / responseEn.results.length;
-    console.log(confidenceEn);
     let transcription = transcriptionEn;
 
     if (confidenceEn < 0.6) {

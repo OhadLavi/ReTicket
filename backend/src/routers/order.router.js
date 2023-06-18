@@ -22,7 +22,6 @@ router.post('/create', asyncHandler(async (req, res) => {
   res.send(newOrder);
 }));
 
-
 router.get('/newOrder', asyncHandler(async (req, res) => {
   const order = await getNewOrder(req);
   if (order)
@@ -37,21 +36,20 @@ router.post('/pay', asyncHandler(async (req, res) => {
   if (!order)
     return res.status(400).send('Order Not Found!');
   try {
-    await Promise.all(order.items.map(async item => {
-      console.log(item.event);
+    const allTickets = [];
+
+    for (const item of order.items) {
       await updateEventAvailableTickets(item.eventM, item.quantity);
-      await updateTicketStatus(item.event, order.userId);
-      const ticket = await Ticket.findOne({ eventId: item.event }).exec();
-      await User.findByIdAndUpdate(ticket.seller, { $inc: { balance: item.price * item.quantity } }).exec();
-    }));
+      const tickets = await updateTicketStatus(item.event, order.userId, order._id, item.quantity);
+      allTickets.push(...tickets);
+      await User.findByIdAndUpdate(tickets[0].seller, { $inc: { balance: item.price * item.quantity } }).exec();
+    }
+    
     order.paymentId = paymentId;
     order.orderStatus = OrderStatus.PAYED;
     await order.save();
     await sendTicketsEmail(order, order.email);
-    const tickets = await Promise.all(order.items.map(async item => {
-      return await Ticket.findOne({ eventId: item.event, buyer: order.userId });
-    }));
-    const ticket = tickets[0];
+    const ticket = allTickets[0];
     const pdfFile = await File.findById(ticket.fileIds[0]);
     res.send({orderId: order._id, fileData: Buffer.from(pdfFile.data).toString('base64'), fileName: 'YourTicket.pdf'});
   } catch (err) {
