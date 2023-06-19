@@ -42,7 +42,8 @@ router.post('/pay', asyncHandler(async (req, res) => {
       await updateEventAvailableTickets(item.eventM, item.quantity);
       const tickets = await updateTicketStatus(item.event, order.userId, order._id, item.quantity);
       allTickets.push(...tickets);
-      await User.findByIdAndUpdate(tickets[0].seller, { $inc: { balance: item.price * item.quantity } }).exec();
+      const roundedBalance = Math.round((item.price * item.quantity) * 100) / 100;
+      await User.findByIdAndUpdate(tickets[0].seller, { $inc: { balance: roundedBalance } }).exec();
     }
     
     order.paymentId = paymentId;

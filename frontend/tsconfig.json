@@ -29,6 +29,8 @@
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
     "strictTemplates": false,
-    "enableIvy": true
+    "enableIvy": true,
+    "types": ["googlemaps"],
+    "compilationMode": "partial"
   }
 }
