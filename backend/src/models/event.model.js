@@ -59,6 +59,16 @@ const eventSchema = new mongoose.Schema({
     min: [0, 'Event wantedTickets cannot be less than 0'],
     default: 0
   },
+  favorites: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+  }],
+  numberOfLikes: {
+    type: Number,
+    required: [false, 'Event likes is required'],
+    min: [0, 'Event likes cannot be less than 0'],
+    default: 0
+  },  
   waitingList: [
     {
       userId: { 

@@ -2,21 +2,15 @@
   <div class="row justify-content-center">
     <div class="col-md-6">
       <mat-card class="rounded">
-        <mat-card-title class="text-center pt-4 mb-4">Create an Account</mat-card-title>
+        <mat-card-title class="text-center mb-4">Create an Account</mat-card-title>
         <mat-card-content>
           <form [formGroup]="registerForm" (ngSubmit)="submit()">
-            <div class="row mb-3">
-              <div class="col-md-12">
                 <mat-form-field appearance="fill" class="w-100">
                   <mat-label>Your Name</mat-label>
                   <input matInput formControlName="name" required minlength="2">
                   <mat-error *ngIf="fc.name.errors?.required">Name is required</mat-error>
                   <mat-error *ngIf="fc.name.errors?.minlength">Name should have at least 2 characters</mat-error>
                 </mat-form-field>
-              </div>
-            </div>
-            <div class="row mb-3">
-              <div class="col-md-12">
                 <mat-form-field appearance="fill" class="w-100">
                   <mat-label>Your Email</mat-label>
                   <input matInput type="email" formControlName="email" required email>
@@ -24,10 +18,6 @@
                   <mat-error *ngIf="fc.email.errors?.email">Invalid email format</mat-error>
                   <mat-error *ngIf="fc.email.errors?.emailInUse">Email is already in use</mat-error>
                 </mat-form-field>
-              </div>
-            </div>
-            <div class="row mb-3">
-              <div class="col-md-12">
                 <mat-form-field appearance="fill" class="w-100">
                   <mat-label>Password</mat-label>
                   <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password" required >
@@ -37,10 +27,6 @@
                   <mat-error *ngIf="fc.password.errors?.required">Password is required</mat-error>
                   <mat-error *ngIf="fc.password.errors?.minlength">Password should have at least 4 characters</mat-error>
                 </mat-form-field>
-              </div>
-            </div>
-            <div class="row mb-3">
-              <div class="col-md-12">
                 <mat-form-field appearance="fill" class="w-100">
                   <mat-label>Confirm Password</mat-label>
                   <input matInput [type]="hideConfirmPassword ? 'password' : 'text'" formControlName="confirmPassword" required >
@@ -51,33 +37,22 @@
                   <mat-error *ngIf="fc.confirmPassword.errors?.minlength">Confirm Password should have at least 4 characters</mat-error>
                   <mat-error *ngIf="fc.confirmPassword.errors?.passwordsMatch">Passwords do not match</mat-error>
                 </mat-form-field>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-12">
-                <div class="form-group text-right">
-                  <button mat-raised-button color="primary" class="float-end btn-lg">Register</button>
-                </div>
-              </div>
-            </div>
+                <button mat-raised-button color="primary" class="float-end btn-lg">Register</button>
           </form>
-          <div class="row mt-3">
-            <div class="row">
-              <div class="form-group text-center">
-                <button mat-raised-button color="primary">
-                  <mat-icon>login</mat-icon>
-                  Register with Google
-                </button>
-              </div>
-            </div>
-            <div class="row mt-3">
-              <div class="form-group text-center">
-                <button mat-raised-button color="primary">
-                  <mat-icon>login</mat-icon>
-                  Register with Facebook
-                </button>
-              </div>
-            </div>
+          <p class="d-inline-block pt-4 w-100 text-center">Or</p>
+
+          <div class="d-flex justify-content-center">
+            <button mat-raised-button color="primary" class="btn-lg">
+              <mat-icon class="me-2">google</mat-icon>
+              Register with Google
+            </button>
+          </div>
+
+          <div class="d-flex justify-content-center mt-4">
+            <button mat-raised-button color="primary" class="btn-lg">
+              <mat-icon class="me-2">facebook</mat-icon>
+              Register with Facebook
+            </button>
           </div>
           <p class="text-center text-muted mt-5 mb-0">Already have an account? <a routerLink="/login" class="fw-bold text-body"><u>Login here</u></a></p>
           <div *ngIf="generalError" class="alert alert-danger mt-3 mx-2">

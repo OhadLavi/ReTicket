@@ -8,6 +8,7 @@ const bcrypt = require('bcryptjs');
 const multer = require('multer');
 const path = require('path');
 const { OAuth2Client } = require('google-auth-library');
+const { Event } = require('../models/event.model');
 const paypal = require('paypal-rest-sdk');
 paypal.configure({
     'mode': process.env.PAYPAL_MODE,
@@ -72,6 +73,11 @@ router.put("/update/:id", asyncHandler(async (req, res) => {
         console.log(error);
         res.status(500).json({ error: "An error occurred while updating the user" });
     }
+}));
+
+router.get('/favorites/', asyncHandler(async (req, res) => {
+  const events = await Event.find({ favorites: req.user.id });
+  res.json(events);
 }));
 
 router.get("/seed", asyncHandler(async (req, res) => {

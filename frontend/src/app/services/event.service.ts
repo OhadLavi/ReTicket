@@ -47,5 +47,22 @@ export class EventService {
   removeFromWaitingList(eventId: string, userId: string): Observable<EventM> {
     return this.http.delete<EventM>(URLS.EVENT.GET_REMOVE_FROM_WAITING_LIST_URL(eventId, userId));
   }
+
+  isEventFavorite(eventId: string): Observable<{ isFavorite: boolean }> {
+    return this.http.get<{ isFavorite: boolean }>(URLS.EVENT.IS_FAVORITE(eventId));
+  }  
+
+  favoriteEvent(eventId: string): Observable<EventM> {
+    return this.http.post<EventM>(URLS.EVENT.FAVORITE(eventId), eventId);
+  }
+
+  unfavoriteEvent(eventId: string): Observable<EventM> {
+    return this.http.delete<EventM>(URLS.EVENT.UNFAVORITE(eventId));
+  }
+
+  getUserFavorites(userId: string): Observable<EventM[]> {
+    return this.http.get<EventM[]>(URLS.USER.GET_FAVORITES(userId));
+  }
+
   
 }

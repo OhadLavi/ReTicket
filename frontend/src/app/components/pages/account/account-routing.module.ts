@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { ProfileComponent } from './profile/profile.component';
 import { TicketsComponent } from './tickets/tickets.component';
 import { NotificationsComponent } from './notifications/notifications.component';
+import { FavoritesComponent } from './favorites/favorites.component';
 
 const routes: Routes = [
   {
@@ -13,16 +14,10 @@ const routes: Routes = [
   },
   {
     path: 'notifications', component: NotificationsComponent
+  },
+  {
+    path: 'favorites', component: FavoritesComponent
   }
-  // {
-  //   path: 'mycollection', component: MyCollectionComponent
-  // },
-  // {
-  //   path: 'favorite', component: FavoriteComponent
-  // },
-  // {
-  //   path: 'notification', component: NotificationComponent
-  // }
 ];
 
 @NgModule({

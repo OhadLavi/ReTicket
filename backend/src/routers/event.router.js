@@ -13,6 +13,8 @@ const levenshtein = require('fast-levenshtein');
 const natural = require('natural');
 const fs = require('fs');
 const mongoose = require('mongoose');
+const authMiddleware = require('../middlewares/auth.mid');
+
 
 router.get("/", asyncHandler(async (req, res) => {
   const events = await Event.getNonExpiredEvents();
@@ -196,6 +198,52 @@ router.post('/transcribeAudio', upload.single('audio'), async (req, res) => {
     res.status(500).send({ error: 'An error occurred while transcribing the audio.' });
   }
 });
+
+router.get('/getFavorite/id/:eventId', authMiddleware, asyncHandler(async (req, res) => {
+  const event = await Event.findById(req.params.eventId);
+  if (!event) {
+    return res.status(404).json({ message: 'Event not found' });
+  }
+  const isFavorite = event.favorites.includes(req.user.id);
+  res.json({ isFavorite: isFavorite });
+}));
+
+router.post('/setFavorite/id/:eventId', authMiddleware, asyncHandler(async (req, res) => {
+  console.log(req.params.eventId);
+  const event = await Event.findById(req.params.eventId);
+  if (!event) {
+    return res.status(404).json({message: 'Event not found'});
+  }
+  if (!event.favorites.includes(req.user.id)) {
+    event.favorites.push(req.user.id);
+    if (!event.numberOfLikes) {
+      event.numberOfLikes = 0;
+    }
+    event.numberOfLikes += 1;
+    await event.save();
+  }
+  res.status(200).json(event);
+}));
+
+router.delete('/unfavorite/id/:eventId', authMiddleware, asyncHandler(async (req, res) => {
+  const event = await Event.findById(req.params.eventId);
+  if (!event) {
+    return res.status(404).json({message: 'Event not found'});
+  }
+  const index = event.favorites.indexOf(req.user.id);
+  if (index > -1) {
+    event.favorites.splice(index, 1);
+    if (!event.numberOfLikes) {
+      event.numberOfLikes = 0;
+    }
+    else {
+      event.numberOfLikes -= 1;
+    }
+    await event.save();
+  }
+  res.status(200).json(event);
+}));
+
 
 // router.post("/transcribe", upload.single('audio'), async (req, res, next) => {
 //   const fileName = req.file.path;

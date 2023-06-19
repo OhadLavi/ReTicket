@@ -2,8 +2,8 @@
   <div class="mask w-100 h-100" style="background-color: rgba(0, 0, 0, 0.6);">
     <div class="d-flex justify-content-center align-items-center h-100">
       <div class="w-75">
-        <mat-form-field class="w-100" appearance="fill">
-          <input matInput placeholder="Search for an event, artist, venue or city" [(ngModel)]="searchTerm" (keyup)="searchEvents()">
+        <mat-form-field class="w-100" appearance="fill" color="accent">
+          <input color="primary" matInput placeholder="Search for an event, artist, venue or city" [(ngModel)]="searchTerm" (keyup)="searchEvents()">
           <mat-icon matPrefix>search</mat-icon>
           <button mat-icon-button matSuffix aria-label="Clear search" (click)="clearSearch()" *ngIf="searchTerm.length > 0">
             <mat-icon>close</mat-icon>
@@ -19,9 +19,8 @@
   </div>
 </div>
 
-
 <section>
-  <div class="row row-cols-1 row-cols-md-5 g-4 p-5" *ngIf="events.length > 0; else noResults">
+  <div class="row row-cols-1 row-cols-xl-5 row-cols-lg-4 row-cols-md-3 row-cols-sm-2 row-cols-1 g-4 p-5" *ngIf="events.length > 0; else noResults">
     <div class="col" *ngFor="let event of events | paginate: { itemsPerPage: 20, currentPage: p }">  
       <div class="card h-100">
         <img [src]="event.image" class="card-img-top event-image" [alt]="event.name" />
@@ -49,7 +48,8 @@
     </div>
   </div>
   <pagination-controls (pageChange)="p = $event"></pagination-controls>
-<ng-template #noResults>
-  <p>No results found.</p>
-</ng-template>
+  <ng-template #noResults>
+    <p>No results found.</p>
+  </ng-template>
 </section>
+

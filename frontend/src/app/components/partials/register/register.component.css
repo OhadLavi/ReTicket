@@ -8,31 +8,27 @@
     justify-content: center;
   }
 
-  .mat-mdc-form-field-error {
+.mat-mdc-form-field-error {
     font-size: 0.85rem;
-  }
+}
 
-.gradient-custom-3 {
-    /* fallback for old browsers */
-    background: #84fab0;
-    
-    /* Chrome 10-25, Safari 5.1-6 */
-    background: -webkit-linear-gradient(to right, rgba(132, 250, 176, 0.5), rgba(143, 211, 244, 0.5));
-    
-    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-    background: linear-gradient(to right, rgba(132, 250, 176, 0.5), rgba(143, 211, 244, 0.5))
-    }
-    .gradient-custom-4 {
-    /* fallback for old browsers */
-    background: #84fab0;
-    
-    /* Chrome 10-25, Safari 5.1-6 */
-    background: -webkit-linear-gradient(to right, rgba(132, 250, 176, 1), rgba(143, 211, 244, 1));
-    
-    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-    background: linear-gradient(to right, rgba(132, 250, 176, 1), rgba(143, 211, 244, 1))
-    }
+mat-card {
+  width: 35rem;
+  padding: 3rem !important;
+}
 
-    mat-card-title {
-        font-size: 2rem;
-    }
+mat-card-title {
+  font-size: 2.1rem;
+  font-weight: 600;
+}
+
+
+mat-form-field {
+  width: 100%;
+}
+
+button {
+  width: 100%;
+  padding: 0.5rem 0;
+}
+

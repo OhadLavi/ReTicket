@@ -10,6 +10,7 @@ const { google } = require('googleapis');
 const TOKEN_PATH = 'token.json';
 const fs = require('fs');
 const { scrapeWebsite } = require('./crawler/crawler');
+const authMiddleware = require('./middlewares/auth.mid');
 
 dotenv.config();
 const path = require('path');
@@ -20,6 +21,7 @@ const port = process.env.PORT || 5000;
 app.use(cors({ origin: 'http://localhost:4200', credentials: true }));
 app.use(express.json());
 app.use('/uploads', express.static('uploads'));
+app.use(authMiddleware);
 
 //import routes
 const usersRouter = require('./routers/user.router');

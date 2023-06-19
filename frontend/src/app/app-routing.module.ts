@@ -18,13 +18,13 @@ const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
-  { path: 'cart', component: CartComponent },
+  { path: 'cart', component: CartComponent, canActivate: [AuthGuard] },
   { path: 'checkout', component: CheckoutComponent, canActivate: [AuthGuard] },
   { path: 'track/:orderId' , component: OrderTrackComponent, canActivate: [AuthGuard] },
   { path: 'event/:id', component: EventPageComponent },
   { path: 'account', loadChildren: () => import('./components/pages/account/account.module').then(m => m.AccountModule), canActivate: [AuthGuard] },
   { path: 'sellTicket', component: SellTicketComponent, canActivate: [AuthGuard]},
-  { path: 'ticketInMarket', component: TicketInMarketComponent}
+  { path: 'ticketInMarket', component: TicketInMarketComponent, canActivate: [AuthGuard]}
 ];
 
 @NgModule({
