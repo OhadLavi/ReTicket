@@ -43,6 +43,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { EventCardComponent } from './components/partials/event-card/event-card.component';
+//import { AgmCoreModule } from '@agm/core';
 
 @NgModule({
   declarations: [
@@ -71,6 +72,9 @@ import { EventCardComponent } from './components/partials/event-card/event-card.
     FormsModule,
     FontAwesomeModule,
     SharedModule,
+    // AgmCoreModule.forRoot({
+    //   apiKey: 'YOUR_GOOGLE_MAPS_API_KEY'
+    // }),
     MDBBootstrapModule.forRoot(),
     MatDialogModule,
     MatCardModule,

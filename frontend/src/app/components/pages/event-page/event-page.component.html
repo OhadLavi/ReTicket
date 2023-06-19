@@ -104,7 +104,9 @@
               <h5 class="card-title">Location</h5>
               <div class="row">
                 <div class="col-12">
-                  <div #map id="map"></div>
+                  <agm-map *ngIf="locationLat && locationLng" [latitude]="locationLat" [longitude]="locationLng">
+                    <agm-marker [latitude]="locationLat" [longitude]="locationLng"></agm-marker>
+                  </agm-map>                  
                 </div>
               </div>
             </div>
