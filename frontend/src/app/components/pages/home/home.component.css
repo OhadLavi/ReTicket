@@ -69,3 +69,20 @@ button[aria-label="Voice search"]:active {
     height: 15px;
     font-size: 15px;
 }
+
+.bg {
+  background-image: url('https://cdn.ticketswap.com/public/202106/3092f98a-3074-4c45-9474-7c2250be3c22.7d1cd9c224bd5ebfc4358026c8efd54a4e588e77.jpeg'); 
+  background-size: cover; 
+  background-position: center bottom;
+  -webkit-background-position: center bottom;
+  object-fit: cover;
+  inset-inline: 0;
+  inset-block-start: 0;
+  block-size: 100%;
+  -webkit-background-size: cover;
+}
+
+.text-shadow {
+  font-size: 3.5rem;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}

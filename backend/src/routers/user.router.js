@@ -47,7 +47,6 @@ router.post("/login", asyncHandler(
   }
 ));
 
-
 router.put("/update/:id", asyncHandler(async (req, res) => {
     console.log("update user");
     const { id } = req.params;

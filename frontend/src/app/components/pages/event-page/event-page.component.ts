@@ -5,8 +5,6 @@ import { EventService } from 'src/app/services/event.service';
 import { UserService } from 'src/app/services/user.service';
 import { EventM } from 'src/app/shared/models/EventM';
 
-declare var google: any;
-
 @Component({
   selector: 'app-event-page',
   templateUrl: './event-page.component.html',
@@ -20,8 +18,6 @@ export class EventPageComponent implements OnInit {
   isPortrait: boolean = false;
   isInWaitingList!: boolean;
   selectedTab: string = 'tickets';
-  locationLat!: number;
-  locationLng!: number;
 
   constructor(
     activatedRoute: ActivatedRoute, 
@@ -42,14 +38,6 @@ export class EventPageComponent implements OnInit {
             });
             this.eventService.isEventFavorite(this.eventm.id).subscribe(result => {
               this.isFavorite = result.isFavorite;
-            });
-            this.geocodeLocation(this.eventm.location).then(coords => {
-              this.locationLat = coords.lat;
-              this.locationLng = coords.lng;
-              console.log(this.locationLat);
-              console.log(this.locationLng);
-            }).catch(error => {
-                console.error('Error geocoding location:', error);
             });
           }
         });
@@ -110,19 +98,5 @@ export class EventPageComponent implements OnInit {
         .subscribe(() => console.log('Removed from waiting list'));
     }
   }  
-
-  geocodeLocation(location: string): Promise<any> {
-    return new Promise((resolve, reject) => {
-        const geocoder = new google.maps.Geocoder();
-        geocoder.geocode({ 'address': location }, (results: google.maps.GeocoderResult[], status: google.maps.GeocoderStatus) => {
-          if (status == google.maps.GeocoderStatus.OK) {
-            resolve({ lat: results[0].geometry.location.lat(), lng: results[0].geometry.location.lng() });
-          } else {
-            reject(new Error('Could not geocode location: ' + status));
-          }
-        });        
-    });
-}
-
 
 }
