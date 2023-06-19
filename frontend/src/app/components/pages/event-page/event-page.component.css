@@ -41,6 +41,7 @@
 
 img.portrait {
     max-height: 250px;
+    width: auto;
     object-fit: contain;
   }  
 
@@ -95,3 +96,17 @@ img.portrait {
 .bg-transparent {
     background-color: transparent;
 }
+
+.image-with-icon {
+    position: relative;
+    display: inline-block;
+}
+  
+.favorite-icon {
+    position: absolute;
+    top: 1.5rem;
+    right: 8px;
+    font-size: 24px;
+    z-index: 1;
+}
+  

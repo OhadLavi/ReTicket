@@ -1,0 +1,27 @@
+<div class="card" style="position: relative;">
+    <!-- Countdown Display (if needed) -->
+    <div class="countdown" style="position: absolute; top: 0; left: 0; z-index: 1; background: rgba(0,0,0,0.5); color: white; padding: 10px;">
+      <i class="fas fa-clock"></i> <!--{{ countdown(event.date) }}-->
+    </div>
+  
+    <!-- Event Image -->
+    <img [src]="eventA.image" class="card-img-top" alt="{{ eventA.name }}">
+  
+    <div class="card-body">
+      <!-- Event Name -->
+      <h5 class="card-title">{{ eventA.name }}</h5>
+  
+      <!-- Date -->
+      <p class="card-text"><small class="text-muted">{{ eventA.date | date }}</small></p>
+  
+      <!-- Location -->
+      <p class="card-text">{{ eventA.location }}</p>
+  
+      <!-- Price and Number of Tickets -->
+      <p class="card-text">
+        Price: {{ eventA.price | currency }}<br>
+        <!-- Number of Tickets: {{ event.availableTickets }} -->
+      </p>
+    </div>
+  </div>
+  

@@ -36,6 +36,9 @@ export class EventPageComponent implements OnInit {
             .subscribe((isInWaitingList: boolean) => {
               this.isInWaitingList = isInWaitingList;
             });
+            this.eventService.isEventFavorite(this.eventm.id).subscribe(result => {
+              this.isFavorite = result.isFavorite;
+            });
           }
         });
       }
@@ -68,8 +71,19 @@ export class EventPageComponent implements OnInit {
 
   toggleFavorite() {
     this.isFavorite = !this.isFavorite;
+    if (this.isFavorite) {
+      this.eventService.favoriteEvent(this.eventm.id).subscribe(
+        response => {
+          this.eventm.numberOfLikes = response.numberOfLikes;
+        }, error => {});
+    } else {
+      this.eventService.unfavoriteEvent(this.eventm.id).subscribe(
+        response => {
+          this.eventm.numberOfLikes = response.numberOfLikes;
+        }, error => {});
+    }
   }
-
+  
   toggleWaitingList() {
     this.isInWaitingList = !this.isInWaitingList;
     console.log(this.isInWaitingList);

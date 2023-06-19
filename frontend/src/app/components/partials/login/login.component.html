@@ -2,11 +2,9 @@
   <div class="row justify-content-center">
     <div class="col-md-6">
       <mat-card class="rounded">
-        <mat-card-title class="text-center pt-4 mb-4">Login</mat-card-title>
+        <mat-card-title class="text-center mb-4 font-weight-bold">Login</mat-card-title>
         <mat-card-content>
           <form [formGroup]="loginForm" (ngSubmit)="submit()">
-            <div class="row mb-3">
-              <div class="col-md-12">
                 <mat-form-field appearance="fill" class="w-100">
                   <mat-label>Email</mat-label>
                   <input matInput formControlName="email" type="email" required>
@@ -19,10 +17,6 @@
                     </div>
                   </mat-error>
                 </mat-form-field>
-              </div>
-            </div>
-            <div class="row mb-3">
-              <div class="col-md-12">
                 <mat-form-field appearance="fill" class="w-100">
                   <mat-label>Password</mat-label>
                   <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password">
@@ -33,32 +27,25 @@
                     Password is required.
                   </mat-error>
                 </mat-form-field>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-12">
-                <div class="form-group text-right">
-                  <button mat-raised-button color="primary" class="float-end btn-lg">Login</button>
-                </div>
-              </div>
-            </div>
+            <button mat-raised-button color="primary" class="float-end btn-lg">Login</button>
           </form>
-          <div class="row mt-3">
-            <div class="row">
-              <div class="form-group text-center">
-                <button mat-raised-button color="primary" (click)="onGoogleSignIn()">
-                  <mat-icon>login</mat-icon>
-                  Register with Google
-                </button>                
-              </div>
-              <div class="form-group text-center">
-                <button mat-raised-button color="primary">
-                  <mat-icon>login</mat-icon>
-                  Login with Facebook
-                </button>
-              </div>              
-            </div>
+        
+          <p class="d-inline-block pt-4 w-100 text-center">Or</p>
+
+          <div class="d-flex justify-content-center">
+            <button mat-raised-button color="primary" class="btn-lg">
+              <mat-icon class="me-2">google</mat-icon>
+              Login with Google
+            </button>
           </div>
+
+          <div class="d-flex justify-content-center mt-4">
+            <button mat-raised-button color="primary" class="btn-lg">
+              <mat-icon class="me-2">facebook</mat-icon>
+              Login with Facebook
+            </button>
+          </div>
+
           <p class="text-center text-muted mt-5 mb-0">Don't have an account? <a routerLink="/register" class="fw-bold text-body"><u>Sign Up</u></a></p>
           <div *ngIf="loginError" class="alert alert-danger mt-3 mx-2">
             {{ loginError }}

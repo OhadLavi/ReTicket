@@ -41,6 +41,8 @@ import { ButtonModule } from 'primeng/button';
 import { ToastModule } from 'primeng/toast';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { EventCardComponent } from './components/partials/event-card/event-card.component';
 
 @NgModule({
   declarations: [
@@ -57,7 +59,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     PaypalButtonComponent,
     SellTicketComponent,
     TicketInMarketComponent,
-    OrderTrackComponent
+    OrderTrackComponent,
+    EventCardComponent
   ],
   imports: [
     BrowserModule,
@@ -89,7 +92,9 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     ToastModule,
     ButtonModule,
     NgxPaginationModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatTooltipModule
+    
   ],
   exports: [
     MatBadgeModule

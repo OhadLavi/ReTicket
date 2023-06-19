@@ -11,4 +11,6 @@ export class EventM {
     soldTickets!: number;
     wantedTickets!: number;
     isInWaitingList!: boolean;
-}
+    numberOfLikes!: number;
+  }
+  

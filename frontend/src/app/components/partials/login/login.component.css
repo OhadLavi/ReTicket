@@ -6,23 +6,29 @@
     overflow: auto;
     align-items: center;
     justify-content: center;
-  }
+}
 
-  .mat-mdc-form-field-error {
+.mat-mdc-form-field-error {
     font-size: 0.85rem;
-  }
-  
-.gradient-custom {
-    /* fallback for old browsers */
-    background: #6a11cb;
-    
-    /* Chrome 10-25, Safari 5.1-6 */
-    background: -webkit-linear-gradient(to right, rgba(106, 17, 203, 1), rgba(37, 117, 252, 1));
-    
-    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-    background: linear-gradient(to right, rgba(106, 17, 203, 1), rgba(37, 117, 252, 1))
-    }
+}
 
-    mat-card-title {
-        font-size: 2rem;
-    }
+mat-card {
+  width: 35rem;
+  padding: 3rem !important;
+}
+
+mat-card-title {
+  font-size: 2.1rem;
+  font-weight: 600;
+}
+
+mat-form-field {
+  width: 100%;
+  margin: 0.5rem 0;
+}
+
+button {
+  width: 100%;
+  padding: 0.5rem 0;
+}
+

@@ -10,6 +10,9 @@ export const URLS = {
         GET_ADD_TO_WAITING_LIST_URL: (id: string) => `${BASE_URL}/api/events/id/${id}/waitingList`,
         GET_REMOVE_FROM_WAITING_LIST_URL: (eventId: string, userId: string) => `${BASE_URL}/api/events/id/${eventId}/waitingList/${userId}`,
         GET_TICKETS_URL: (eventId: string, quantity: number) => `${BASE_URL}/api/events/cheapestTickets/${eventId}/${quantity}`,
+        FAVORITE: (eventId: string) => `${BASE_URL}/api/events/setFavorite/id/${eventId}`,
+        UNFAVORITE: (eventId: string) => `${BASE_URL}/api/events/unfavorite/id/${eventId}`,
+        IS_FAVORITE: (eventId: string) => `${BASE_URL}/api/events/getFavorite/id/${eventId}`,
     },
     USER: {
         GET_ALL: `${BASE_URL}/api/users`,
@@ -17,7 +20,8 @@ export const URLS = {
         GET_BY_SEARCH_TERM: (searchTerm: string) => `${BASE_URL}/api/users/search/${searchTerm}`,
         GET_USER_UPDATE_URL: (id: string) => `${BASE_URL}/api/users/update/${id}`,
         GET_USER_PHOTO_UPDATE_URL: (id: string) => `${BASE_URL}/api/users/update/photo/${id}`,
-        GET_USER_MOVE_TO_PAYPAL_URL: `${BASE_URL}/api/users/moveToPaypal/`
+        GET_USER_MOVE_TO_PAYPAL_URL: `${BASE_URL}/api/users/moveToPaypal/`,
+        GET_FAVORITES: (userId: string) => `${BASE_URL}/api/users/favorites/`,
     },
     LOGIN: {
         GET_LOGIN_URL: `${BASE_URL}/api/users/login`,
