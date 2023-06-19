@@ -9,7 +9,7 @@
           <div class="col-12 col-md-8 col-lg-6 text-center text-shadow">
             <div class="image-with-icon">
               <img [src]="eventm.image" [alt]="eventm.name" class="img-fluid rounded mt-3 mb-3 event-logo" [class.portrait]="isPortrait" />
-              <mat-icon (click)="toggleFavorite()" class="favorite-icon" [style.color]="isFavorite ? 'red' : ''">
+              <mat-icon *ngIf="isAuth" (click)="toggleFavorite()" class="favorite-icon" [style.color]="isFavorite ? 'red' : ''" style="cursor: pointer;">
                 {{isFavorite ? 'favorite' : 'favorite_border'}}
               </mat-icon>
             </div>

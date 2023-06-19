@@ -18,6 +18,7 @@ export class EventPageComponent implements OnInit {
   isPortrait: boolean = false;
   isInWaitingList!: boolean;
   selectedTab: string = 'tickets';
+  isAuth: boolean = false;
 
   constructor(
     activatedRoute: ActivatedRoute, 
@@ -32,13 +33,16 @@ export class EventPageComponent implements OnInit {
           if(this.eventm) { 
             this.checkImageDimensions(this.eventm.image);
             console.log("test");
-            this.eventService.checkUserInWaitingList(this.eventm.id, this.userService.currentUser.id)
-            .subscribe((isInWaitingList: boolean) => {
-              this.isInWaitingList = isInWaitingList;
-            });
-            this.eventService.isEventFavorite(this.eventm.id).subscribe(result => {
-              this.isFavorite = result.isFavorite;
-            });
+            if (this.userService.isAuth()) {
+              this.isAuth = true;
+              this.eventService.checkUserInWaitingList(this.eventm.id, this.userService.currentUser.id)
+              .subscribe((isInWaitingList: boolean) => {
+                this.isInWaitingList = isInWaitingList;
+              });
+              this.eventService.isEventFavorite(this.eventm.id).subscribe(result => {
+                this.isFavorite = result.isFavorite;
+              });
+            }
           }
         });
       }
