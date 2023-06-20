@@ -44,6 +44,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { EventCardComponent } from './components/partials/event-card/event-card.component';
 import { GoogleMapsModule } from '@angular/google-maps';
+import { TicketQuantityDialogComponent } from './components/partials/ticket-quantity-dialog/ticket-quantity-dialog.component';
 
 @NgModule({
   declarations: [
@@ -61,7 +62,8 @@ import { GoogleMapsModule } from '@angular/google-maps';
     SellTicketComponent,
     TicketInMarketComponent,
     OrderTrackComponent,
-    EventCardComponent
+    EventCardComponent,
+    TicketQuantityDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -95,7 +97,7 @@ import { GoogleMapsModule } from '@angular/google-maps';
     NgxPaginationModule,
     MatProgressSpinnerModule,
     MatTooltipModule,
-    GoogleMapsModule    
+    GoogleMapsModule  
   ],
   exports: [
     MatBadgeModule

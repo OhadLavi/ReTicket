@@ -12,16 +12,35 @@ export class CartService {
   private cart:Cart = this.getCartFromLocalStorage();
   private cartSubject: BehaviorSubject<Cart> = new BehaviorSubject(this.cart);
   constructor(private eventService:EventService) { }
+  exchangeRate = 3.5;
+
+  getQuantityInCart(eventId: string): number {
+    return this.cart.items.reduce((total, item) => {
+      return item.eventM.id === eventId ? total + item.quantity : total;
+    }, 0);
+  }
+
+  getTotalQuantityForEvent(eventId: string): number {
+    let cartItem = this.cart.items.find(item => item.eventM.id === eventId);
+    return cartItem ? cartItem.quantity : 0;
+  }
 
   addToCart(eventM:EventM, quantity:number):void {
     this.eventService.findTickets(eventM.id, quantity).subscribe(tickets => {
       for (let ticket of tickets) {
-        let cartItem = new CartItem(eventM, ticket);
-        this.cart.items.push(cartItem);
+        let existingCartItem = this.cart.items.find(item => item.eventM.id === eventM.id && item.ticket.id === ticket.id);
+        if (existingCartItem) {
+          existingCartItem.quantity += 1;
+          existingCartItem.price += (Math.round(ticket.price / this.exchangeRate * 100) / 100);
+        } else {
+          let cartItem = new CartItem(eventM, ticket);
+          this.cart.items.push(cartItem);
+        }
       }
       this.updateCartToLocalStorage();
     });
   }
+  
   
   removeFromCart(ticketId:string):void {
     this.cart.items = this.cart.items.filter(item => item.ticket.id !== ticketId);
@@ -71,20 +90,20 @@ export class CartService {
     return cart ? { ...JSON.parse(cart), couponApplied: JSON.parse(cart).cartPrice !== JSON.parse(cart).totalPrice } : new Cart();
   }
 
-  applyCoupon(discountPercentage:number) {
-    //this.emptyCartFromLocalStorage();
-    if (this.cart.couponApplied) return;
-    this.cart.totalPrice -= Math.floor(this.cart.cartPrice * discountPercentage);
-    this.cart.couponApplied = true;
-    this.setCartToLocalStorage();
-  }
-
   emptyCartFromLocalStorage() {
     localStorage.removeItem('Cart');
   }
 
   setCouponAppliesToFalse() {
     this.cart.couponApplied = false;
+    this.setCartToLocalStorage();
+  }
+
+  applyCoupon(discountPercentage:number) {
+    //this.emptyCartFromLocalStorage();
+    if (this.cart.couponApplied) return;
+    this.cart.totalPrice -= Math.floor(this.cart.cartPrice * discountPercentage);
+    this.cart.couponApplied = true;
     this.setCartToLocalStorage();
   }
 
