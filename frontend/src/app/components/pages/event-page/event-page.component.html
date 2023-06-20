@@ -104,9 +104,17 @@
               <h5 class="card-title">Location</h5>
               <div class="row">
                 <div class="col-12">
-                  <agm-map *ngIf="locationLat && locationLng" [latitude]="locationLat" [longitude]="locationLng">
+                  <input class="d-none" type="text" (change)="geocodeAddress($event.target.value)">
+                  <div class="map-container">
+                    <google-map [center]="center" [zoom]="zoom">
+                      <map-marker [position]="markerPosition"></map-marker>
+                    </google-map>
+                  </div>
+                  
+                                           
+                  <!-- <agm-map *ngIf="locationLat && locationLng" [latitude]="locationLat" [longitude]="locationLng">
                     <agm-marker [latitude]="locationLat" [longitude]="locationLng"></agm-marker>
-                  </agm-map>                  
+                  </agm-map>                   -->
                 </div>
               </div>
             </div>

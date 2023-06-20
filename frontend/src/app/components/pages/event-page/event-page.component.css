@@ -110,3 +110,13 @@ img.portrait {
     z-index: 1;
 }
   
+:host google-map {
+    height: 500px;
+    width: 100%;
+  }
+  
+  .map-container {
+    height: 500px;
+    width: 100%;
+  }
+  
