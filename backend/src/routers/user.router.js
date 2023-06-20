@@ -17,10 +17,9 @@ paypal.configure({
 });
 
 router.post("/register", asyncHandler(async(req, res) => {
-  console.log("register" + req.body);
   const {name, password, confirmPassword, email} = req.body;
   const user = await UserModel.findOne({email});
-  if(user){
+  if(user) {
       res.status(400).json({error: "User already exists"});
       return;
   }

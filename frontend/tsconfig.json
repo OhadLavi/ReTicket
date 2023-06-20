@@ -30,7 +30,6 @@
     "strictInputAccessModifiers": true,
     "strictTemplates": false,
     "enableIvy": true,
-    "types": ["googlemaps"],
-    "compilationMode": "partial"
+    "types": ["googlemaps"]
   }
 }
