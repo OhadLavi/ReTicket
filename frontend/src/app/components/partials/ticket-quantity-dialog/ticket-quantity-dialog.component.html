@@ -1,0 +1,25 @@
+<div class="dialog-header">
+    <h1 mat-dialog-title>Buy Tickets</h1>
+    <button mat-icon-button class="close-button" mat-dialog-close>
+      <mat-icon style="color: red;">close</mat-icon>
+    </button>
+  </div>
+  <div mat-dialog-content class="border-top border-bottom">
+    <p>Please enter the quantity (max {{data.availableTickets > 10 ? 10 : data.availableTickets}}):</p>
+    <mat-form-field>
+      <input matInput type="number" min="1" [max]="data.availableTickets" [(ngModel)]="data.quantity" #quantityInput="ngModel" required>
+      <mat-error *ngIf="quantityInput.errors?.max">The number of tickets exceeds the available tickets.</mat-error>
+      <mat-error *ngIf="quantityInput.errors?.required">This field is required.</mat-error>
+    </mat-form-field>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-raised-button color="primary" (click)="onContinueBrowsing()">
+      <mat-icon>arrow_forward</mat-icon> 
+      Continue Browsing
+    </button>
+    <button mat-raised-button color="accent" [disabled]="quantityInput.invalid" cdkFocusInitial (click)="onProceedToCart()">
+      <mat-icon>shopping_cart</mat-icon> 
+      Proceed to Cart
+    </button>
+  </div>
+  

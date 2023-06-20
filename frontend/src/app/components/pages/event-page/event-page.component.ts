@@ -4,6 +4,8 @@ import { CartService } from 'src/app/services/cart.service';
 import { EventService } from 'src/app/services/event.service';
 import { UserService } from 'src/app/services/user.service';
 import { EventM } from 'src/app/shared/models/EventM';
+import { TicketQuantityDialogComponent } from '../../partials/ticket-quantity-dialog/ticket-quantity-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-event-page',
@@ -23,18 +25,22 @@ export class EventPageComponent implements OnInit {
   markerPosition!: google.maps.LatLngLiteral;
   center = {lat: 40, lng: -20};
   zoom = 15;
-  
+  ticketQuantity: number = 1;
+  totalQuantityInCart!: number;
+
   constructor(
     activatedRoute: ActivatedRoute, 
     private eventService: EventService, 
     private userService: UserService,
     private cartService: CartService, 
-    private router: Router) {
+    private router: Router,
+    public dialog: MatDialog) {
     activatedRoute.params.subscribe(params => {
       if(params.id) {
         eventService.getEventById(params.id).subscribe(serverEvent => {
           this.eventm = serverEvent;
           if(this.eventm) { 
+            this.totalQuantityInCart = this.cartService.getQuantityInCart(this.eventm.id);
             this.geocodeAddress(this.eventm.location + ', ' + this.eventm.venue);
             this.checkImageDimensions(this.eventm.image);
             console.log("test");
@@ -77,20 +83,49 @@ export class EventPageComponent implements OnInit {
   }
 
   ngOnInit() {
-
+    
   }  
   
   sellTicket() {
     this.router.navigate(['/sellTicket']);
   }
 
-  buyTicket(quantity: number) {
+  buyTicket() {
     if (this.userService.isAuth()) {
-      this.cartService.addToCart(this.eventm, quantity);
+      if (this.totalQuantityInCart < this.eventm.availableTickets) {
+        if (this.eventm.availableTickets === 1) {
+          this.cartService.addToCart(this.eventm, 1);
+          this.totalQuantityInCart++;
+        } else {
+          this.openDialog();
+        }
+      }
     } else {
       this.router.navigate(['/login']);
     }
-  }  
+  }
+  
+  openDialog(): void {
+    const dialogRef = this.dialog.open(TicketQuantityDialogComponent, {
+      width: 'auto',
+      data: {quantity: this.ticketQuantity, availableTickets: this.eventm.availableTickets}
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      if (result?.action === 'continueBrowsing') {
+        this.ticketQuantity = result.quantity;
+        this.cartService.addToCart(this.eventm, this.ticketQuantity);
+        this.totalQuantityInCart += this.ticketQuantity;
+      }
+      else if (result?.action === 'proceedToCart') {
+        this.ticketQuantity = result.quantity;
+        this.cartService.addToCart(this.eventm, this.ticketQuantity);
+        this.totalQuantityInCart += this.ticketQuantity;
+        this.router.navigate(['/cart']);
+      }
+    });
+    
+  }
 
   toggleFavorite() {
     this.isFavorite = !this.isFavorite;

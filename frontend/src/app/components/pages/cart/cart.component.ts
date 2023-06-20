@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Location } from '@angular/common';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CartService } from 'src/app/services/cart.service';
 import { Cart } from 'src/app/shared/models/Cart';
 import { CartItem } from 'src/app/shared/models/CartItem';
@@ -16,8 +18,13 @@ export class CartComponent implements OnInit{
   discountPercentage: number = 0.25; // 5% discount
   couponForm!: UntypedFormGroup;
   discountedPrice: number = 0;
-
-  constructor(private cartService:CartService, private formBuilder: UntypedFormBuilder) {
+  returnUrl: string | null = null;
+  
+  constructor(private cartService:CartService,
+     private formBuilder: UntypedFormBuilder,
+      private location: Location, 
+      private router: Router,
+      private activatedRoute: ActivatedRoute) {
   }
 
   ngOnInit(): void {
@@ -29,6 +36,8 @@ export class CartComponent implements OnInit{
       this.cart = cart;
       this.discountedPrice = this.cartService.getCart().cartPrice - this.cartService.getCart().totalPrice;
     });
+
+    this.returnUrl = this.activatedRoute.snapshot.queryParams.returnUrl;
   }
 
   removeFromCart(cartItem:CartItem) {
@@ -45,6 +54,14 @@ export class CartComponent implements OnInit{
       this.cart = this.cartService.getCart();
       this.discountedPrice = this.cartService.getCart().cartPrice - this.cartService.getCart().totalPrice;
       this.couponForm.get('couponCode')?.reset();
+    }
+  }
+
+  goBack(): void {
+    if (this.returnUrl) {
+      this.router.navigateByUrl(this.returnUrl);
+    } else {
+      this.location.back();
     }
   }
 
