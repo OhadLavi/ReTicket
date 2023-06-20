@@ -43,6 +43,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { EventCardComponent } from './components/partials/event-card/event-card.component';
+import { GoogleMapsModule } from '@angular/google-maps';
 
 @NgModule({
   declarations: [
@@ -93,8 +94,8 @@ import { EventCardComponent } from './components/partials/event-card/event-card.
     ButtonModule,
     NgxPaginationModule,
     MatProgressSpinnerModule,
-    MatTooltipModule
-    
+    MatTooltipModule,
+    GoogleMapsModule    
   ],
   exports: [
     MatBadgeModule

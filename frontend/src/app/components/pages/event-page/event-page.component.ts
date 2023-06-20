@@ -19,7 +19,11 @@ export class EventPageComponent implements OnInit {
   isInWaitingList!: boolean;
   selectedTab: string = 'tickets';
   isAuth: boolean = false;
-
+  private geocoder = new google.maps.Geocoder();
+  markerPosition!: google.maps.LatLngLiteral;
+  center = {lat: 40, lng: -20};
+  zoom = 15;
+  
   constructor(
     activatedRoute: ActivatedRoute, 
     private eventService: EventService, 
@@ -31,6 +35,7 @@ export class EventPageComponent implements OnInit {
         eventService.getEventById(params.id).subscribe(serverEvent => {
           this.eventm = serverEvent;
           if(this.eventm) { 
+            this.geocodeAddress(this.eventm.location + ', ' + this.eventm.venue);
             this.checkImageDimensions(this.eventm.image);
             console.log("test");
             if (this.userService.isAuth()) {
@@ -45,6 +50,20 @@ export class EventPageComponent implements OnInit {
             }
           }
         });
+      }
+    });
+  }
+
+  geocodeAddress(address: string) {
+    this.geocoder.geocode({ 'address': address }, (results, status) => {
+      if (status === google.maps.GeocoderStatus.OK && results && results[0]) {
+        this.center = {
+          lat: results[0].geometry.location.lat(),
+          lng: results[0].geometry.location.lng()
+        };
+        this.markerPosition = this.center;
+      } else {
+        alert('Geocode was not successful for the following reason: ' + status);
       }
     });
   }
