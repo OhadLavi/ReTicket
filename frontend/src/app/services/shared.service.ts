@@ -29,8 +29,12 @@ export class SharedService {
     return this.orderData;
   }
 
-  fetchNotifications(userId: string): Observable<Notification[]> {
-    return this.http.get<Notification[]>(URLS.NOTIFICATION.GET_NOTIFICATIONS_BY_USER_ID_URL(userId));
-  } 
+  fetchNotifications(): Observable<Notification[]> {
+    return this.http.get<Notification[]>(URLS.NOTIFICATION.GET_NOTIFICATIONS_URL);
+  }  
+
+  markNotificationsAsRead(): Observable<any> {
+    return this.http.put(URLS.NOTIFICATION.GET_MARK_AS_READ_URL, {});
+  }
   
 }

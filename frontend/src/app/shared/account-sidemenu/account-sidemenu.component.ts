@@ -48,7 +48,7 @@ export class AccountSidemenuComponent implements OnInit {
   }
 
   loadNotifications(userId: string) {
-    this.sharedService.fetchNotifications(userId).subscribe((notifications) => {
+    this.sharedService.fetchNotifications().subscribe((notifications) => {
       this.notificationCount = notifications.length;
     });
   }

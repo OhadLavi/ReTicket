@@ -40,7 +40,7 @@ export class HeaderComponent implements OnInit {
     this.userService.userObservable.subscribe((user) => {
       if (user.id) {
         this.user = user;
-        this.loadNotifications(user.id);
+        this.loadNotifications();
       }
     });
   }
@@ -58,15 +58,22 @@ export class HeaderComponent implements OnInit {
   }
 
   toggleNotifications() {
-    this.loadNotifications(this.userService.currentUser.id);
-  }
-
-  loadNotifications(userId: string) {
-    this.sharedService.fetchNotifications(userId).subscribe((notifications) => {
-      this.notifications = notifications;
-      this.notificationCount = notifications.length;
-      console.log(this.notificationCount);
-      this.cd.detectChanges();
+    this.loadNotifications();
+    console.log("h");
+    if (this.notificationCount > 0) {
+      console.log("h");
+      this.sharedService.markNotificationsAsRead().subscribe(() => {
+        this.notificationCount = 0;
+        this.cd.detectChanges();
+      });
+    }
+  }  
+  
+  loadNotifications() {
+    this.sharedService.fetchNotifications().subscribe((notifications) => {
+        this.notifications = notifications;
+        this.notificationCount = notifications.filter(notification => !notification.isRead).length;
+        this.cd.detectChanges();
     });
   }
 

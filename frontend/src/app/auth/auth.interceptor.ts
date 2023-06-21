@@ -15,6 +15,7 @@ export class AuthInterceptor implements HttpInterceptor {
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     const user = this.userService.currentUser;
+    try {
     if(user.token) {
       console.log("token: " + user.token);
       request = request.clone({
@@ -25,6 +26,8 @@ export class AuthInterceptor implements HttpInterceptor {
     }
     else {
       this.userService.removeUserFromLocalStorage();
+    }} catch (error) {
+      console.log(error);
     }
     return next.handle(request);
   }

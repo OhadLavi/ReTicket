@@ -44,8 +44,10 @@ export const URLS = {
         GET_TICKET_DOWNLOAD_URL: (id:string) => `${BASE_URL}/api/tickets/getTicketFile/${id}`
     },
     NOTIFICATION: {
-        GET_NOTIFICATIONS_BY_USER_ID_URL: (userId: string) => `${BASE_URL}/api/notifications/user/${userId}`,
-    }
+        GET_NOTIFICATIONS_URL: `${BASE_URL}/api/notifications`,
+        GET_MARK_AS_READ_URL: `${BASE_URL}/api/notifications/read`,
+      }
+      
 };
 
 //        GET_TICKETS_URL: (userId:string) => `${BASE_URL}/api/tickets/getUserTickets/${userId}`,

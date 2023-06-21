@@ -1,9 +1,8 @@
-<div class="text-center" style="height: 400px;">
+<div class="text-center w-100" style="height: 400px;">
   <div class="mask w-100 h-100 bg" style="background-color: rgba(0, 0, 0, 0.6);">
     <div class="d-flex justify-content-center align-items-center h-100">
       <div class="w-75">
         <div class="h1 text-white text-shadow font-weight-bold">The safest way to buy and sell tickets</div>
-
         <mat-form-field class="w-75" appearance="fill" color="accent">
           <input color="primary" matInput placeholder="Search for an event, artist, venue or city" [(ngModel)]="searchTerm" (keyup)="searchEvents()">
           <mat-icon matPrefix>search</mat-icon>
@@ -20,8 +19,6 @@
     </div>
   </div>
 </div>
-
-
 <section>
   <div class="row row-cols-1 row-cols-xl-5 row-cols-lg-4 row-cols-md-3 row-cols-sm-2 row-cols-1 g-4 p-5" *ngIf="events.length > 0; else noResults">
     <div class="col" *ngFor="let event of events | paginate: { itemsPerPage: 20, currentPage: p }">  
@@ -50,9 +47,11 @@
       </div>
     </div>
   </div>
-  <pagination-controls (pageChange)="p = $event"></pagination-controls>
-  <ng-template #noResults>
-    <p>No results found.</p>
-  </ng-template>
 </section>
 
+<pagination-controls (pageChange)="p = $event"></pagination-controls>
+<ng-template #noResults>
+  <div class="d-flex justify-content-center align-items-center full-vh">
+    <p class="text-white text-center fs-4">No results found.</p>
+  </div>
+</ng-template>
