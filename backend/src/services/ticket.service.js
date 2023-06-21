@@ -14,7 +14,7 @@ const { writeFile } = require('fs');
 const { NotificationType } = require('../constants/notification_type');
 const pdfPoppler = require('pdf-poppler');
 const zxing = require('node-zxing')({ scale: 2 });
-// const { PDFParser } = require('pdf2json');
+const { getEventByNameDateLocation } = require('../services/event.service');
 
 async function processTicket(pdfBuffer) {
   const pdfPath = path.join(__dirname, '..', 'uploads', 'pdf', 'temp.pdf');
@@ -36,7 +36,9 @@ async function processTicket(pdfBuffer) {
       error = 'Error: A valid ticket should contain both a QR Code and a Barcode';
       break;
     }
-    const ticket = await parseTicketDetails(pdfBuffer, ++i);
+    const ticket = await parseTicketDetails(pdfBuffer, barcode);
+    const event = await getEventByNameDateLocation(ticket.artists, ticket.eventDate, ticket.venue); 
+    ticket.location = event.location;
     ticket.valid = match;
     results.push(ticket);
     await fsPromises.unlink(imagePath);
@@ -46,7 +48,7 @@ async function processTicket(pdfBuffer) {
 }
 
 
-async function parseTicketDetails(pdfBuffer, i) {
+async function parseTicketDetails(pdfBuffer, event, barcode) {
   const data = await pdfParse(pdfBuffer);
   const text = data.text;
   const lines = data.text.split('\n');
@@ -91,7 +93,9 @@ async function parseTicketDetails(pdfBuffer, i) {
     status: "On sale",
     description: `Gate: ${gate}, Block: ${block}`,
     fileName: 'ticket.pdf',
-    fileIds: [savedFile._id]
+    location: event.location,
+    fileIds: [savedFile._id],
+    barcode: barcode
   };
 
   return ticket;
