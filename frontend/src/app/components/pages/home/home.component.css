@@ -12,7 +12,38 @@ body.dark-theme > section {
     color: #fff;
   }
    */
-   .ms-n5 {
+   html, body {
+    height: 100%;
+    min-width: 400px;
+  }
+  
+
+  :host {
+    min-height: calc(100vh - 60px);  /* Adjust 60px according to your header's height */
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .full-vh {
+    height: calc(100vh - 510px);  /* Adjust 400px according to your header's height */
+  }
+  
+  
+  section {
+    min-height: 100%;
+  }
+  
+.text-center.w-100 {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.fs-4 {
+  font-size: 3.5rem;
+}
+
+.ms-n5 {
     margin-left: -40px;
 }
 
