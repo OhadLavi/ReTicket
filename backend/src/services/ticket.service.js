@@ -23,30 +23,32 @@ async function processTicket(pdfBuffer) {
   const imagePaths = await convertPdfToImage(pdfPath, imageDir);
   const results = [];
   let i = 0;
+  let error = null;
+
   for (const imagePath of imagePaths) {
     const qrCode = await detectAndReadQRCode(imagePath);
+    console.log("qrcode: " + qrCode);
     const barcode = await detectAndReadBarcode(imagePath);
+    console.log("barcode: " + barcode);
     const match = checkQRAndBarcodeMatch(qrCode, barcode);
-    //const dateIsValid = checkDateIsValid(eventDate);
-    let errorMessage = '';
+    console.log(match);
     if (qrCode && barcode && !match) {
-      errorMessage = 'Error: QR Code and Barcode do not match';
+      error = 'Error: QR Code and Barcode do not match';
+      break;
     } else if (!qrCode || !barcode) {
-      errorMessage = 'Error: A valid ticket should contain both a QR Code and a Barcode';
+      console.log("Error: A valid ticket should contain both a QR Code and a Barcode");
+      error = 'Error: A valid ticket should contain both a QR Code and a Barcode';
+      break;
     }
-    // else if (!dateIsValid) {
-    //   errorMessage = 'Error: Ticket date is not valid';
-    // }
     const ticket = await parseTicketDetails(pdfBuffer, ++i);
-    ticket.valid = match 
-    //&& dateIsValid;
-    ticket.errorMessage = errorMessage;
+    ticket.valid = match;
     results.push(ticket);
     await fsPromises.unlink(imagePath);
   }
   await fsPromises.unlink(pdfPath);
-  return { validTickets: results.filter(ticket => ticket.valid).length, tickets: results };
+  return { validTickets: results.filter(ticket => ticket.valid).length, tickets: results, error: error };
 }
+
 
 async function parseTicketDetails(pdfBuffer, i) {
   const data = await pdfParse(pdfBuffer);
@@ -121,11 +123,14 @@ async function convertPdfToImage(pdfPath, outputPath) {
 }
 
 async function detectAndReadQRCode(imagePath) {
+  console.log("here");
   const image = await jimp.read(imagePath);
   const qrCode = jsQR(image.bitmap.data, image.bitmap.width, image.bitmap.height);
   if (qrCode) {
+    console.log(qrCode.data);
       return qrCode.data;
   } else {
+    console.log('No QR Code found in image');
       return null;
   }
 }

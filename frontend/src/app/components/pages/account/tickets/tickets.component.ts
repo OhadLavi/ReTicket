@@ -12,6 +12,7 @@ export class TicketsComponent implements OnInit {
   allTickets: any;
   boughtTickets: any = [];
   soldTickets: any = [];
+  sellingTickets: any = [];
 
   constructor(private ticketService: TicketService, private userService:UserService) { }
 
@@ -25,22 +26,14 @@ export class TicketsComponent implements OnInit {
   fetchTickets(): void {
     console.log(this.allTickets);
     this.ticketService.fetchUserTickets(this.userService.currentUser.id)
-    .subscribe(response => {
-      console.log(response);
-      this.soldTickets = response.sellingTickets;
-      this.boughtTickets = response.boughtTickets;
-      this.allTickets = [...this.soldTickets, ...this.boughtTickets];
-    });
-
-    // Fetch all tickets
-    // this.allTickets = []; // Replace with your API call to fetch all tickets
-
-    // Filter sold tickets
-    //this.soldTickets = this.allTickets.filter((ticket: any) => ticket.status === 'Sold');
-
-    // Filter bought tickets
-    //this.boughtTickets = this.allTickets.filter((ticket: any) => ticket.status === 'Bought');
-  }
+      .subscribe(response => {
+        console.log(response);
+        this.soldTickets = response.sellingTickets.filter((ticket: any) => ticket.ticketDetails.isSold === true);
+        this.boughtTickets = response.boughtTickets;
+        this.sellingTickets = response.sellingTickets.filter((ticket: any) => ticket.ticketDetails.isSold === false);
+        this.allTickets = [...this.soldTickets, ...this.boughtTickets, ...this.sellingTickets];
+      });
+  }  
 
   generateFakeData(): void {
     const today = new Date();

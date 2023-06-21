@@ -73,3 +73,9 @@
   border-color: mat-color($primary);
   margin-left: 10px;
 }
+
+.toolbar-logo {
+  height: 22px;
+  width: auto;
+  vertical-align: middle;
+}
