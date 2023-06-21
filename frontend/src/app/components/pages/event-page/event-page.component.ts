@@ -6,6 +6,7 @@ import { UserService } from 'src/app/services/user.service';
 import { EventM } from 'src/app/shared/models/EventM';
 import { TicketQuantityDialogComponent } from '../../partials/ticket-quantity-dialog/ticket-quantity-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { NgToastService } from 'ng-angular-popup';
 
 @Component({
   selector: 'app-event-page',
@@ -34,7 +35,8 @@ export class EventPageComponent implements OnInit {
     private userService: UserService,
     private cartService: CartService, 
     private router: Router,
-    public dialog: MatDialog) {
+    public dialog: MatDialog,
+    private toast: NgToastService) {
     activatedRoute.params.subscribe(params => {
       if(params.id) {
         eventService.getEventById(params.id).subscribe(serverEvent => {
@@ -43,7 +45,7 @@ export class EventPageComponent implements OnInit {
             this.totalQuantityInCart = this.cartService.getQuantityInCart(this.eventm.id);
             this.geocodeAddress(this.eventm.location + ', ' + this.eventm.venue);
             this.checkImageDimensions(this.eventm.image);
-            console.log("test");
+
             if (this.userService.isAuth()) {
               this.isAuth = true;
               this.eventService.checkUserInWaitingList(this.eventm.id, this.userService.currentUser.id)
@@ -68,8 +70,6 @@ export class EventPageComponent implements OnInit {
           lng: results[0].geometry.location.lng()
         };
         this.markerPosition = this.center;
-      } else {
-        alert('Geocode was not successful for the following reason: ' + status);
       }
     });
   }
@@ -116,6 +116,8 @@ export class EventPageComponent implements OnInit {
         this.ticketQuantity = result.quantity;
         this.cartService.addToCart(this.eventm, this.ticketQuantity);
         this.totalQuantityInCart += this.ticketQuantity;
+
+        this.toast.success({detail:"SUCCESS",summary:'You added tickets to your cart', sticky: false, duration: 3000, type: 'success'});
       }
       else if (result?.action === 'proceedToCart') {
         this.ticketQuantity = result.quantity;
@@ -132,12 +134,16 @@ export class EventPageComponent implements OnInit {
       this.eventService.favoriteEvent(this.eventm.id).subscribe(
         response => {
           this.eventm.numberOfLikes = response.numberOfLikes;
-        }, error => {});
+        }, error => {
+          this.toast.error({detail:"ERROR",summary:'You need to be logged in to favorite an event', sticky: false, duration: 3000, type: 'error'});
+        });
     } else {
       this.eventService.unfavoriteEvent(this.eventm.id).subscribe(
         response => {
           this.eventm.numberOfLikes = response.numberOfLikes;
-        }, error => {});
+        }, error => {
+          this.toast.error({detail:"ERROR",summary:'You need to be logged in to favorite an event', sticky: false, duration: 3000, type: 'error'});
+        });
     }
   }
   

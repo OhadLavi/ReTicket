@@ -7,6 +7,7 @@ import { Cart } from 'src/app/shared/models/Cart';
 import { CartItem } from 'src/app/shared/models/CartItem';
 import { MatDialog } from '@angular/material/dialog';
 import { RemoveCartItemDialogComponent } from '../../partials/remove-cart-item-dialog/remove-cart-item-dialog.component';
+import { NgToastService } from 'ng-angular-popup';
 
 @Component({
   selector: 'app-cart',
@@ -27,7 +28,8 @@ export class CartComponent implements OnInit{
       private location: Location, 
       private router: Router,
       private activatedRoute: ActivatedRoute,
-      public dialog: MatDialog) {
+      public dialog: MatDialog,
+      private toast: NgToastService) {
   }
 
   ngOnInit(): void {
@@ -68,12 +70,12 @@ export class CartComponent implements OnInit{
     dialogRef.afterClosed().subscribe(result => {
       if (result?.action === 'remove') {
         this.cartService.removeFromCart(cartItem.ticket.id);
+        this.toast.success({detail:"SUCCESS",summary:'Ticket removed from the cart', sticky: false, duration: 3000, type: 'success'});
       } else {
         cartItem.quantity = 1;
       }
     });
   }
-
 
   applyCoupon() {
     if (this.couponForm.value.couponCode === 'b') {
@@ -81,6 +83,7 @@ export class CartComponent implements OnInit{
       this.cart = this.cartService.getCart();
       this.discountedPrice = this.cartService.getCart().cartPrice - this.cartService.getCart().totalPrice;
       this.couponForm.get('couponCode')?.reset();
+      this.toast.success({detail:"SUCCESS",summary:'Coupon applied', sticky: false, duration: 3000, type: 'success'});
     }
   }
 

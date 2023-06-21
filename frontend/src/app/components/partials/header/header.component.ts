@@ -59,9 +59,7 @@ export class HeaderComponent implements OnInit {
 
   toggleNotifications() {
     this.loadNotifications();
-    console.log("h");
     if (this.notificationCount > 0) {
-      console.log("h");
       this.sharedService.markNotificationsAsRead().subscribe(() => {
         this.notificationCount = 0;
         this.cd.detectChanges();

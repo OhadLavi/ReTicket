@@ -21,16 +21,13 @@ export class UserService {
   }
 
   register(userRegister:IUserRegister): Observable<User> {
-    console.log(URLS.REGISTER.GET_REGISTER_URL);
     const t =  this.http.post<User>(URLS.REGISTER.GET_REGISTER_URL, userRegister).pipe(
       tap({
         next: (user:User) => {
-          console.log(user);
           this.setUserToLocalStorage(user);
           this.userSubject.next(user);
         },
         error: (err: any) => {
-          console.log(err);
         }
       })
     );
@@ -48,17 +45,15 @@ export class UserService {
 
   login(userLogin:IUserLogin):Observable<User> {
     this.removeUserFromLocalStorage();
-    console.log('login');
+
     return this.http.post<User>(URLS.LOGIN.GET_LOGIN_URL, userLogin).pipe(
       tap({
         next: (user:User) => {
-          console.log(user);
           this.setUserToLocalStorage(user);
           this.userSubject.next(user);
         },
         error: (err: any) => {
           this.removeUserFromLocalStorage();
-          console.log(err);
         }
       })
     );
@@ -70,12 +65,10 @@ export class UserService {
       tap({
         next: (updatedUser: User) => {
           updatedUser.token = this.currentUser.token;
-          console.log('User updated:', updatedUser);
           this.setUserToLocalStorage(updatedUser);
           this.userSubject.next(updatedUser);
         },
         error: (err: any) => {
-          console.log('Error updating user:', err);
         }
       })
     );
@@ -84,31 +77,25 @@ export class UserService {
   updateUserPhoto(userId: string, photo: File): Observable<User> {
     const updateUserPhotoUrl = URLS.USER.GET_USER_PHOTO_UPDATE_URL(userId);
     const formData = new FormData();
-    console.log(photo.name);
     formData.append('photo', photo);
 
     return this.http.put<User>(updateUserPhotoUrl, formData).pipe(
       tap({
         next: (updatedUser: User) => {
-          console.log('User photo updated:', updatedUser);
           updatedUser.token = this.currentUser.token;
           this.setUserToLocalStorage(updatedUser);
         },
         error: (err: any) => {
-          console.log('Error updating user photo:', err);
         }
       })
     );
   }
 
   public removeUserFromLocalStorage() {
-    console.log('removeUserFromLocalStorage');
     try {
       localStorage.removeItem('user');
-      console.log('removeUserFromLocalStorage');
     }
     catch (e) {
-      console.log(e);
     }
   }
 

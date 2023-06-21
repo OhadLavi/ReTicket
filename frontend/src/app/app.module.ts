@@ -36,7 +36,6 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatBadgeModule} from '@angular/material/badge';
 import { OrderTrackComponent } from './components/pages/order-track/order-track.component';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { ButtonModule } from 'primeng/button';
 import { ToastModule } from 'primeng/toast';
 import { NgxPaginationModule } from 'ngx-pagination';
@@ -46,6 +45,7 @@ import { EventCardComponent } from './components/partials/event-card/event-card.
 import { GoogleMapsModule } from '@angular/google-maps';
 import { TicketQuantityDialogComponent } from './components/partials/ticket-quantity-dialog/ticket-quantity-dialog.component';
 import { RemoveCartItemDialogComponent } from './components/partials/remove-cart-item-dialog/remove-cart-item-dialog.component';
+import { NgToastModule } from 'ng-angular-popup';
 
 @NgModule({
   declarations: [
@@ -91,7 +91,6 @@ import { RemoveCartItemDialogComponent } from './components/partials/remove-cart
     MatSidenavModule,
     MatBadgeModule,
     MatIconModule,
-    MatSnackBarModule,
     BrowserModule,
     BrowserAnimationsModule,
     ToastModule,
@@ -99,7 +98,8 @@ import { RemoveCartItemDialogComponent } from './components/partials/remove-cart
     NgxPaginationModule,
     MatProgressSpinnerModule,
     MatTooltipModule,
-    GoogleMapsModule  
+    GoogleMapsModule,
+    NgToastModule
   ],
   exports: [
     MatBadgeModule

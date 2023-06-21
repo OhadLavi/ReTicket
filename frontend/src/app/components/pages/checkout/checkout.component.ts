@@ -46,18 +46,14 @@ export class CheckoutComponent implements OnInit {
 
   createOrder() {
     if (this.checkoutForm.invalid) {
-      console.log("invalid");
       return;
     };
 
     this.order.name = this.fc.name.value;
     this.order.email = this.fc.email.value;
     this.order.userId = this.userService.currentUser.id;
-    console.log("here");
-    console.log(this.order);
     this.orderService.create(this.order).subscribe({
       next: (order:Order) => {
-        console.log(order);
       },
       error: (err: any) => {
         console.log(err);

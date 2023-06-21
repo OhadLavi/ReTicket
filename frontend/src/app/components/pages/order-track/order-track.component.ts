@@ -41,7 +41,7 @@ export class OrderTrackComponent implements OnInit {
       link.click();
       setTimeout(() => window.URL.revokeObjectURL(url), 100);
     } else {
-      console.error('No file data available');
+
     }
   }
   
@@ -53,7 +53,7 @@ export class OrderTrackComponent implements OnInit {
       printWindow?.print();
       setTimeout(() => window.URL.revokeObjectURL(url), 100);
     } else {
-      console.error('No file data available');
+
     }
   }
   

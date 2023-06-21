@@ -5,6 +5,7 @@ import { UserService } from 'src/app/services/user.service';
 import { Ticket } from 'src/app/shared/interfaces/ITicket';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
+import { NgToastService } from 'ng-angular-popup';
 
 @Component({
   selector: 'app-sell-ticket',
@@ -33,7 +34,6 @@ export class SellTicketComponent implements OnInit {
   description: string = '';
   isLoading = false;
   isEventDatePassedFlag = false;
-  errorMessage: string = '';
   originalPrice: number = 0;
   ticketPriceControls: FormControl[] = [];
   ticketPriceValidators: Validators[] = [];
@@ -44,7 +44,8 @@ export class SellTicketComponent implements OnInit {
     private ticketUploadService: TicketUploadService,
     private userSrvice:UserService, 
     private router: Router,
-    private el: ElementRef) { }
+    private el: ElementRef,
+    private toast: NgToastService) { }
 
   ngOnInit() {
     setTimeout(() => {
@@ -58,18 +59,16 @@ export class SellTicketComponent implements OnInit {
       let container = this.el.nativeElement.querySelector('#upload-container');
       this.containerHeight = getComputedStyle(container).height;
       this.isLoading = true;
-      this.errorMessage = '';
       for (let i = 0; i < file.length; i++) {
         this.ticketUploadService.uploadTicket(file[i]).subscribe({
           next: (response: any) => {
             const ticketResults = response.ticketResults.tickets;
-            console.log(ticketResults);
             for (let i = 0; i < ticketResults.length; i++) {
               const ticketResult = ticketResults[i];
               if (this.isEventDatePassed(ticketResult.eventDate)) {
                 this.isEventDatePassedFlag = true;
               } else if (!ticketResult.valid) {
-                this.errorMessage = ticketResult.errorMessage;
+                this.toast.error({detail:"ERROR",summary: ticketResult.errorMessage, sticky: false, duration: 10000, type: 'error'});
               } else {
                 ticketResult.eventDate = new Date(ticketResult.eventDate).toISOString().split('T')[0];
                 this.tickets.push(ticketResult);
@@ -90,7 +89,7 @@ export class SellTicketComponent implements OnInit {
           },
           error: error => {
             this.isLoading = false;
-            this.errorMessage = error.error.error;
+            this.toast.error({detail:"ERROR",summary: error.error.error, sticky: false, duration: 10000, type: 'error'});
           }
         });
       }
@@ -110,17 +109,14 @@ onSubmit() {
         tickets: this.tickets, 
         sellerId: this.userSrvice.currentUser.id
     };
-    console.log(ticketInfo);
     this.ticketUploadService.submitTicketInfo(ticketInfo).subscribe({
       next: (response: Ticket[]) => {
-        console.log(response);
         this.isLoading = false;
         this.router.navigate(['/ticketInMarket']); 
       },
       error: error => {
-        console.log(error);
         this.isLoading = false;
-        this.errorMessage = error.message;
+        this.toast.error({detail:"ERROR",summary: error.message, sticky: false, duration: 10000, type: 'error'});
       }
     });
 }
@@ -137,10 +133,8 @@ isEventDatePassed(date: string): boolean {
 }
 
 checkTicketPrice(ticket: Ticket) {
-  if (+ticket.price > this.originalPrice) {
-    this.errorMessage = 'Updated price cannot be more than the original price.';
-  } else {
-    this.errorMessage = '';
+  if (ticket.price > this.originalPrice) {
+    this.toast.warning({detail:"WARN",summary: 'Updated price cannot be more than the original price.', sticky: false, duration: 10000, type: 'warning'});
   }
 }
 

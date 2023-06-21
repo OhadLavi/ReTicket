@@ -23,10 +23,8 @@ export class AppComponent {
   ngOnInit(): void {
     const darkModeOn = this.userService.getThemePreference();
     this.toggleControl.setValue(darkModeOn);
-    console.log(darkModeOn);
     const darkClassName = 'darkMode';
     if (darkModeOn) {
-      console.log('adding dark mode');
       this.className = darkClassName;
       this.overlay.getContainerElement().classList.add(darkClassName);
     } else {
@@ -36,9 +34,7 @@ export class AppComponent {
     
     this.toggleControl.valueChanges.subscribe((darkMode) => {
       this.className = darkMode ? darkClassName : '';
-      console.log(darkModeOn + 'toggle');
       if (darkMode) {
-        console.log('adding dark mode2');
         this.overlay.getContainerElement().classList.add(darkClassName);
         this.userService.setThemePreference(darkMode);
       } else {

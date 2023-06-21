@@ -47,12 +47,10 @@ export class PaypalButtonComponent implements OnInit {
         self.orderService.pay(this.order).subscribe(
           {
             next: (response: any) => {
-              console.log(response);
               const orderId = response.body.orderId;
               const fileData = response.body.fileData;
               const fileName = response.body.fileName;
-              this.sharedService.setOrderData({ orderId, fileData, fileName });
-              console.log('/track/' + orderId);     
+              this.sharedService.setOrderData({ orderId, fileData, fileName }); 
               this.cartService.clearCart();
               this.router.navigateByUrl('/track/' + orderId);
             },

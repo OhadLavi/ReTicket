@@ -47,7 +47,6 @@ router.post("/login", asyncHandler(
 ));
 
 router.put("/update/:id", asyncHandler(async (req, res) => {
-    console.log("update user");
     const { id } = req.params;
     const { name, email, password } = req.body;
 
@@ -141,13 +140,9 @@ router.post("/moveToPaypal", asyncHandler(async (req, res) => {
         if (error) {
           console.log(error.response);
           throw error;
-        } else {
-          console.log("Create Payout Response");
-          console.log(payout);
-    
+        } else {  
           try {
             const updatedUser = await UserModel.findOneAndUpdate({ _id: userId }, { balance: 0 }, { new: true });
-            console.log("User balance updated successfully", updatedUser);
           } catch (err) {
             console.log("Something went wrong when updating the user balance", err);
           }
