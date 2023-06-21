@@ -14,12 +14,13 @@ const ticketSchema = new mongoose.Schema({
     fileIds: [{ type: String, required: true }],
     description: { type: String, required: false },
     orderId: { type: mongoose.Schema.Types.ObjectId, ref: 'Order', required: false },
-  }, {
-    timestamps: true,
-    toJSON: {virtuals: true},
-    toObject: {virtuals: true}
-  });
-  
+    barcode: { type: String, unique: true },
+}, {
+  timestamps: true,
+  toJSON: {virtuals: true},
+  toObject: {virtuals: true}
+});
+
   ticketSchema.statics.findCheapestTickets = function (eventId, quantity) {
     return this.find({ eventId: eventId, isSold: false })
         .sort({ price: 1 })

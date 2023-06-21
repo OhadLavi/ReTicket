@@ -59,6 +59,10 @@ router.post('/upload', upload.single('file'), async (req, res) => {
       const pdfBytes = await pdfDocSingle.save();
       const pdfBuffer = Buffer.from(pdfBytes);
       const ticketResult = await processTicket(pdfBuffer);
+      const existingTicket = await Ticket.findOne({ barcode: ticketResult.tickets[0].barcode, isSold: false });
+      if (existingTicket) {
+        return res.status(400).json({ error: 'Error: A ticket with this barcode is already for sale' });
+      }
       if (ticketResult.error)
         return res.status(500).json({ error: ticketResult.error });      
       if (!ticketResult)
