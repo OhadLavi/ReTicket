@@ -42,6 +42,7 @@ export class EventPageComponent implements OnInit {
         eventService.getEventById(params.id).subscribe(serverEvent => {
           this.eventm = serverEvent;
           if(this.eventm) { 
+            console.log(this.eventm);
             this.totalQuantityInCart = this.cartService.getQuantityInCart(this.eventm.id);
             this.geocodeAddress(this.eventm.location + ', ' + this.eventm.venue);
             this.checkImageDimensions(this.eventm.image);
