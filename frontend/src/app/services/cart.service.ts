@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, of } from 'rxjs';
 import { Cart } from '../shared/models/Cart';
 import { CartItem } from '../shared/models/CartItem';
 import { EventM } from '../shared/models/EventM';
@@ -25,22 +25,53 @@ export class CartService {
     return cartItem ? cartItem.quantity : 0;
   }
 
+  updateCartItemQuantity(eventM: any, newQuantity: number): Observable<Cart> {
+    let existingCartItem = this.cart.items.find(item => item.eventM.id === eventM.id);
+  
+    if (existingCartItem) {
+      let oldQuantity = existingCartItem.quantity;
+      let additionalQuantity = newQuantity - oldQuantity;
+
+      if (newQuantity > existingCartItem.eventM.availableTickets) {
+        console.log('Error: Quantity exceeds the number of available tickets');
+        return of(this.cart);
+      }
+
+      if (additionalQuantity > 0) {
+        this.addToCart(eventM, additionalQuantity);
+      } else if (additionalQuantity < 0) {
+        existingCartItem.quantity = newQuantity;
+        existingCartItem.price = (Math.round(existingCartItem.ticket.price / this.exchangeRate * 100) / 100) * newQuantity;
+        this.updateCartToLocalStorage();
+      }
+    } else {
+      console.log('Error: cart item not found');
+      return of(this.cart);
+    }
+    return of(this.cart);
+  }
+
   addToCart(eventM:EventM, quantity:number):void {
     this.eventService.findTickets(eventM.id, quantity).subscribe(tickets => {
-      for (let ticket of tickets) {
-        let existingCartItem = this.cart.items.find(item => item.eventM.id === eventM.id && item.ticket.id === ticket.id);
-        if (existingCartItem) {
+      let existingCartItem = this.cart.items.find(item => item.eventM.id === eventM.id);
+      
+      if (existingCartItem) {
+        for (let ticket of tickets) {
           existingCartItem.quantity += 1;
           existingCartItem.price += (Math.round(ticket.price / this.exchangeRate * 100) / 100);
-        } else {
-          let cartItem = new CartItem(eventM, ticket);
-          this.cart.items.push(cartItem);
         }
+      } else {
+        let cartItem = new CartItem(eventM, tickets[0]);
+        for (let i = 1; i < tickets.length; i++) {
+          let ticket = tickets[i];
+          cartItem.quantity += 1;
+          cartItem.price += (Math.round(ticket.price / this.exchangeRate * 100) / 100);
+        }
+        this.cart.items.push(cartItem);
       }
       this.updateCartToLocalStorage();
     });
   }
-  
   
   removeFromCart(ticketId:string):void {
     this.cart.items = this.cart.items.filter(item => item.ticket.id !== ticketId);

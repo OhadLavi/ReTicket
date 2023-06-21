@@ -5,6 +5,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CartService } from 'src/app/services/cart.service';
 import { Cart } from 'src/app/shared/models/Cart';
 import { CartItem } from 'src/app/shared/models/CartItem';
+import { MatDialog } from '@angular/material/dialog';
+import { RemoveCartItemDialogComponent } from '../../partials/remove-cart-item-dialog/remove-cart-item-dialog.component';
 
 @Component({
   selector: 'app-cart',
@@ -24,7 +26,8 @@ export class CartComponent implements OnInit{
      private formBuilder: UntypedFormBuilder,
       private location: Location, 
       private router: Router,
-      private activatedRoute: ActivatedRoute) {
+      private activatedRoute: ActivatedRoute,
+      public dialog: MatDialog) {
   }
 
   ngOnInit(): void {
@@ -45,8 +48,32 @@ export class CartComponent implements OnInit{
   }
 
   changeQuantity(cartItem:CartItem, quantityInString:string) {
-    this.cartService.changeQuantity(cartItem.eventM.id, parseInt(quantityInString));
+    let newQuantity = parseInt(quantityInString);
+    if (newQuantity === 0) {
+      this.openRemoveDialog(cartItem);
+    } else {
+      this.cartService.updateCartItemQuantity(cartItem.eventM, newQuantity);
+    }
+    if(cartItem.quantity === 0){
+      cartItem.quantity = 1;
+    }
   }
+  
+  openRemoveDialog(cartItem:CartItem): void {
+    const dialogRef = this.dialog.open(RemoveCartItemDialogComponent, {
+      width: 'auto',
+      data: {cartItem: cartItem}
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      if (result?.action === 'remove') {
+        this.cartService.removeFromCart(cartItem.ticket.id);
+      } else {
+        cartItem.quantity = 1;
+      }
+    });
+  }
+
 
   applyCoupon() {
     if (this.couponForm.value.couponCode === 'b') {

@@ -45,6 +45,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { EventCardComponent } from './components/partials/event-card/event-card.component';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { TicketQuantityDialogComponent } from './components/partials/ticket-quantity-dialog/ticket-quantity-dialog.component';
+import { RemoveCartItemDialogComponent } from './components/partials/remove-cart-item-dialog/remove-cart-item-dialog.component';
 
 @NgModule({
   declarations: [
@@ -63,7 +64,8 @@ import { TicketQuantityDialogComponent } from './components/partials/ticket-quan
     TicketInMarketComponent,
     OrderTrackComponent,
     EventCardComponent,
-    TicketQuantityDialogComponent
+    TicketQuantityDialogComponent,
+    RemoveCartItemDialogComponent
   ],
   imports: [
     BrowserModule,

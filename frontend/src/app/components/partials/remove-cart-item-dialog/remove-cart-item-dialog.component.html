@@ -1,0 +1,20 @@
+<div class="dialog-header">
+    <h1 mat-dialog-title>Remove from Cart</h1>
+    <button mat-icon-button class="close-button" mat-dialog-close>
+      <mat-icon style="color: red;">close</mat-icon>
+    </button>
+  </div>
+  <div mat-dialog-content class="border-top border-bottom">
+    <p>Are you sure you want to remove {{data.name}} from the cart?</p>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-raised-button color="primary" (click)="onCancel()">
+      <mat-icon>cancel</mat-icon> 
+      Cancel
+    </button>
+    <button mat-raised-button color="accent" cdkFocusInitial (click)="onRemove()">
+      <mat-icon>delete</mat-icon> 
+      Remove
+    </button>
+  </div>
+  
