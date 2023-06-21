@@ -26,7 +26,7 @@ router.get("/search/:searchTerm?", asyncHandler(async (req, res) => {
   let allEvents = await Event.getNonExpiredEvents();
   if (!searchTerm) return res.json(allEvents);
   let similarityScores = [];
-  const searchTermWords = searchTerm.toLowerCase().replace(/[^\w\s]/gi, ' ').split(' ');
+  const searchTermWords = searchTerm.normalize('NFD').toLowerCase().replace(/[^a-zA-Z0-9\u0590-\u05FF\s]/gi, ' ').split(' ');
   const similarityThreshold = 0.8;
   const weights = { name: 0.6, location: 0.2, venue: 0.2 };
   let maxScoreEvent = { event: null, score: 0 };
@@ -35,7 +35,7 @@ router.get("/search/:searchTerm?", asyncHandler(async (req, res) => {
     const valuesToSearch = { name, location, venue };
     let maxSimilarity = 0;
     Object.entries(valuesToSearch).forEach(([key, value]) => {
-      const words = value.toLowerCase().replace(/[^\w\s]/gi, ' ').split(' ');
+      const words = value.normalize('NFD').toLowerCase().replace(/[^a-zA-Z0-9\u0590-\u05FF\s]/gi, ' ').split(' ');
       words.forEach(word => {
         const checkSimilarity = (term) => {
           const distance = natural.LevenshteinDistance(term, word);
@@ -48,11 +48,15 @@ router.get("/search/:searchTerm?", asyncHandler(async (req, res) => {
           }
           const similarityScore = `Similarity between "${term}" and "${word}" in ${key}: ${similarity}`;
           similarityScores.push(similarityScore);
+          // write to file
+          fs.appendFile('similarityScores.txt', similarityScore + '\n', (err) => {
+            if (err) throw err;
+          });
           return similarity;
         };
         searchTermWords.forEach(checkSimilarity);
         if (searchTermWords.length > 1) {
-          checkSimilarity(searchTerm.toLowerCase().replace(/[^\w\s]/gi, ' '));
+          checkSimilarity(searchTerm.normalize('NFD').toLowerCase().replace(/[^a-zA-Z0-9\u0590-\u05FF\s]/gi, ' '));
         }
       });
     });

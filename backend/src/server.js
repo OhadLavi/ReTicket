@@ -45,10 +45,11 @@ app.use('/api/notifications', notificationRouter);
 //start server
 app.listen(port, () => { 
     console.log(`Server is running on port: ${port}`);
+    //scrapeWebsite('eventim');
     setInterval(() => {
-        // scrapeWebsite('eventim');
+         scrapeWebsite('eventim');
         scrapeWebsite('tmisrael');
-    }, 1000 * 60 * 60 * 24); 
+    }, 1000 * 60 * 60 * 24); // Scrap every 24 hours
  });
 
 // Disable strict mode for queries in Mongoose
