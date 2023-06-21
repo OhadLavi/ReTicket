@@ -1,6 +1,7 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { interval, Subscription } from 'rxjs';
+import { TicketService } from 'src/app/services/ticket.service';
 import { UserService } from 'src/app/services/user.service';
 
 @Component({
@@ -10,7 +11,7 @@ import { UserService } from 'src/app/services/user.service';
 })
 export class TicketGridComponent implements OnInit, OnDestroy {
   userId: String = '';
-  constructor(private sanitizer: DomSanitizer, private userService:UserService) {
+  constructor(private sanitizer: DomSanitizer, private userService:UserService, private ticketService: TicketService) {
     this.userId = this.userService.currentUser.id;
     console.log("here");
     console.log(this.userId);
@@ -34,7 +35,6 @@ export class TicketGridComponent implements OnInit, OnDestroy {
   }
 
   openFile(file: string): void {
-
     const byteCharacters = atob(file);
     const byteNumbers = new Array(byteCharacters.length);
     for (let i = 0; i < byteCharacters.length; i++) {
@@ -42,21 +42,15 @@ export class TicketGridComponent implements OnInit, OnDestroy {
     }
     const byteArray = new Uint8Array(byteNumbers);
     const fileBlob = new Blob([byteArray], { type: 'application/pdf' });
-
-
     const url = window.URL.createObjectURL(fileBlob);
     const printWindow = window.open(url);
-
     setTimeout(() => window.URL.revokeObjectURL(url), 100);
-
   }
-  
   
   countdown(eventDate: string): string {
     const currentTime = new Date().getTime();
     const targetTime = new Date(eventDate).getTime();
     const timeDifference = targetTime - currentTime;
-  
     if (timeDifference > 0) {
       if (timeDifference < 24 * 60 * 60 * 1000) {
         return 'Event Started';
@@ -71,5 +65,18 @@ export class TicketGridComponent implements OnInit, OnDestroy {
       return 'Event Ended';
     }
   }
+
+  deleteTicket(ticketId: string): void {
+    this.ticketService.deleteTicket(ticketId).subscribe(
+      response => {
+        console.log(response);
+        this.tickets = this.tickets.filter(ticket => ticket.id !== ticketId);
+      },
+      error => {
+        console.error(error);
+      }
+    );
+  }
+  
   
 }

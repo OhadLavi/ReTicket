@@ -1,5 +1,7 @@
 <mat-toolbar color="primary">
-	<span [routerLink]="['/']" style="cursor: pointer;">Reticket</span>
+	<a [routerLink]="['/']" style="cursor: pointer;">
+		<img src="../../../../assets/logo.svg" alt="Reticket" class="toolbar-logo">
+	  </a>	  
 	<span class="example-spacer"></span>
 	<button *ngIf="isAuth" mat-button [matMenuTriggerFor]="menu" matTooltip="Account">
 	  <img [src]="'http://localhost:5000/' + user.imageURL" class="user-image">

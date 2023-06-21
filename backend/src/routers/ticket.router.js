@@ -63,11 +63,13 @@ router.post('/upload', upload.single('file'), async (req, res) => {
       const pdfBytes = await pdfDocSingle.save();
       const pdfBuffer = Buffer.from(pdfBytes);
       const ticketResult = await processTicket(pdfBuffer);
+      if (ticketResult.error)
+        return res.status(500).json({ error: ticketResult.error });      
       if (!ticketResult)
         return res.status(500).json({ error: 'Error: PDF processing failed, the file might be corrupted' });
       const event = await getEventByNameDateLocation(ticketResult.tickets[0].artists, ticketResult.tickets[0].eventDate, ticketResult.tickets[0].venue);
-      if (!event)
-        return res.status(500).json({ error: 'Error: PDF processing failed, the file might be corrupted' });
+      if (!event || event.error)
+        return res.status(500).json({ error: event.error });
       const eventId = event._id;
       ticketResult.tickets.forEach(ticket => {
         ticket.eventId = eventId.toString();
@@ -153,6 +155,20 @@ router.post('/submit', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
+
+router.delete('/delete/:id', asyncHandler(async (req, res) => {
+  const ticket = await Ticket.findById(req.params.id);
+  if (!ticket) {
+    res.status(404).send('No ticket found');
+    return;
+  }
+  if (String(ticket.seller) !== String(req.user._id) || ticket.isSold) {
+    res.status(403).send('You are not allowed to delete this ticket');
+    return;
+  }
+  await Ticket.findByIdAndRemove(req.params.id);
+  res.status(200).send('Ticket deleted');
+}));
 
 router.get('/getUserTickets/:userId', asyncHandler(async(req, res) => {
   const userId = req.params.userId;

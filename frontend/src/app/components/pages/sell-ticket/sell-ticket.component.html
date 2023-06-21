@@ -8,7 +8,7 @@
           <p class="my-2">Drag and drop your file here</p>
           <p class="mt-1 h6">Or</p>
           <input type="file" id="file-input" class="my-2" (change)="onFileSelected($event)" accept=".pdf,.doc,.docx">
-          <p class="my-2">Supported file types: .pdf, .png, .jpg .jpeg</p>
+          <p class="my-2">Supported file types: .pdf</p>
         </div>
       </div>
       <div id="uploading-container" *ngIf="isLoading && !uploadSuccess" [style.height]="containerHeight" class="card my-4 border-dashed d-flex justify-content-center align-items-center" [@fade]>
@@ -83,36 +83,4 @@
       </div>
     </div>
   </div>
-</div>  
-
-<!--<div class="container">
-    <div class="row">
-      <div class="col-md-9 mx-auto">
-        <h2 class="text-center">Upload Ticket File</h2>
-        <mat-card id="upload-container" *ngIf="!fileUploaded" class="my-4 border-dashed">
-          <mat-card-content class="text-center p-2 highlight-on-drag-over">
-            <p class="my-2">Drag and drop your file here</p>
-            <p>or</p>
-            <input type="file" id="file-input" class="my-2" (change)="onFileSelected($event)" accept=".pdf,.doc,.docx">
-            <p class="my-2">Supported file types: .pdf, .png, .jpg .jpeg</p>
-          </mat-card-content>
-        </mat-card>
-        <form id="ticket-info-form" *ngIf="fileUploaded" (ngSubmit)="onSubmit()" class="my-4 border-rounded p-4">
-          <mat-form-field class="full-width mb-4">
-            <mat-label>Ticket Price</mat-label>
-            <input matInput type="text" [(ngModel)]="ticketPrice" name="ticketPrice">
-          </mat-form-field>
-          <mat-form-field class="full-width mb-4">
-            <mat-label>Location</mat-label>
-            <input matInput type="text" [(ngModel)]="location" name="location">
-          </mat-form-field>
-          <mat-form-field class="full-width mb-4">
-            <mat-label>Date</mat-label>
-            <input matInput type="date" [(ngModel)]="date" name="date">
-          </mat-form-field>
-          <mat-progress-spinner *ngIf="!fileUploaded" mode="indeterminate"></mat-progress-spinner>
-          <button mat-raised-button color="primary" type="submit">Sell Ticket</button>
-        </form>
-      </div>
-    </div>
-  </div>  -->
+</div>

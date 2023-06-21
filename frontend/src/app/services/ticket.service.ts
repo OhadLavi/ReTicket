@@ -12,4 +12,9 @@ export class TicketService {
   fetchUserTickets(userId: string): Observable<any> {
     return this.http.get<any>(URLS.TICKET.GET_USER_TICKETS_URL(userId));
   }
+
+  deleteTicket(ticketId: string): Observable<any> {
+    return this.http.delete<any>(URLS.TICKET.GET_TICKET_DELETE_URL(ticketId));
+  }
+  
 }

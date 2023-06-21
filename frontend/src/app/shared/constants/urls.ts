@@ -41,11 +41,12 @@ export const URLS = {
         GET_TICKET_UPLOAD_URL: `${BASE_URL}/api/tickets/upload/`,
         GET_TICKET_SUBMIT_URL: `${BASE_URL}/api/tickets/submit/`,
         GET_TICKET_REVIEW_URL: (id:string) => `${BASE_URL}/api/tickets/review/${id}`,
-        GET_TICKET_DOWNLOAD_URL: (id:string) => `${BASE_URL}/api/tickets/getTicketFile/${id}`
+        GET_TICKET_DOWNLOAD_URL: (id:string) => `${BASE_URL}/api/tickets/getTicketFile/${id}`,
+        GET_TICKET_DELETE_URL: (id:string) => `${BASE_URL}/api/tickets/delete/${id}`    
     },
     NOTIFICATION: {
         GET_NOTIFICATIONS_URL: `${BASE_URL}/api/notifications`,
-        GET_MARK_AS_READ_URL: `${BASE_URL}/api/notifications/read`,
+        GET_MARK_AS_READ_URL: `${BASE_URL}/api/notifications/read`
       }
       
 };
