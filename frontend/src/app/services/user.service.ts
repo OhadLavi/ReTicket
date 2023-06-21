@@ -122,6 +122,7 @@ export class UserService {
     localStorage.removeItem('user');
     localStorage.removeItem('Cart');
     localStorage.removeItem(this.darkModeLSKey);
+    console.log('removed user from local storage');
     window.location.href = "/";
   }
 
@@ -141,7 +142,7 @@ export class UserService {
 
   getThemePreference(): boolean {
     const savedPref = localStorage.getItem(this.darkModeLSKey);
-    return savedPref !== null ? savedPref === 'true' : true;
+    return savedPref !== null ? savedPref === 'true' : false;
   }
   
 }

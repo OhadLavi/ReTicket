@@ -6,6 +6,7 @@ import { NgToastService } from 'ng-angular-popup';
 import { TicketService } from 'src/app/services/ticket.service';
 import { UserService } from 'src/app/services/user.service';
 import { TicketDeleteDialogComponent } from '../ticket-delete-dialog/ticket-delete-dialog.component';
+import { TicketEditDialogComponent } from '../ticket-edit-dialog/ticket-edit-dialog.component';
 
 @Component({
   selector: 'app-ticket-grid',
@@ -69,7 +70,9 @@ export class TicketGridComponent implements OnInit, OnDestroy {
     }
   }
 
-  deleteTicket(ticketId: string): void {
+  deleteTicket(ticketId: string, event: Event): void {
+    event.stopPropagation();
+    
     const dialogRef = this.dialog.open(TicketDeleteDialogComponent, {
       width: 'auto',
       data: {ticketId: ticketId}
@@ -90,14 +93,25 @@ export class TicketGridComponent implements OnInit, OnDestroy {
     });
   }
 
-  updateTicketPrice(ticketId: string, newPrice: number): void {
-    this.ticketService.updateTicketPrice(ticketId, newPrice).subscribe(
-      response => {
-        this.toast.success({detail:"SUCCESS", summary:'Ticket price successfully updated.', sticky: false, duration: 3000, type: 'success'});
-      },
-      error => {
-        this.toast.error({detail:"ERROR", summary: 'An error occurred. Please try again later.', sticky: false, duration: 10000, type: 'error'});
-      }
-    );
+  updateTicketPrice(ticketId: string, currentPrice: number): void {
+    const dialogRef = this.dialog.open(TicketEditDialogComponent, {
+      width: 'auto',
+      data: {price: currentPrice}
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      if (result?.action === 'confirm') {
+        const newPrice = result.price;
+        this.ticketService.updateTicketPrice(ticketId, newPrice).subscribe(
+          response => {
+            this.toast.success({detail:"SUCCESS", summary:'Ticket price successfully updated.', sticky: false, duration: 3000, type: 'success'});
+          },
+          error => {
+            this.toast.error({detail:"ERROR", summary: 'An error occurred. Please try again later.', sticky: false, duration: 10000, type: 'error'});
+          }
+        );
+      }    
+    });
   }
+  
 }
