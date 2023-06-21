@@ -9,12 +9,16 @@ import { Injectable } from '@angular/core';
 export class TicketService {
   constructor(private http: HttpClient) { }
 
-  fetchUserTickets(userId: string): Observable<any> {
-    return this.http.get<any>(URLS.TICKET.GET_USER_TICKETS_URL(userId));
-  }
+  fetchUserTickets(): Observable<any> {
+    return this.http.get<any>(URLS.TICKET.GET_USER_TICKETS_URL());
+  }  
 
   deleteTicket(ticketId: string): Observable<any> {
     return this.http.delete<any>(URLS.TICKET.GET_TICKET_DELETE_URL(ticketId));
+  }
+
+  updateTicketPrice(ticketId: string, newPrice: number): Observable<any> {
+    return this.http.put<any>(URLS.TICKET.GET_TICKET_UPDATE_PRICE_URL(ticketId), { price: newPrice });
   }
   
 }

@@ -46,6 +46,8 @@ import { GoogleMapsModule } from '@angular/google-maps';
 import { TicketQuantityDialogComponent } from './components/partials/ticket-quantity-dialog/ticket-quantity-dialog.component';
 import { RemoveCartItemDialogComponent } from './components/partials/remove-cart-item-dialog/remove-cart-item-dialog.component';
 import { NgToastModule } from 'ng-angular-popup';
+import { TicketDeleteDialogComponent } from './components/partials/ticket-delete-dialog/ticket-delete-dialog.component';
+import { TicketEditDialogComponent } from './components/partials/ticket-edit-dialog/ticket-edit-dialog.component';
 
 @NgModule({
   declarations: [
@@ -65,7 +67,9 @@ import { NgToastModule } from 'ng-angular-popup';
     OrderTrackComponent,
     EventCardComponent,
     TicketQuantityDialogComponent,
-    RemoveCartItemDialogComponent
+    RemoveCartItemDialogComponent,
+    TicketDeleteDialogComponent,
+    TicketEditDialogComponent
   ],
   imports: [
     BrowserModule,

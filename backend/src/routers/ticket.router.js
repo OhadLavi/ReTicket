@@ -29,6 +29,7 @@ const jimp = require('jimp');
 const sample_events = require('../data/events');
 const { send, eventNames } = require('process');
 const { processTicket} = require('../services/ticket.service');
+const authMiddleware = require('../middlewares/auth.mid');
 
 router.get("/seed", asyncHandler(async (req, res) => {
   const eventsCount = await Event.countDocuments();
@@ -156,22 +157,24 @@ router.post('/submit', async (req, res) => {
   }
 });
 
-router.delete('/delete/:id', asyncHandler(async (req, res) => {
+router.delete('/delete/:id', authMiddleware, asyncHandler(async (req, res) => {
   const ticket = await Ticket.findById(req.params.id);
   if (!ticket) {
-    res.status(404).send('No ticket found');
+    res.status(404).send({error: 'No ticket found'});
     return;
   }
-  if (String(ticket.seller) !== String(req.user._id) || ticket.isSold) {
-    res.status(403).send('You are not allowed to delete this ticket');
+  console.log(ticket.seller);
+  console.log(req.user.id);
+  if (ticket.seller.toString() !== req.user.id.toString() || ticket.isSold) {
+    res.status(403).send({error: 'You are not allowed to delete this ticket'});
     return;
   }
   await Ticket.findByIdAndRemove(req.params.id);
-  res.status(200).send('Ticket deleted');
+  res.status(200).send({message: 'Ticket deleted'});
 }));
 
-router.get('/getUserTickets/:userId', asyncHandler(async(req, res) => {
-  const userId = req.params.userId;
+router.get('/getUserTickets', authMiddleware, asyncHandler(async(req, res) => {
+  const userId = req.user.id;
   const sellingTickets = await getSellingTickets(userId);
   const boughtTickets = await getBoughtTickets(userId);
   res.json({
@@ -180,6 +183,18 @@ router.get('/getUserTickets/:userId', asyncHandler(async(req, res) => {
   });
 }));
 
+router.put('/updatePrice/:id', authMiddleware, asyncHandler(async(req, res) => {
+  const ticketId = req.params.id;
+  const newPrice = req.body.price;
+  const ticket = await Ticket.findById(ticketId);
+  if (ticket) {
+    ticket.price = newPrice;
+    await ticket.save();
+    res.json({ message: 'Ticket price updated successfully.' });
+  } else {
+    res.status(404).json({ message: 'Ticket not found.' });
+  }
+}));
 
 router.get('/getTicketFile/:id', async (req, res) => {
   try {

@@ -6,3 +6,7 @@
     color: rgb(84, 110, 197);
 }
   
+.button-group {
+  right: 10px;
+  left: auto;
+}

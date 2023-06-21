@@ -23,7 +23,7 @@ export class AccountSidemenuComponent implements OnInit {
       if (user.id) {
         this.user = user;
         this.loadNotifications(user.id);
-        this.loadTickets(user.id);
+        this.loadTickets();
       }
     });
   }
@@ -53,9 +53,10 @@ export class AccountSidemenuComponent implements OnInit {
     });
   }
 
-  loadTickets(userId: string) {
-    this.ticketService.fetchUserTickets(userId).subscribe((tickets) => {
+  loadTickets() {
+    this.ticketService.fetchUserTickets().subscribe((tickets) => {
       this.ticketCount = tickets.sellingTickets.length + tickets.boughtTickets.length;
     });
   }
+  
 }

@@ -220,6 +220,7 @@ async function formatTicketDetails(tickets) {
       }));
 
       const formattedTicketDetails = {
+        id: ticketDetails._id,
         eventDate: ticketDetails.eventDate,
         location: ticketDetails.location,
         price: ticketDetails.price,

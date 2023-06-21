@@ -1,0 +1,19 @@
+<div class="dialog-header">
+    <h1 mat-dialog-title>Delete Ticket</h1>
+    <button mat-icon-button class="close-button" mat-dialog-close>
+      <mat-icon style="color: red;">close</mat-icon>
+    </button>
+  </div>
+  <div mat-dialog-content class="border-top border-bottom">
+    <p>Are you sure you want to delete this ticket?</p>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-raised-button color="primary" (click)="onCancel()">
+      <mat-icon>cancel</mat-icon> 
+      Cancel
+    </button>
+    <button mat-raised-button color="accent" cdkFocusInitial (click)="onDelete()">
+      <mat-icon>delete</mat-icon> 
+      Delete
+    </button>
+</div>  

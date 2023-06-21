@@ -18,8 +18,11 @@
                                         <span class='opacity-70'>({{allTickets.length}})</span>
                                     </a>
                                     <ng-template ngbNavContent>
-                                        <app-ticket-grid [tickets]="allTickets"></app-ticket-grid>
-                                    </ng-template>
+                                        <app-ticket-grid [tickets]="allTickets" (ticketDeleted)="fetchTickets()"></app-ticket-grid>
+                                        <div *ngIf="allTickets.length === 0" class="empty-container">
+                                          There are no tickets here.
+                                        </div>
+                                      </ng-template>                                      
                                 </li>
                                 <li class="nav-item" ngbNavItem="sold">
                                     <a ngbNavLink class="nav-link">
@@ -27,8 +30,11 @@
                                         <span class='opacity-70'>({{soldTickets.length}})</span>
                                     </a>
                                     <ng-template ngbNavContent>
-                                        <app-ticket-grid [tickets]="soldTickets"></app-ticket-grid>
-                                    </ng-template>
+                                        <app-ticket-grid [tickets]="soldTickets" (ticketDeleted)="fetchTickets()"></app-ticket-grid>
+                                        <div *ngIf="soldTickets.length === 0" class="empty-container">
+                                          There are no sold tickets here.
+                                        </div>
+                                      </ng-template>
                                 </li>
                                 <li class="nav-item" ngbNavItem="selling">
                                     <a ngbNavLink class="nav-link">
@@ -36,8 +42,11 @@
                                         <span class='opacity-70'>({{sellingTickets.length}})</span>
                                     </a>
                                     <ng-template ngbNavContent>
-                                        <app-ticket-grid [tickets]="sellingTickets"></app-ticket-grid>
-                                    </ng-template>
+                                        <app-ticket-grid [tickets]="sellingTickets" (ticketDeleted)="fetchTickets()"></app-ticket-grid>
+                                        <div *ngIf="sellingTickets.length === 0" class="empty-container">
+                                          There are no tickets being sold here.
+                                        </div>
+                                      </ng-template>
                                 </li>                                
                                 <li class="nav-item" ngbNavItem="live">
                                     <a ngbNavLink class="nav-link">
@@ -45,8 +54,11 @@
                                         <span class='opacity-70'>({{boughtTickets.length}})</span>
                                     </a>
                                     <ng-template ngbNavContent>
-                                        <app-ticket-grid [tickets]="boughtTickets"></app-ticket-grid>
-                                    </ng-template>
+                                        <app-ticket-grid [tickets]="boughtTickets" (ticketDeleted)="fetchTickets()"></app-ticket-grid>
+                                        <div *ngIf="boughtTickets.length === 0" class="empty-container">
+                                          There are no bought tickets here.
+                                        </div>
+                                      </ng-template>
                                 </li>
                             </ul>
                         </div>
