@@ -124,7 +124,6 @@ export class EventPageComponent implements OnInit {
         this.router.navigate(['/cart']);
       }
     });
-    
   }
 
   toggleFavorite() {

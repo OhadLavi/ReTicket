@@ -12,9 +12,9 @@ export class TicketQuantityDialogComponent {
     @Inject(MAT_DIALOG_DATA) public data: {quantity: number, availableTickets: number}
   ) {}
 
-  // onCancel(): void {
-  //   this.dialogRef.close();
-  // }
+  onCancel(): void {
+    this.dialogRef.close();
+  }
 
   onContinueBrowsing(): void {
     this.dialogRef.close({quantity: this.data.quantity, action: 'continueBrowsing'});

@@ -40,22 +40,21 @@
                         </div>
                         <div class="col-md-3 col-lg-3 col-xl-2">
                           <h6 class="text-black mb-0">{{cartItem.eventM.name}}</h6>
-                          <p>{{cartItem.ticketId}}</p>
                         </div>
                         <div class="col-md-2 col-lg-2 col-xl-2">
                           <h6 class="text-black mb-0">{{cartItem.eventM.date | date:'fullDate'}}</h6>
                         </div>
                         <div class="col-md-3 col-lg-3 col-xl-2 d-flex">
-                          <button class="btn btn-link px-2" onclick="this.parentNode.querySelector('input[type=number]').stepDown();">
+                          <button class="btn btn-link px-2" (click)="changeQuantity(cartItem, (cartItem.quantity - 1).toString())">
                             <i class="fas fa-minus"></i>
                           </button>
                           <div class="col-4">
-                            <input #quantitySelect id="form1" min="0" name="quantity" [value]="cartItem.quantity"
-                                   (change)="changeQuantity(cartItem, quantitySelect.value)" type="number" class="form-control form-control-sm" />
+                            <input #quantitySelect id="form1" min="0" max="{{cartItem.eventM.availableTickets}}" name="quantity" [value]="cartItem.quantity"
+                            (change)="changeQuantity(cartItem, quantitySelect.value)" type="number" class="form-control form-control-sm" />                            
                           </div>                        
-                          <button class="btn btn-link px-2" onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
+                          <button class="btn btn-link px-2" (click)="changeQuantity(cartItem, (cartItem.quantity + 1).toString())">
                             <i class="fas fa-plus"></i>
-                          </button>
+                          </button>                          
                         </div>                        
                         <div class="col-md-3 col-lg-2 col-xl-1">
                           <h6 class="mb-0"> {{cartItem.price | currency}}</h6>
@@ -67,11 +66,13 @@
                     </div>
                     <div *ngIf="!cart || cart.items.length === 0"><p class="text-muted">Your cart is empty.</p></div>
                     <hr class="my-4">
-                    <div class="pt-5">
-                      <h6 class="mb-0"><a class="text-body" style="cursor: pointer;" (click)="goBack()"><i class="fas fa-long-arrow-alt-left me-2"></i>Back to shop</a></h6>
-                    </div>
                   </div>
-                </div>
+                  <div class="bottom-0 position-absolute p-5">
+                      <div class="">
+                          <h6 class="mb-0"><a class="text-body" style="cursor: pointer;" (click)="goBack()"><i class="fas fa-long-arrow-alt-left me-2"></i>Back to shop</a></h6>
+                      </div>
+                  </div>
+              </div>
                 <div *ngIf="cart && cart.items.length" class="col-lg-3" style="background-color: beige; border-radius: 0 15px 15px 0;">
                   <div class="p-5">
                     <h3 class="fw-bold mb-5 mt-2 pt-1">Summary</h3>
