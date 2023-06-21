@@ -41,7 +41,6 @@ export class HomeComponent {
     eventsObservable.subscribe(
       (serverEvents) => {
         this.events = serverEvents;
-        console.log(this.events);
       },
       (error) => {
         if (error.status === 500 && error.error.message === 'No results') {
@@ -68,7 +67,6 @@ export class HomeComponent {
     if (this.recorder) {
       this.isRecording = false;
       this.recorder.stopRecording(() => {
-        console.log('stopped recording');
         let blob = this.recorder.getBlob();
         this.sendToServer(blob);
         this.stream.getTracks().forEach(track => track.stop());
@@ -86,7 +84,7 @@ export class HomeComponent {
         });
       });
     } else {
-      console.log('Audio stream is empty, not sending to server.');
+      console.log('Audio too short');
     }
   }
 
@@ -95,29 +93,4 @@ export class HomeComponent {
     this.searchEvents();
   }
 
-
-    // startRecording(): void {
-  //   console.log('start recording');
-  //   this.isRecording = true;
-  //   const mediaConstraints = { video: false, audio: true };
-  //   navigator.mediaDevices.getUserMedia(mediaConstraints).then(this.processRecording.bind(this));
-  //   document.addEventListener('mouseup', this.stopRecording.bind(this));
-  // }
-
-  // private processRecording(stream: MediaStream): void {
-  //   console.log('process recording');
-  //   this.recorder = new RecordRTC(stream, { type: 'audio' });
-  //   this.recorder.startRecording();
-  // }
-
-  // stopRecording(): void {
-  //   console.log('stop recording');
-  //   this.isRecording = false;
-  //   if (this.recorder) {
-  //     this.recorder.stopRecording(() => {
-  //       this.sendToServer(this.recorder.getBlob());
-  //     });
-  //   }
-  //   document.removeEventListener('mouseup', this.stopRecording.bind(this));
-  // }
 }

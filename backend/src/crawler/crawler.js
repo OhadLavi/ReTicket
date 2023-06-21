@@ -29,8 +29,6 @@ async function scrapeWebsite(websiteName) {
         let venue = document.querySelector(selectors.venue)?.innerText || '';
         let img = document.querySelector(selectors.img)?.src || '';
         let description = document.querySelector(selectors.description)?.innerText || '';
-        console.log(selectors.name);
-        console.log({ name, timeDate, venue, location, img, description });
         return { name, timeDate, venue, location, img, description };
       }, config.eventDetailsSelectors);
       if (eventDetails.name && eventDetails.timeDate && eventDetails.venue && eventDetails.location) {
@@ -39,9 +37,7 @@ async function scrapeWebsite(websiteName) {
       }
     }
     await browser.close();
-    console.log(data);
     fs.writeFileSync('scrapedData.txt', JSON.stringify(data, null, 2));
-    console.log('Data successfully written to file!');
   } catch (error) {
     console.error('An error occurred while scraping:', error);
   }

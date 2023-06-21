@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { UserService } from 'src/app/services/user.service';
 import { User } from 'src/app/shared/models/User';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
+import { NgToastService } from 'ng-angular-popup';
 
 @Component({
   selector: 'app-profile',
@@ -23,11 +23,13 @@ export class ProfileComponent implements OnInit {
   token!: string;
   payerId!: string;
   
-  constructor(private formBuilder: UntypedFormBuilder, private userService: UserService, private snackBar: MatSnackBar, private route: ActivatedRoute) {
-    this.user = userService.currentUser;
-    this.userBalance = this.user.balance;
-    console.log(this.user.balance);
-    console.log(this.user.imageURL);
+  constructor(
+    private formBuilder: UntypedFormBuilder,
+    private userService: UserService,
+    private route: ActivatedRoute,
+    private toast: NgToastService) {
+      this.user = userService.currentUser;
+      this.userBalance = this.user.balance;
   }
 
   ngOnInit(): void {
@@ -85,13 +87,6 @@ export class ProfileComponent implements OnInit {
     return this.photoForm.controls;
   }
 
-  openSnackBarSuccess(message: string) {
-    this.snackBar.open(message, 'Close', {
-      duration: 5000,
-      panelClass: ['success-snackbar']
-    });
-  }
-
   updatePhoto(event: any) {
     if (event.target.files && event.target.files.length > 0) {
       const photo: File = event.target.files[0];
@@ -105,23 +100,21 @@ export class ProfileComponent implements OnInit {
   
       // Use the service method to send the file to the backend
       this.userService.updateUserPhoto(this.user.id, photo).subscribe((res) => {
-        this.openSnackBarSuccess('Operation successful!');
+        this.toast.success({detail:"SUCCESS",summary:'User photo updated successfully!', sticky: false, duration: 3000, type: 'success'});
         console.log(res);
         document.querySelectorAll('#user_profile').forEach((element: any) => {
           element.src = this.imageURL;
         });
       },
       error => {
-        console.log('Error occurred while updating user photo:', error);
+        this.toast.error({detail:"ERROR",summary:'Error occurred while updating user photo', sticky: false, duration: 10000, type: 'error'});
       });
     }
   }
   
   saveUser() {
-    console.log("saveUser");
     this.submitted = true;
     if (this.userForm.invalid) {
-      console.log("invalid");
       return;
     }
 
@@ -150,17 +143,14 @@ export class ProfileComponent implements OnInit {
   moveToPaypal() {
     this.userService.moveToPaypal(this.user.id, this.user.email, this.userBalance)
     .subscribe(res => {
-      console.log(res);
       if (res && res.payout && res.payout.batch_header && res.payout.batch_header.payout_batch_id) {
-        console.log(res);
-        this.openSnackBarSuccess('Payment successful! The batch ID is ' + res.payout.batch_header.payout_batch_id);
+        this.toast.success({detail:"SUCCESS",summary:'Payment successful! The batch ID is ' + res.payout.batch_header.payout_batch_id, sticky: false, duration: 3000, type: 'success'});
         this.userService.updateUserBalanceInLocalStorage(0);
         this.userBalance = 0;
       }
     },
     error => {
-      this.openSnackBarSuccess('Error occurred while paying user:' + error);
-      console.log('Error occurred while paying user:', error);
+      this.toast.error({detail:"ERROR",summary:'Error occurred while updating user balance', sticky: false, duration: 10000, type: 'error'});
     });
 }
   

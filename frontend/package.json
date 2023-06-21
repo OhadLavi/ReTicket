@@ -38,6 +38,7 @@
     "dotenv": "^16.3.1",
     "mdb-angular-ui-kit": "^4.1.0",
     "mdb-ui-kit": "^6.3.0",
+    "ng-angular-popup": "^0.4.4",
     "ngx-google-places-autocomplete": "^2.0.5",
     "ngx-pagination": "^6.0.3",
     "primeicons": "^6.0.1",

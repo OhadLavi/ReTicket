@@ -28,11 +28,7 @@ const { PDFParser } = require('pdf2json');
 const jimp = require('jimp');
 const sample_events = require('../data/events');
 const { send, eventNames } = require('process');
-const { 
-  generateRandomTicket, 
-  getRandomDate,
-  processTicket
-} = require('../services/ticket.service');
+const { processTicket} = require('../services/ticket.service');
 
 router.get("/seed", asyncHandler(async (req, res) => {
   const eventsCount = await Event.countDocuments();

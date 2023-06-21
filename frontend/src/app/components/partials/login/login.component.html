@@ -1,6 +1,6 @@
 <div class="container">
   <div class="row justify-content-center">
-    <div class="col-md-6">
+    <div class="col-md-6 px-0">
       <mat-card class="rounded">
         <mat-card-title class="text-center mb-4 font-weight-bold">Login</mat-card-title>
         <mat-card-content>
@@ -47,9 +47,6 @@
           </div>
 
           <p class="text-center text-muted mt-5 mb-0">Don't have an account? <a routerLink="/register" class="fw-bold text-body"><u>Sign Up</u></a></p>
-          <div *ngIf="loginError" class="alert alert-danger mt-3 mx-2">
-            {{ loginError }}
-          </div>
         </mat-card-content>
       </mat-card>
     </div>

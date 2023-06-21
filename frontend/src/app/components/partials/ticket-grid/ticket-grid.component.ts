@@ -13,8 +13,6 @@ export class TicketGridComponent implements OnInit, OnDestroy {
   userId: String = '';
   constructor(private sanitizer: DomSanitizer, private userService:UserService, private ticketService: TicketService) {
     this.userId = this.userService.currentUser.id;
-    console.log("here");
-    console.log(this.userId);
    }
   
   @Input() tickets: any[] = [];
@@ -69,7 +67,6 @@ export class TicketGridComponent implements OnInit, OnDestroy {
   deleteTicket(ticketId: string): void {
     this.ticketService.deleteTicket(ticketId).subscribe(
       response => {
-        console.log(response);
         this.tickets = this.tickets.filter(ticket => ticket.id !== ticketId);
       },
       error => {

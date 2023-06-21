@@ -17,7 +17,6 @@ export class FavoritesComponent implements OnInit {
     this.eventService.getUserFavorites(this.userService.currentUser.id)
       .subscribe(favorites => {
         this.favorites = favorites;
-        console.log(this.favorites);
       });
   }
   

@@ -14,7 +14,6 @@ export class TicketUploadService {
   uploadTicket(file: File): Observable<Ticket> {
     const formData = new FormData();
     formData.append('file', file);
-    console.log(formData);
     return this.http.post<Ticket>(URLS.TICKET.GET_TICKET_UPLOAD_URL, formData);
   }
 
@@ -23,7 +22,6 @@ export class TicketUploadService {
   }
 
   downloadTicket(fileId: string): Observable<Blob> {
-    console.log(`${URLS.TICKET.GET_TICKET_DOWNLOAD_URL}/${fileId}`);
     return this.http.get(URLS.TICKET.GET_TICKET_DOWNLOAD_URL(fileId.toString()), { responseType: 'blob' });
   }
   

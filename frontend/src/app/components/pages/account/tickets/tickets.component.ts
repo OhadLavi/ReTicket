@@ -24,10 +24,8 @@ export class TicketsComponent implements OnInit {
   }
 
   fetchTickets(): void {
-    console.log(this.allTickets);
     this.ticketService.fetchUserTickets(this.userService.currentUser.id)
       .subscribe(response => {
-        console.log(response);
         this.soldTickets = response.sellingTickets.filter((ticket: any) => ticket.ticketDetails.isSold === true);
         this.boughtTickets = response.boughtTickets;
         this.sellingTickets = response.sellingTickets.filter((ticket: any) => ticket.ticketDetails.isSold === false);

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { NgToastService } from 'ng-angular-popup';
 import { UserService } from 'src/app/services/user.service';
 
 @Component({
@@ -13,10 +14,13 @@ export class LoginComponent implements OnInit {
   loginForm!:FormGroup;
   isSubmitted = false;
   returnUrl = '';
-  loginError: string | null = null;
   hidePassword = true;
   
-  constructor(private formBuilder:FormBuilder, private userService:UserService, private actiavtedRouter:ActivatedRoute, private router:Router) {
+  constructor(private formBuilder:FormBuilder,
+              private userService:UserService,
+              private actiavtedRouter:ActivatedRoute,
+              private router:Router,
+              private toast: NgToastService) {
     // this.userService.removeUserFromLocalStorage();
   }
 
@@ -44,25 +48,22 @@ export class LoginComponent implements OnInit {
     }
     console.log((this.returnUrl));
     this.userService.login(this.loginForm.value).subscribe(
-      () => { this.router.navigateByUrl(this.returnUrl); },
+      () => { 
+        this.router.navigateByUrl(this.returnUrl); 
+        this.toast.success({detail:"SUCCESS",summary:'You have successfully logged in.', sticky: false, duration: 3000, type: 'success'});
+      },
       (error) => {
         if (error.status === 401) {
-          console.log(error.error);
-          this.loginError = error.error.error;
+          this.toast.error({detail:"ERROR",summary: error.error.error, sticky: false, duration: 10000, type: 'error'});
         } else {
-          this.loginError = 'An error occurred. Please try again later.';
+          this.toast.error({detail:"ERROR",summary: 'An error occurred. Please try again later.', sticky: false, duration: 10000, type: 'error'});
         }
       }
     );
   }
 
   onGoogleSignIn() {
-    // this.userService.googleLogin()
-    //   .then(() => {
-        
-    //   })
-    //   .catch(err => console.error(err));
+
   }
-  
 
 }

@@ -131,28 +131,10 @@ export class CartService {
   }
 
   applyCoupon(discountPercentage:number) {
-    //this.emptyCartFromLocalStorage();
     if (this.cart.couponApplied) return;
     this.cart.totalPrice -= Math.floor(this.cart.cartPrice * discountPercentage);
     this.cart.couponApplied = true;
     this.setCartToLocalStorage();
   }
-
-    // addToCart(eventM:EventM):void {
-  //   let cartItem = null;
-  //   try {
-  //     cartItem = this.cart.items.find(item => item.eventM.id === eventM.id);
-  //   } catch (e) {
-  //     this.emptyCartInLocalStorage();
-  //   }
-  //   finally {
-  //     if (cartItem)
-  //       return;
-  //   }
-  //   this.cart.items.push(new CartItem(eventM));
-  //   console.log(this.cart);
-  //   this.updateCartToLocalStorage();
-  // }
-
 
 }

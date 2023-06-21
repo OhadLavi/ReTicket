@@ -27,16 +27,12 @@ async function processTicket(pdfBuffer) {
 
   for (const imagePath of imagePaths) {
     const qrCode = await detectAndReadQRCode(imagePath);
-    console.log("qrcode: " + qrCode);
     const barcode = await detectAndReadBarcode(imagePath);
-    console.log("barcode: " + barcode);
     const match = checkQRAndBarcodeMatch(qrCode, barcode);
-    console.log(match);
     if (qrCode && barcode && !match) {
       error = 'Error: QR Code and Barcode do not match';
       break;
     } else if (!qrCode || !barcode) {
-      console.log("Error: A valid ticket should contain both a QR Code and a Barcode");
       error = 'Error: A valid ticket should contain both a QR Code and a Barcode';
       break;
     }
@@ -117,20 +113,16 @@ async function convertPdfToImage(pdfPath, outputPath) {
           .map(filename => path.join(opts.out_dir, filename));
       return imagePaths;
   } catch (error) {
-      console.error('Error converting PDF to image: ', error);
       return null;
   }
 }
 
 async function detectAndReadQRCode(imagePath) {
-  console.log("here");
   const image = await jimp.read(imagePath);
   const qrCode = jsQR(image.bitmap.data, image.bitmap.width, image.bitmap.height);
   if (qrCode) {
-    console.log(qrCode.data);
       return qrCode.data;
   } else {
-    console.log('No QR Code found in image');
       return null;
   }
 }
@@ -161,13 +153,11 @@ async function updateEventAvailableTickets(eventId, quantity) {
 }
 
 async function updateTicketStatus(eventId, buyerId, orderId, quantity) {
-  console.log('updating ticket status');
   try {
     const soldDate = new Date().toISOString();
     const tickets = await Ticket.find({ eventId: eventId, isSold: false }).limit(quantity);
-    console.log('found tickets: ', tickets);
     if(tickets.length < quantity) {
-      throw new Error('Not enough available tickets for this event');
+      console.error('Not enough available tickets for this event');
     }
 
     const event = await Event.findById(eventId);
@@ -181,7 +171,6 @@ async function updateTicketStatus(eventId, buyerId, orderId, quantity) {
     }
 
     const updatedTickets = await Promise.all(tickets.map((ticket) => {
-      console.log('updating ticket: ', ticket._id);
       return Ticket.findByIdAndUpdate(ticket._id, 
         { 
           $set: {
@@ -258,71 +247,10 @@ async function loadPdf(pdfPath) {
   return pdf;
 }
 
-// async function extractQRCodeFromPDF(pdfPath) {
-//   const pdfParser = new PDFParser();
-//   pdfParser.on('pdfParser_dataError', (err) => console.error(err.parserError));
-//   pdfParser.on('pdfParser_dataReady', (pdfData) => {
-//     const image = pdfData.formImage.Pages[0].Texts.find((text) => {
-//       return text.R[0].T === 'QRCode';
-//     });
-//     if (image) {
-//       const imageData = Buffer.from(image.R[0].T, 'base64');
-//       decodeQRCodeFromBuffer(imageData);
-//     } else {
-//       console.error('No QR code found in PDF');
-//     }
-//   });
-//   pdfParser.loadPDF(pdfPath);
-// }
-
-// async function processTicket(pdfPath, outputDir, pdfName) {
-//   console.log('Processing ticket...');
-//   extractQRCodeFromPDF(pdfPath);
-//   return "text";
-// }
-
-function generateRandomTicket() {
-  const locations = ['Madison Square Garden', 'Wembley Stadium', 'Camp Nou', 'Old Trafford', 'Maracanã'];
-  const statuses = ['On sale', 'Sold out', 'Cancelled'];
-  const randomLocation = locations[Math.floor(Math.random() * locations.length)];
-  const randomStatus = statuses[Math.floor(Math.random() * statuses.length)];
-  const randomPrice = (Math.random() * 100).toFixed(2);
-  const currentDate = new Date();
-  const randomDate = getRandomDate(currentDate);
-  let numTickets;
-  const randomNum = Math.random();
-  if (randomNum <= 0.55) {
-    numTickets = 1;
-  } else {
-    numTickets = Math.floor(Math.random() * 5) + 2; // Random number between 2 and 6
-  }
-  const tickets = [];
-  for (let i = 0; i < numTickets; i++) {
-    const ticket = {
-      price: randomPrice,
-      location: randomLocation,
-      eventDate: randomDate.toISOString().split('T')[0],
-      fileName: 'ticket.pdf',
-      status: randomStatus
-    };
-    tickets.push(ticket);
-  }
-  return tickets;
-}
-
-function getRandomDate(currentDate) {
-  const maxDaysAfter = 7; // Maximum number of days after the current date
-  const randomDays = Math.floor(Math.random() * (maxDaysAfter + 1)); // Generate a random number of days (0-maxDaysAfter)
-  const randomDate = new Date(currentDate);
-  randomDate.setDate(currentDate.getDate() + randomDays); // Add the random number of days to the current date
-  return randomDate;
-}
-
 module.exports = {
   getSellingTickets,
   getBoughtTickets,
   updateEventAvailableTickets,
   updateTicketStatus,
-  processTicket,
-  generateRandomTicket
+  processTicket
 };

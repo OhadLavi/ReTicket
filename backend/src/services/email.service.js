@@ -41,14 +41,7 @@ async function sendEmail(mailOptions) {
   });
 
   transporter.verify().then(console.log).catch(console.error);
-
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      console.error('Error sending email:', error);
-    } else {
-      console.log('Email sent:', info.response);
-    }
-  });
+  transporter.sendMail(mailOptions);
 }
 
 async function sendTicketsEmail(order, email) {
@@ -69,7 +62,6 @@ async function sendTicketsEmail(order, email) {
       };
       const { error, value } = ics.createEvent(event);
       if (error) {
-          console.log("error creating ics: " + error);
           return;
       }
       
@@ -128,7 +120,6 @@ async function findEventDetailsByEventId(eventId) {
     if (event) {
       return event;
     } else {
-      console.log(`Event with id: ${eventId} not found`);
       return null;
     }
   } catch (error) {

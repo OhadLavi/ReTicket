@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { NgToastService } from 'ng-angular-popup';
 import { UserService } from 'src/app/services/user.service';
 import { IUserRegister } from 'src/app/shared/interfaces/IUserRegister';
 import { PasswordsMatchValidator } from 'src/app/shared/validators/password_match_validator';
@@ -25,7 +26,8 @@ export class RegisterComponent implements OnInit {
     private formBuilder: FormBuilder,
     private userService: UserService,
     private activatedRoute: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private toast: NgToastService
   ) { 
     this.returnUrl = this.activatedRoute.snapshot.queryParams.returnUrl || '/';
   }
@@ -63,6 +65,7 @@ export class RegisterComponent implements OnInit {
     this.userService.register(user).subscribe(
       user => {
         this.router.navigateByUrl(this.returnUrl);
+        this.toast.success({detail:"SUCCESS",summary:'You have successfully registered.', sticky: false, duration: 5000, type: 'success'});
       },
       error => {
         if (error.status === 400 && error.error.error === 'User already exists') {
@@ -70,6 +73,7 @@ export class RegisterComponent implements OnInit {
           this.fc.email.markAsTouched();
           this.fc.email.setErrors({'emailInUse': true});
         } else if (error.status === 500 && error.error.error === 'Error registering user') {
+          this.toast.error({detail:"ERROR",summary: 'An error occurred. Please try again later.', sticky: false, duration: 10000, type: 'error'});
           this.generalError = true;
         }
       }
