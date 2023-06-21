@@ -37,12 +37,13 @@ export const URLS = {
         GET_ORDER_TRACK_URL: (id:string) => `${BASE_URL}/api/orders/track/${id}`
     },
     TICKET: {
-        GET_USER_TICKETS_URL: (userId: string) => `${BASE_URL}/api/tickets/getUserTickets/${userId}`,
+        GET_USER_TICKETS_URL: () => `${BASE_URL}/api/tickets/getUserTickets`,
         GET_TICKET_UPLOAD_URL: `${BASE_URL}/api/tickets/upload/`,
         GET_TICKET_SUBMIT_URL: `${BASE_URL}/api/tickets/submit/`,
         GET_TICKET_REVIEW_URL: (id:string) => `${BASE_URL}/api/tickets/review/${id}`,
         GET_TICKET_DOWNLOAD_URL: (id:string) => `${BASE_URL}/api/tickets/getTicketFile/${id}`,
-        GET_TICKET_DELETE_URL: (id:string) => `${BASE_URL}/api/tickets/delete/${id}`    
+        GET_TICKET_DELETE_URL: (id:string) => `${BASE_URL}/api/tickets/delete/${id}`,
+        GET_TICKET_UPDATE_PRICE_URL: (id: string) => `${BASE_URL}/api/tickets/updatePrice/${id}`,
     },
     NOTIFICATION: {
         GET_NOTIFICATIONS_URL: `${BASE_URL}/api/notifications`,

@@ -1,8 +1,11 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { interval, Subscription } from 'rxjs';
+import { NgToastService } from 'ng-angular-popup';
 import { TicketService } from 'src/app/services/ticket.service';
 import { UserService } from 'src/app/services/user.service';
+import { TicketDeleteDialogComponent } from '../ticket-delete-dialog/ticket-delete-dialog.component';
 
 @Component({
   selector: 'app-ticket-grid',
@@ -11,11 +14,13 @@ import { UserService } from 'src/app/services/user.service';
 })
 export class TicketGridComponent implements OnInit, OnDestroy {
   userId: String = '';
-  constructor(private sanitizer: DomSanitizer, private userService:UserService, private ticketService: TicketService) {
+  constructor(private sanitizer: DomSanitizer, private userService:UserService, private ticketService: TicketService, private toast: NgToastService, private dialog: MatDialog) {
     this.userId = this.userService.currentUser.id;
-   }
+  }
   
   @Input() tickets: any[] = [];
+  @Output() ticketDeleted = new EventEmitter<string>();
+
   intervalSubscription?: Subscription;
 
   ngOnInit() {
@@ -65,15 +70,34 @@ export class TicketGridComponent implements OnInit, OnDestroy {
   }
 
   deleteTicket(ticketId: string): void {
-    this.ticketService.deleteTicket(ticketId).subscribe(
+    const dialogRef = this.dialog.open(TicketDeleteDialogComponent, {
+      width: 'auto',
+      data: {ticketId: ticketId}
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      if (result?.action === 'delete') {
+          this.ticketService.deleteTicket(ticketId).subscribe(
+            response => {
+              this.ticketDeleted.emit(ticketId);
+              this.toast.success({detail:"SUCCESS",summary:'Ticket successfully deleted.', sticky: false, duration: 3000, type: 'success'});
+            },
+            error => {
+              this.toast.error({detail:"ERROR",summary: 'An error occurred. Please try again later.', sticky: false, duration: 10000, type: 'error'});
+            }
+          );
+      }    
+    });
+  }
+
+  updateTicketPrice(ticketId: string, newPrice: number): void {
+    this.ticketService.updateTicketPrice(ticketId, newPrice).subscribe(
       response => {
-        this.tickets = this.tickets.filter(ticket => ticket.id !== ticketId);
+        this.toast.success({detail:"SUCCESS", summary:'Ticket price successfully updated.', sticky: false, duration: 3000, type: 'success'});
       },
       error => {
-        console.error(error);
+        this.toast.error({detail:"ERROR", summary: 'An error occurred. Please try again later.', sticky: false, duration: 10000, type: 'error'});
       }
     );
   }
-  
-  
 }

@@ -4,11 +4,17 @@
       <div class="countdown" style="position: absolute; top: 0; left: 0; z-index: 1; background: rgba(0,0,0,0.5); color: white; padding: 10px;">
         <i class="fas fa-clock"></i> {{ countdown(item.event?.date) }}
       </div>
-      <button class="btn" style="position: absolute; top: 0; right: 0; z-index: 1; padding: 10px;" (click)="openFile(item.files[0])">
-        <i *ngIf="item.ticketDetails?.seller === userId && item.ticketDetails?.isSold !== true" class="fas fa-edit" style="border-radius: 50%; padding: 5px; background-color: white;" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Edit"></i>
-        <i *ngIf="item.ticketDetails?.seller !== userId" class="fas fa-eye" style="border-radius: 50%; padding: 5px; background-color: white;" data-bs-toggle="tooltip" data-bs-placement="bottom" title="View"></i>
-        <i *ngIf="item.ticketDetails?.seller === userId && item.ticketDetails?.isSold !== true" class="fas fa-trash"  style="border-radius: 50%; padding: 5px; background-color: white;"  data-bs-toggle="tooltip"  data-bs-placement="bottom"  title="Delete"  (click)="deleteTicket(item.ticketDetails.id)"></i>
-      </button>        
+      <div class="button-group" style="position: absolute; top: 0; right: 0; z-index: 1; padding: 10px;">
+        <button *ngIf="item.ticketDetails?.seller === userId && item.ticketDetails?.isSold !== true" class="btn pe-0 ps-1">
+          <i class="fas fa-edit" style="border-radius: 50%; padding: 5px; background-color: white;" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Edit"></i>
+        </button>
+        <button *ngIf="item.ticketDetails?.seller !== userId" class="btn pe-0 ps-1" (click)="openFile(item.files[0])">
+          <i class="fas fa-eye" style="border-radius: 50%; padding: 5px; background-color: white;" data-bs-toggle="tooltip" data-bs-placement="bottom" title="View"></i>
+        </button>
+        <button *ngIf="item.ticketDetails?.seller === userId && item.ticketDetails?.isSold !== true" class="btn pe-0 ps-1" (click)="deleteTicket(item.ticketDetails.id)">
+          <i class="fas fa-trash" style="border-radius: 50%; padding: 5px; background-color: white;" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Delete"></i>
+        </button>
+      </div>        
       <img src="{{ item.event?.image }}" class="card-img-top" alt="{{ item.event?.name }}">
       <div class="card-body">
         <h5 class="card-title">{{ item.event?.name }}</h5>
@@ -16,7 +22,6 @@
         <p class="card-text">{{ item.event?.location }}</p>
         <p class="card-text">
           Price: {{ item.ticketDetails?.price | currency }}<br>
-          <!-- Number of Tickets: {{ item.ticketDetails?.numberOfTickets }} -->
         </p>
       </div>
     </div>
