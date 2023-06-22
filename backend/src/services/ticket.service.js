@@ -14,9 +14,9 @@ const { writeFile } = require('fs');
 const { NotificationType } = require('../constants/notification_type');
 const pdfPoppler = require('pdf-poppler');
 const zxing = require('node-zxing')({ scale: 2 });
-const { getEventByNameDateLocation } = require('../services/event.service');
+const { getEventByNameDate } = require('../services/event.service');
 
-async function processTicket(pdfBuffer) {
+async function processTicket(pdfBuffer, userId) {
   const pdfPath = path.join(__dirname, '..', 'uploads', 'pdf', 'temp.pdf');
   await fsPromises.writeFile(pdfPath, pdfBuffer);
   const imageDir = path.join(__dirname, '..', 'uploads', 'images');
@@ -36,10 +36,12 @@ async function processTicket(pdfBuffer) {
       error = 'Error: A valid ticket should contain both a QR Code and a Barcode';
       break;
     }
-    const ticket = await parseTicketDetails(pdfBuffer, barcode);
-    const event = await getEventByNameDateLocation(ticket.artists, ticket.eventDate, ticket.venue); 
+    const ticket = await parseTicketDetails(pdfBuffer, barcode, userId);
+    const event = await getEventByNameDate(ticket.artists, ticket.eventDate); 
     ticket.location = event.location;
+    ticket.venue = event.venue;
     ticket.valid = match;
+    console.log(ticket.barcode);
     results.push(ticket);
     await fsPromises.unlink(imagePath);
   }
@@ -48,7 +50,7 @@ async function processTicket(pdfBuffer) {
 }
 
 
-async function parseTicketDetails(pdfBuffer, event, barcode) {
+async function parseTicketDetails(pdfBuffer, barcode, userId) {
   const data = await pdfParse(pdfBuffer);
   const text = data.text;
   const lines = data.text.split('\n');
@@ -88,14 +90,14 @@ async function parseTicketDetails(pdfBuffer, event, barcode) {
   const ticket = {
     artists: artistName,
     price: ticketPrice,
-    venue: "Park hayarkon",
     eventDate: eventDate,
     status: "On sale",
     description: `Gate: ${gate}, Block: ${block}`,
-    fileName: 'ticket.pdf',
-    location: event.location,
+    fileName: savedFile.name,
     fileIds: [savedFile._id],
-    barcode: barcode
+    barcode: barcode.trim(),
+    seller: userId,
+    isSold: false
   };
 
   return ticket;

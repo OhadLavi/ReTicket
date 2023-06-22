@@ -32,7 +32,7 @@
                                     <ng-template ngbNavContent>
                                         <app-ticket-grid [tickets]="soldTickets" (ticketDeleted)="fetchTickets()"></app-ticket-grid>
                                         <div *ngIf="soldTickets.length === 0" class="empty-container">
-                                          There are no sold tickets here.
+                                            You have not sold any tickets.
                                         </div>
                                       </ng-template>
                                 </li>
@@ -44,7 +44,7 @@
                                     <ng-template ngbNavContent>
                                         <app-ticket-grid [tickets]="sellingTickets" (ticketDeleted)="fetchTickets()"></app-ticket-grid>
                                         <div *ngIf="sellingTickets.length === 0" class="empty-container">
-                                          There are no tickets being sold here.
+                                          You have not listed any tickets for sale.
                                         </div>
                                       </ng-template>
                                 </li>                                
@@ -56,7 +56,7 @@
                                     <ng-template ngbNavContent>
                                         <app-ticket-grid [tickets]="boughtTickets" (ticketDeleted)="fetchTickets()"></app-ticket-grid>
                                         <div *ngIf="boughtTickets.length === 0" class="empty-container">
-                                          There are no bought tickets here.
+                                          You have not bought any tickets.
                                         </div>
                                       </ng-template>
                                 </li>

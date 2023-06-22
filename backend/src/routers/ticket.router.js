@@ -46,8 +46,9 @@ router.get("/", asyncHandler(async(req, res) => {
     res.json(tickets);
 }));
 
-router.post('/upload', upload.single('file'), async (req, res) => {
+router.post('/upload', authMiddleware, upload.single('file'), async (req, res) => {
   const { path: filePath, originalname } = req.file;
+  let ticketDocs = [];
   try {
     const fileBuffer = fs.readFileSync(filePath);
     const pdfDoc = await PDFDocument.load(fileBuffer);
@@ -59,34 +60,56 @@ router.post('/upload', upload.single('file'), async (req, res) => {
       pdfDocSingle.addPage(copiedPage);
       const pdfBytes = await pdfDocSingle.save();
       const pdfBuffer = Buffer.from(pdfBytes);
-      const ticketResult = await processTicket(pdfBuffer);
-      const existingTicket = await Ticket.findOne({ barcode: ticketResult.tickets[0].barcode, isSold: false });
-      if (existingTicket) {
-        return res.status(400).json({ error: 'Error: A ticket with this barcode is already for sale' });
+      const ticketResult = await processTicket(pdfBuffer, req.user.id);
+      
+      if (!ticketResult) {
+        await Ticket.deleteMany({ _id: { $in: ticketDocs.map(t => t._id) } });
+        fs.unlinkSync(filePath);
+        return res.status(500).json({ error: 'Error2: PDF processing failed, the file might be corrupted' });
       }
-      if (ticketResult.error)
-        return res.status(500).json({ error: ticketResult.error });      
-      if (!ticketResult)
-        return res.status(500).json({ error: 'Error: PDF processing failed, the file might be corrupted' });
+
+      if (ticketResult.error) {
+        await Ticket.deleteMany({ _id: { $in: ticketDocs.map(t => t._id) } });
+        fs.unlinkSync(filePath);
+        return res.status(500).json({ error: ticketResult.error });
+      }
+
       const event = await getEventByNameDateLocation(ticketResult.tickets[0].artists, ticketResult.tickets[0].eventDate, ticketResult.tickets[0].venue);
-      if (!event || event.error)
-        return res.status(500).json({ error: event.error });
+      if (!event || event.error) {
+        await Ticket.deleteMany({ _id: { $in: ticketDocs.map(t => t._id) } });
+        fs.unlinkSync(filePath);
+        return res.status(500).json({ error: event.error ? event.error : "Error: No matching event found" });
+      }
       const eventId = event._id;
-      ticketResult.tickets.forEach(ticket => {
+
+      ticketDocs = ticketResult.tickets.map(ticket => {
         ticket.eventId = eventId.toString();
+        return new Ticket(ticket);
       });
+
+      for (const ticket of ticketDocs) {
+        await ticket.save();
+        const existingTicket = await Ticket.findOne({ barcode: ticket.barcode, isSold: false, _id: { $ne: ticket._id } });
+        if (existingTicket) {
+          await Ticket.deleteMany({ _id: { $in: ticketDocs.map(t => t._id) } });
+          fs.unlinkSync(filePath);
+          return res.status(400).json({ error: `Error: A ticket with barcode ${ticket.barcode} is already on sale.` });
+        }
+      }
+
       ticketResults.tickets.push(...ticketResult.tickets);
     }
     fs.unlinkSync(filePath);
     return res.status(200).json({ ticketResults: ticketResults });
   } catch (error) {
-    console.error(error);
+    await Ticket.deleteMany({ _id: { $in: ticketDocs.map(t => t._id) } });
     fs.unlink(filePath, (err) => {
       if (err) console.error(err);
     });
     return res.status(500).json({ error: 'Error: PDF processing failed, the file might be corrupted' });
   }
 });
+
 
 router.post('/submit', async (req, res) => {
   try {

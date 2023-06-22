@@ -1,12 +1,21 @@
 const { Event } = require('../models/event.model');
 
 async function getEventByNameDateLocation(name, date, venue) {
-  const eventDate = new Date(date);
-  const events = await Event.find({}, { name: 1, date: 1, venue: 1 });
   const event = await Event.findOne({
     name: name,
     date: { $eq: date },
     venue: venue
+  });
+  if (!event) {
+    return { error: 'Error: Event not found' };
+  }
+  return event;
+}
+
+async function getEventByNameDate(name, date) {
+  const event = await Event.findOne({
+    name: name,
+    date: { $eq: date }
   });
   if (!event) {
     return { error: 'Error: Event not found' };
@@ -55,6 +64,7 @@ async function saveEvent(eventDetails) {
 
   module.exports = {
     getEventByNameDateLocation,
+    getEventByNameDate,
     saveEvent
   };
   

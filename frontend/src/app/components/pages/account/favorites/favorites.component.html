@@ -34,6 +34,9 @@
                   </div>
                 </div>
               </div>
+              <div *ngIf="favorites.length === 0" class="empty-container">
+                You didn't add any events to your favorites yet.
+                </div>  
             </div>
           </div>
         </section>
