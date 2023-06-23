@@ -1,6 +1,5 @@
 const nodemailer = require('nodemailer');
 const { google } = require('googleapis');
-const fs = require('fs');
 const ics = require('ics');
 const { Event } = require('../models/event.model');
 const Ticket = require('../models/ticket.model');

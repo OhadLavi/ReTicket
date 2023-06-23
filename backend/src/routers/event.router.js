@@ -7,14 +7,8 @@ const asyncHandler = require('express-async-handler');
 const multer = require('multer');
 const speech = require('@google-cloud/speech');
 const upload = multer();
-const path = require('path');
-const stringSimilarity = require('string-similarity');
-const levenshtein = require('fast-levenshtein');
 const natural = require('natural');
-const fs = require('fs');
-const mongoose = require('mongoose');
 const authMiddleware = require('../middlewares/auth.mid');
-
 
 router.get("/", asyncHandler(async (req, res) => {
   const events = await Event.getNonExpiredEvents();
@@ -250,33 +244,6 @@ router.delete('/unfavorite/id/:eventId', authMiddleware, asyncHandler(async (req
   }
   res.status(200).json(event);
 }));
-
-
-// router.post("/transcribe", upload.single('audio'), async (req, res, next) => {
-//   const fileName = req.file.path;
-
-//   const audio = {
-//     content: fs.readFileSync(fileName).toString('base64'),
-//   };
-
-//   const config = {
-//     encoding: 'LINEAR16',
-//     sampleRateHertz: 16000,
-//     languageCode: 'en-US',
-//   };
-
-//   const request = {
-//     audio: audio,
-//     config: config,
-//   };
-
-//   const [response] = await client.recognize(request);
-//   const transcription = response.results
-//     .map(result => result.alternatives[0].transcript)
-//     .join('\n');
-  
-//   res.send(transcription);
-// });
 
 router.get("/seed", asyncHandler(async (req, res) => {
   const eventsCount = await Event.countDocuments();

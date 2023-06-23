@@ -1,11 +1,9 @@
 <div class="container mt-5 mb-5 pb-3">
     <div class="bg-light shadow-lg rounded-3 overflow-hidden">
         <div class="row">
-            <!-- Sidebar -->
             <aside class="col-lg-3 pe-xl-5">
                 <app-account-sidemenu></app-account-sidemenu>
             </aside>
-            <!-- Content -->
             <section class="col-lg-9 pt-lg-4 pb-4 mb-3">
                 <div class="pt-2 px-4 ps-lg-0 pe-xl-5">
                     <div class="d-flex flex-sm-row flex-column align-items-sm-center justify-content-between mb-4">
@@ -45,6 +43,9 @@
                                         <app-ticket-grid [tickets]="sellingTickets" (ticketDeleted)="fetchTickets()"></app-ticket-grid>
                                         <div *ngIf="sellingTickets.length === 0" class="empty-container">
                                           You have not listed any tickets for sale.
+                                          <div class="d-flex flex-sm-row flex-column">
+                                            <a class="btn btn-accent" routerLink="/createnewitem">Sell a Ticket</a>
+                                        </div>
                                         </div>
                                       </ng-template>
                                 </li>                                
@@ -66,10 +67,6 @@
                     <div>
                         <div [ngbNavOutlet]="nav"></div>
                     </div>
-                    <!-- Create new item -->
-                    <!-- <div class="d-flex flex-sm-row flex-column">
-                        <a class="btn btn-accent" routerLink="/createnewitem">Sell a Ticket</a>
-                    </div> -->
                 </div>
             </section>
         </div>

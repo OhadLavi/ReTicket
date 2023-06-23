@@ -43,6 +43,13 @@ export class HeaderComponent implements OnInit {
         this.loadNotifications();
       }
     });
+  
+    this.userService.photoUpdatedSubject.subscribe((photoUpdated) => {
+      if (photoUpdated) {
+        this.user = this.userService.currentUser;
+        this.cd.detectChanges();
+      }
+    });
   }
 
   toggle() {

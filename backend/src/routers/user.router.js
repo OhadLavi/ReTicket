@@ -172,7 +172,7 @@ router.post("/moveToPaypal", asyncHandler(async (req, res) => {
 const generateTokenResponse = async (user) => {
   const token = jwt.sign(
     { id: user.id, email: user.email }, process.env.JWT_SECRET,
-    { expiresIn: "12h" }
+    { expiresIn: "120h" }
   );
 
   return {

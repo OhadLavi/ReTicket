@@ -17,21 +17,21 @@ const path = require('path');
 const app = express();
 const port = process.env.PORT || 5000;
 
-//middleware
+// Middleware
 app.use(cors({ origin: 'http://localhost:4200', credentials: true }));
 app.use(express.json());
 app.use('/uploads', express.static('uploads'));
 app.use('/assets', express.static('assets'));
 app.use(authMiddleware);
 
-//import routes
+// Import routes
 const usersRouter = require('./routers/user.router');
 const eventRouter = require('./routers/event.router');
 const orderRouter = require('./routers/order.router');
 const ticketRouter = require('./routers/ticket.router');
 const notificationRouter = require('./routers/notification.router');
 
-//use routes
+// Use routes
 app.use('/api/users', usersRouter);
 app.use('/api/events', eventRouter);
 app.use('/api/orders', orderRouter);
@@ -43,7 +43,7 @@ app.use('/api/notifications', notificationRouter);
 //     app.use(express.static(path.join(__dirname, 'public')));
 // }
 
-//start server
+// Start server
 app.listen(port, () => { 
     console.log(`Server is running on port: ${port}`);
     //scrapeWebsite('eventim');
