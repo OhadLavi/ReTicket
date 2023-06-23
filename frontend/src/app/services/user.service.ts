@@ -14,6 +14,8 @@ import { IUserUpdateProfile } from '../shared/interfaces/IUserUpdateProfile';
 export class UserService {
   private userSubject = new BehaviorSubject<User>(this.getUserFromLocalStorage());
   public userObservable:Observable<User>;
+  public photoUpdatedSubject = new BehaviorSubject<boolean>(false);
+  public photoUpdatedObservable = this.photoUpdatedSubject.asObservable();
   private readonly darkModeLSKey = 'DARK_MODE_ON';
 
   constructor(private http:HttpClient) { 
@@ -64,11 +66,15 @@ export class UserService {
     return this.http.put<User>(updateUserUrl, userUpdate).pipe(
       tap({
         next: (updatedUser: User) => {
+          if (updatedUser.imageURL !== this.currentUser.imageURL) {
+            this.photoUpdatedSubject.next(true);
+          }
           updatedUser.token = this.currentUser.token;
           this.setUserToLocalStorage(updatedUser);
           this.userSubject.next(updatedUser);
         },
         error: (err: any) => {
+          console.error('Error while updating user:', err);
         }
       })
     );
@@ -84,12 +90,14 @@ export class UserService {
         next: (updatedUser: User) => {
           updatedUser.token = this.currentUser.token;
           this.setUserToLocalStorage(updatedUser);
+          this.userSubject.next(updatedUser);
         },
         error: (err: any) => {
+          console.error('Error while updating user photo:', err);
         }
       })
     );
-  }
+}
 
   deleteUserPhoto(userId: string): Observable<User> {
     const deleteUserPhotoUrl = URLS.USER.GET_USER_PHOTO_DELETE_URL(userId);
@@ -98,6 +106,7 @@ export class UserService {
         next: (updatedUser: User) => {
           updatedUser.token = this.currentUser.token;
           this.setUserToLocalStorage(updatedUser);
+          this.photoUpdatedSubject.next(true);
         },
         error: (err: any) => {
         }

@@ -33,7 +33,6 @@ export class ProfileComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    //this.imageURL = this.user.imageURL;
     document.body.scrollTop = 0;
     document.documentElement.scrollTop = 0;
 
@@ -89,25 +88,24 @@ export class ProfileComponent implements OnInit {
   updatePhoto(event: any) {
     if (event.target.files && event.target.files.length > 0) {
       const photo: File = event.target.files[0];
-  
-      // Use FileReader to read the uploaded file as a Data URL
-      const reader = new FileReader();
-      reader.onload = () => {
-        this.imageURL = reader.result as string;
-      };
-      reader.readAsDataURL(photo);
-  
-      // Use the service method to send the file to the backend
-      this.userService.updateUserPhoto(this.user.id, photo).subscribe((res) => {
-        this.toast.success({detail:"SUCCESS",summary:'User photo updated successfully!', sticky: false, duration: 3000, type: 'success'});
-        document.querySelectorAll('#user_profile').forEach((element: any) => {
-          element.src = this.imageURL;
-        });
-      },
-      error => {
-        this.toast.error({detail:"ERROR",summary:'Error occurred while updating user photo', sticky: false, duration: 10000, type: 'error'});
-      });
+      this.userService.updateUserPhoto(this.user.id, photo).subscribe(
+        res => this.onPhotoUpdateSuccess(res),
+        error => this.onPhotoUpdateError(error)
+      );
     }
+  }
+
+  onPhotoUpdateSuccess(res: any) {
+    this.user = res;
+    this.userService.photoUpdatedSubject.next(true);
+    this.toast.success({detail:"SUCCESS",summary:'User photo updated successfully!', sticky: false, duration: 3000, type: 'success'});
+    document.querySelectorAll('#user_profile').forEach((element: any) => {
+      element.src = this.user.imageURL;
+    });
+  }
+
+  onPhotoUpdateError(error: any) {
+    this.toast.error({detail:"ERROR",summary:'Error occurred while updating user photo', sticky: false, duration: 10000, type: 'error'});
   }
 
   deletePhoto() {  
@@ -152,8 +150,6 @@ export class ProfileComponent implements OnInit {
       });
     };
     reader.readAsDataURL(file);
-  
-    // Clear the selected file from the file input element
   }  
 
   moveToPaypal() {
