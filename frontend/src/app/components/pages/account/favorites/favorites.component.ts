@@ -14,7 +14,7 @@ export class FavoritesComponent implements OnInit {
   constructor(private eventService: EventService, private userService: UserService) {}
 
   ngOnInit() {
-    this.eventService.getUserFavorites(this.userService.currentUser.id)
+    this.eventService.getUserFavorites()
       .subscribe(favorites => {
         this.favorites = favorites;
       });

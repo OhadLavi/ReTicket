@@ -6,9 +6,9 @@ export const URLS = {
         GET_BY_ID: (id: string) => `${BASE_URL}/api/events/id/${id}`,
         GET_BY_SEARCH_TERM: (searchTerm: string) => `${BASE_URL}/api/events/search/${searchTerm}`,
         GET_EVENT_TRANSCRIBE_AUDIO_URL: `${BASE_URL}/api/events/transcribeAudio/`,
-        GET_CHECK_IN_WAITING_LIST_URL: (eventId: string, userId: string) => `${BASE_URL}/api/events/checkInWaitingList/${eventId}/${userId}`,
+        GET_CHECK_IN_WAITING_LIST_URL: (eventId: string) => `${BASE_URL}/api/events/checkInWaitingList/${eventId}`,
         GET_ADD_TO_WAITING_LIST_URL: (id: string) => `${BASE_URL}/api/events/id/${id}/waitingList`,
-        GET_REMOVE_FROM_WAITING_LIST_URL: (eventId: string, userId: string) => `${BASE_URL}/api/events/id/${eventId}/waitingList/${userId}`,
+        GET_REMOVE_FROM_WAITING_LIST_URL: (eventId: string) => `${BASE_URL}/api/events/id/${eventId}/waitingList`,
         GET_TICKETS_URL: (eventId: string, quantity: number) => `${BASE_URL}/api/events/cheapestTickets/${eventId}/${quantity}`,
         FAVORITE: (eventId: string) => `${BASE_URL}/api/events/setFavorite/id/${eventId}`,
         UNFAVORITE: (eventId: string) => `${BASE_URL}/api/events/unfavorite/id/${eventId}`,
@@ -23,7 +23,7 @@ export const URLS = {
         GET_USER_PHOTO_UPDATE_URL: (id: string) => `${BASE_URL}/api/users/update/photo/${id}`,
         GET_USER_PHOTO_DELETE_URL: (id: string) => `${BASE_URL}/api/users/delete/photo/${id}`,
         GET_USER_MOVE_TO_PAYPAL_URL: `${BASE_URL}/api/users/moveToPaypal/`,
-        GET_FAVORITES: (userId: string) => `${BASE_URL}/api/users/favorites/`,
+        GET_FAVORITES: `${BASE_URL}/api/users/favorites/`,
     },
     LOGIN: {
         GET_LOGIN_URL: `${BASE_URL}/api/users/login`,
@@ -53,5 +53,3 @@ export const URLS = {
       }
       
 };
-
-//        GET_TICKETS_URL: (userId:string) => `${BASE_URL}/api/tickets/getUserTickets/${userId}`,

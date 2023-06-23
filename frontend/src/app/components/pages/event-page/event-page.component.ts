@@ -48,7 +48,7 @@ export class EventPageComponent implements OnInit {
 
             if (this.userService.isAuth()) {
               this.isAuth = true;
-              this.eventService.checkUserInWaitingList(this.eventm.id, this.userService.currentUser.id)
+              this.eventService.checkUserInWaitingList(this.eventm.id)
               .subscribe((isInWaitingList: boolean) => {
                 this.isInWaitingList = isInWaitingList;
               });
@@ -150,7 +150,7 @@ export class EventPageComponent implements OnInit {
   toggleWaitingList() {
     this.isInWaitingList = !this.isInWaitingList;
     if (this.isInWaitingList) {
-      this.eventService.addToWaitingList(this.eventm.id, this.userService.currentUser.id)
+      this.eventService.addToWaitingList(this.eventm.id)
       .subscribe({
         next: (response) => {
           this.toast.success({detail:"SUCCESS",summary:'Added to waiting list', sticky: false, duration: 3000, type: 'success'});
@@ -160,7 +160,7 @@ export class EventPageComponent implements OnInit {
         },
       });
     } else {
-      this.eventService.removeFromWaitingList(this.eventm.id, this.userService.currentUser.id)
+      this.eventService.removeFromWaitingList(this.eventm.id)
         .subscribe({
           next: () => {
             this.toast.success({detail:"SUCCESS",summary:'Removed from waiting list', sticky: false, duration: 3000, type: 'success'});
