@@ -1,11 +1,9 @@
 <div class="container mt-5 mb-5 pb-3">
   <div class="bg-light shadow-lg rounded-3 overflow-hidden">
     <div class="row">
-      <!-- Sidebar -->
       <aside class="col-lg-3 pe-xl-5">
         <app-account-sidemenu></app-account-sidemenu>
       </aside>
-      <!-- Content -->
       <section class="col-lg-9 pt-lg-4 pb-4 mb-3">
         <div class="pt-2 px-4 ps-lg-0 pe-xl-5">
           <h1 class="h3 mb-4 pt-2 text-center text-sm-start">Profile Settings</h1>
@@ -59,7 +57,6 @@
                 <input class="form-control" id="profile-uid" formControlName="id" type="text" readonly>
               </div>
             </div>
-            <!-- Submit -->
             <div class="d-flex flex-sm-row flex-column justify-content-sm-end justify-content-center">
               <default-button class="btn btn-accent" text="Update profile"></default-button>
             </div>            
@@ -69,61 +66,3 @@
     </div>
   </div>
 </div>
-
-<!-- <section class="h-100 h-custom" style="background-color: #d2c9ff;">
-    <div class="container py-5 h-100">
-        <div class="row d-flex flex-column flex-md-row bg-white rounded">
-          <div class="col-md-4 ps-0">
-            <div class="list-group list-group-flush" id="list-tab" role="tablist">
-              <a class="list-group-item list-group-item-action tab-item active px-3 border-0" id="list-home-list"
-                data-bs-toggle="list" href="#list-home" role="tab" aria-controls="list-home"><i class="material-icons">person</i> My Profile</a>
-              <a class="list-group-item list-group-item-action tab-item px-3 border-0" id="list-profile-list"
-                data-bs-toggle="list" href="#list-profile" role="tab" aria-controls="list-profile"><i class="material-icons">event_note</i> Tickets</a>
-              <a class="list-group-item list-group-item-action tab-item px-3 border-0" id="list-messages-list"
-                data-bs-toggle="list" href="#list-messages" role="tab" aria-controls="list-messages"><i class="material-icons">notifications</i> Notifications</a>
-              <a class="list-group-item list-group-item-action tab-item px-3 border-0" id="list-settings-list"
-                data-bs-toggle="list" href="#list-settings" role="tab" aria-controls="list-settings"><i class="material-icons">exit_to_app</i> Signout</a>
-            </div>
-          </div>
-          <div class="col-md-8">
-            <div class="tab-content" id="nav-tabContent">
-              <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
-                <div class="container py-5">
-                  <div class="row">
-                    <h4 class="mt-4">Profile Settings</h4>
-                    <div class="col-md-6 mb-3">
-                      <label class="form-label">Full Name</label>
-                      <input type="text" class="form-control" placeholder="Enter your full name">
-                    </div>
-                    <div class="col-md-6 mb-3">
-                      <label class="form-label">Email</label>
-                      <input type="email" class="form-control" placeholder="Enter your email address">
-                    </div>
-                    <div class="col-md-6 mb-3">
-                      <label class="form-label">Username</label>
-                      <input type="text" class="form-control" placeholder="Enter your username">
-                    </div>
-                    <div class="col-md-6 mb-3">
-                      <label class="form-label">UID</label>
-                      <input type="text" class="form-control" placeholder="Enter your UID">
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="tab-pane fade" id="list-profile" role="tabpanel" aria-labelledby="list-profile-list">
-                <h4 class="mt-4">Tickets</h4>
-                 Content for Tickets tab 
-              </div>
-              <div class="tab-pane fade" id="list-messages" role="tabpanel" aria-labelledby="list-messages-list">
-                <h4 class="mt-4">Notifications</h4>
-                 Content for Notifications tab 
-              </div>
-              <div class="tab-pane fade" id="list-settings" role="tabpanel" aria-labelledby="list-settings-list">
-                <h4 class="mt-4">Signout</h4>
-                 Content for Signout tab 
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-</section> -->

@@ -5,12 +5,8 @@ const Ticket = require('../models/ticket.model');
 const { File } = require('../models/file.model');
 const UserModel = require('../models/user.model');
 const Notification = require('../models/notification.model');
-const GridFsStorage = require('multer-gridfs-storage').GridFsStorage;
 const { Event } = require('../models/event.model');
 const { NotificationType } = require('../constants/notification_type');
-const pdfjsLib = require('pdfjs-dist');
-const mongoose = require('mongoose');
-const jsQR = require('jsqr');
 const router = express.Router();
 const { PDFDocument } = require('pdf-lib');
 const asyncHandler = require('express-async-handler');
@@ -22,10 +18,6 @@ const storage = multer.diskStorage({
   filename: function (req, file, cb) {cb(null, file.originalname);}
 }); 
 const upload = multer({ storage: storage });
-const nodemailer = require('nodemailer');
-const qrCode = require('qrcode-reader');
-const { PDFParser } = require('pdf2json');
-const jimp = require('jimp');
 const sample_events = require('../data/events');
 const { send, eventNames } = require('process');
 const { processTicket} = require('../services/ticket.service');
@@ -252,26 +244,5 @@ router.get('/getTicketFile/:id', async (req, res) => {
     res.status(500).send({ error: 'Internal server error.' });
   }
 });
-
-// const storage = new GridFsStorage({
-//   url: process.env.MONGO_URI, // replace this with your MongoDB connection string
-//   file: (req, file) => {
-//     return {
-//       bucketName: 'uploads/', // this is the bucket name in your MongoDB where the files will be stored
-//       filename: `${Date.now()}-${file.originalname}` // this is the file name under which the file will be stored
-//     };
-//   }
-// });
-// const { PDFDocument, PNGStream } = require("pdfjs-dist");
-// const { fromPath } = require ('pdf2pic');
-// const pdfImgConvert = require('pdf-img-convert');
-// const pdf = require('pdf-parse');
-// const parse = require('pdf-parse');
-// const ocr = require('../src/ocr/ocr');
-// const bwipjs = require('bwip-js');
-// const { v4: uuidv4 } = require('uuid');
-// const jsQR = require('jsqr');
-// const { PDFDocument } = require('pdf-lib');
-// const jsBarcode = require('jsbarcode');
 
 module.exports = router;
