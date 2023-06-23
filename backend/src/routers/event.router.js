@@ -71,19 +71,19 @@ router.get("/id/:eventId", asyncHandler(async (req, res) => {
   res.json(event);
 }));
 
-router.get("/checkInWaitingList/:eventId/:userId", asyncHandler(async (req, res) => {
+router.get("/checkInWaitingList/:eventId", authMiddleware, asyncHandler(async (req, res) => {
   const event = await Event.findById(req.params.eventId);
   if (!event) {
     return res.status(404).json({message: 'Event not found'});
   }
-  const userId = req.params.userId;  
+  const userId = req.user.id;  
   const isInWaitingList = event.waitingList.some(user => user.userId.equals(userId));
   res.json(isInWaitingList);
 }));
 
 
-router.post("/id/:eventId/waitingList", asyncHandler(async (req, res) => {
-  const userId = req.body.userId;
+router.post("/id/:eventId/waitingList", authMiddleware, asyncHandler(async (req, res) => {
+  const userId = req.user.id;
   const event = await Event.findById(req.params.eventId);
   if (!event) {
     return res.status(404).json({message: 'Event not found'});
@@ -98,8 +98,8 @@ router.post("/id/:eventId/waitingList", asyncHandler(async (req, res) => {
   }
 }));
 
-router.delete("/id/:eventId/waitingList/:userId", asyncHandler(async (req, res) => {
-  const userId = req.params.userId;
+router.delete("/id/:eventId/waitingList", authMiddleware, asyncHandler(async (req, res) => {
+  const userId = req.user.id;
   const event = await Event.findById(req.params.eventId);
   if (!event) {
     return res.status(404).json({message: 'Event not found'});

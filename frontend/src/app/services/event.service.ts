@@ -34,16 +34,17 @@ export class EventService {
     return this.http.post(URLS.EVENT.GET_EVENT_TRANSCRIBE_AUDIO_URL, formData);
   }
 
-  checkUserInWaitingList(eventId: string, userId: string): Observable<boolean> {
-    return this.http.get<boolean>(URLS.EVENT.GET_CHECK_IN_WAITING_LIST_URL(eventId, userId));
+  checkUserInWaitingList(eventId: string): Observable<boolean> {
+    return this.http.get<boolean>(URLS.EVENT.GET_CHECK_IN_WAITING_LIST_URL(eventId));
   }
   
-  addToWaitingList(eventId: string, userId: string): Observable<EventM> {
-    return this.http.post<EventM>(URLS.EVENT.GET_ADD_TO_WAITING_LIST_URL(eventId), {userId});
+  addToWaitingList(eventId: string): Observable<EventM> {
+    return this.http.post<EventM>(URLS.EVENT.GET_ADD_TO_WAITING_LIST_URL(eventId), {});
   }
-
-  removeFromWaitingList(eventId: string, userId: string): Observable<EventM> {
-    return this.http.delete<EventM>(URLS.EVENT.GET_REMOVE_FROM_WAITING_LIST_URL(eventId, userId));
+  
+  
+  removeFromWaitingList(eventId: string): Observable<EventM> {
+    return this.http.delete<EventM>(URLS.EVENT.GET_REMOVE_FROM_WAITING_LIST_URL(eventId));
   }
 
   isEventFavorite(eventId: string): Observable<{ isFavorite: boolean }> {
@@ -51,16 +52,15 @@ export class EventService {
   }  
 
   favoriteEvent(eventId: string): Observable<EventM> {
-    return this.http.post<EventM>(URLS.EVENT.FAVORITE(eventId), eventId);
+    return this.http.post<EventM>(URLS.EVENT.FAVORITE(eventId), {});
   }
 
   unfavoriteEvent(eventId: string): Observable<EventM> {
     return this.http.delete<EventM>(URLS.EVENT.UNFAVORITE(eventId));
   }
 
-  getUserFavorites(userId: string): Observable<EventM[]> {
-    return this.http.get<EventM[]>(URLS.USER.GET_FAVORITES(userId));
+  getUserFavorites(): Observable<EventM[]> {
+    return this.http.get<EventM[]>(URLS.EVENT.GET_FAVORITES_EVENTS_URL);
   }
-
   
 }

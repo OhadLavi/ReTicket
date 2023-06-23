@@ -10,6 +10,7 @@ const multer = require('multer');
 const path = require('path');
 const { OAuth2Client } = require('google-auth-library');
 const { Event } = require('../models/event.model');
+const authMiddleware = require('../middlewares/auth.mid');
 const paypal = require('paypal-rest-sdk');
 paypal.configure({
     'mode': process.env.PAYPAL_MODE,
@@ -73,7 +74,7 @@ router.put("/update/:id", asyncHandler(async (req, res) => {
     }
 }));
 
-router.get('/favorites/', asyncHandler(async (req, res) => {
+router.get('/favorites/', authMiddleware, asyncHandler(async (req, res) => {
   const events = await Event.find({ favorites: req.user.id });
   res.json(events);
 }));
