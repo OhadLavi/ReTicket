@@ -11,7 +11,6 @@ async function scrapeWebsite(websiteName) {
     const page = await browser.newPage();
     await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.82 Safari/537.36');
     await page.goto(config.url, { waitUntil: 'networkidle0' });
-    await page.screenshot({path: 'screenshot.png'});
     console.log('Scraping in process...');
     const eventLinks = await page.evaluate((linkSelector) => {
       let links = Array.from(document.querySelectorAll(linkSelector)).map(a => a.href);

@@ -1,1 +1,26 @@
-<p class="text-white">ticket-in-market works!</p>
+<div class="container mt-5 bg-white rounded shadow-sm p-4">
+    <div class="row">
+      <div class="col-md-12 mx-auto">
+        <h2 class="text-center">Tickets in Market</h2>
+        <div class="row">
+          <div class="col-md-4" *ngFor="let ticket of tickets">
+            <mat-card class="my-4">
+              <mat-card-header>
+                <mat-card-title>{{ticket.title}}</mat-card-title>
+                <mat-card-subtitle>{{ticket.date}} at {{ticket.location}}</mat-card-subtitle>
+              </mat-card-header>
+              <mat-card-content>
+                <p>Artist: {{ticket.artists}}</p>
+                <p>Price: ₪{{ticket.price}}</p>
+                <p>Description: {{ticket.description}}</p>
+              </mat-card-content>
+              <mat-card-actions>
+                <button mat-button>Buy Ticket</button>
+              </mat-card-actions>
+            </mat-card>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  

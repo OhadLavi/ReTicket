@@ -32,7 +32,7 @@
           <a class="nav-link-style d-flex align-items-center px-4 py-3 menulist" routerLink="/account/favorites">
             <i class="fas fa-heart me-2"></i>
             Favorites
-            <span class="fs-sm text-muted ms-auto">2</span>
+            <span class="fs-sm text-muted ms-auto" *ngIf="notificationCount > 0">{{ favoritesCount }}</span>
           </a>
         </li>
         <li class="border-bottom mb-0 cursor-pointer">

@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Ticket } from '../shared/interfaces/ITicket';
 import { URLS } from '../shared/constants/urls';
+import { TicketUpdate } from '../shared/interfaces/ITicket copy';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +18,7 @@ export class TicketUploadService {
     return this.http.post<Ticket>(URLS.TICKET.GET_TICKET_UPLOAD_URL, formData);
   }
 
-  submitTicketInfo(ticketInfo: { tickets: Ticket[], sellerId: string }): Observable<Ticket[]> {
+  submitTicketInfo(ticketInfo: { tickets: TicketUpdate[], sellerId: string }): Observable<Ticket[]> {
     return this.http.post<Ticket[]>(URLS.TICKET.GET_TICKET_SUBMIT_URL, ticketInfo);
   }
 

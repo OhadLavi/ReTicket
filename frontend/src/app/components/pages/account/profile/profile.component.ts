@@ -55,7 +55,6 @@ export class ProfileComponent implements OnInit {
       id: [this.user.id, [Validators.required]],
       email: [this.user.email, [Validators.required, Validators.email]],
       facebook: [''],
-      insta: [''],
       password: [this.user.password],
     });
 
@@ -101,7 +100,6 @@ export class ProfileComponent implements OnInit {
       // Use the service method to send the file to the backend
       this.userService.updateUserPhoto(this.user.id, photo).subscribe((res) => {
         this.toast.success({detail:"SUCCESS",summary:'User photo updated successfully!', sticky: false, duration: 3000, type: 'success'});
-        console.log(res);
         document.querySelectorAll('#user_profile').forEach((element: any) => {
           element.src = this.imageURL;
         });
@@ -111,6 +109,20 @@ export class ProfileComponent implements OnInit {
       });
     }
   }
+
+  deletePhoto() {  
+    this.userService.deleteUserPhoto(this.user.id).subscribe((res) => {
+      document.querySelectorAll('#user_profile').forEach((element: any) => {
+        element.src = "http://localhost:5000/" + res.imageURL;
+      });
+      this.toast.success({detail:"SUCCESS",summary:'User photo deleted successfully!', sticky: false, duration: 3000, type: 'success'});
+    },
+    error => {
+      console.log(error);
+      this.toast.error({detail:"ERROR",summary:'Error occurred while deleting user photo', sticky: false, duration: 10000, type: 'error'});
+    });
+  }
+  
   
   saveUser() {
     this.submitted = true;
@@ -119,9 +131,13 @@ export class ProfileComponent implements OnInit {
     }
 
     this.userService.updateUser(this.userForm.value).subscribe((res) => {
-      console.log(res);
-    });
-
+      if (res) {
+        this.toast.success({detail:"SUCCESS",summary:'User updated successfully!', sticky: false, duration: 3000, type: 'success'});
+      }
+      },
+      error => {
+        this.toast.error({detail:"ERROR",summary:'Error occurred while updating user', sticky: false, duration: 10000, type: 'error'});
+      });
   }
 
   imageURL: string | undefined;

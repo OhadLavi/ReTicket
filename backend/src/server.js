@@ -21,6 +21,7 @@ const port = process.env.PORT || 5000;
 app.use(cors({ origin: 'http://localhost:4200', credentials: true }));
 app.use(express.json());
 app.use('/uploads', express.static('uploads'));
+app.use('/assets', express.static('assets'));
 app.use(authMiddleware);
 
 //import routes

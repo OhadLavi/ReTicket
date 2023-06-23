@@ -17,7 +17,6 @@
           <p id="uploading-text" class="my-2 h4">Uploading file<span class="dots"></span></p>
         </div>
       </div>
-      
       <div id="uploaded-container" *ngIf="uploadSuccess && !fileUploaded" [style.height]="containerHeight" class="card my-4 border-dashed d-flex justify-content-center align-items-center" [@fade]>
         <div class="card-body text-center p-4 d-flex justify-content-center align-items-center">
           <mat-icon class="m-auto icon-display" aria-hidden="false">done</mat-icon>
@@ -36,6 +35,7 @@
           </a>
         </p>
         <mat-tab-group *ngIf="fileUploaded && tickets.length > 0">
+          <app-ticket-in-market [tickets]="tickets"></app-ticket-in-market>
           <mat-tab *ngFor="let ticket of tickets; index as i" label="Ticket {{ i + 1 }}">
             <div id="ticket-info-form" class="my-4 border rounded p-4">
               <div class="form-group mb-4">
@@ -77,6 +77,7 @@
         <div class="text-end">
           <button class="btn btn-primary mt-3" type="submit">Sell {{ tickets.length > 1 ? 'Tickets' : 'Ticket' }}</button>
         </div>
+        
       </form>
     </div>
   </div>

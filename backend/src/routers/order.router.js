@@ -1,5 +1,6 @@
 const asyncHandler = require('express-async-handler');
 const express = require('express');
+const mongoose = require('mongoose');
 const auth = require('../middlewares/auth.mid');
 const OrderModel = require('../models/order.model');
 const { OrderStatus } = require('../constants/order_status');
@@ -10,6 +11,7 @@ const Ticket = require('../models/ticket.model');
 const Notification = require('../models/notification.model');
 const User = require('../models/user.model');
 const { File } = require('../models/file.model');
+const authMiddleware = require('../middlewares/auth.mid');
 
 router.use(auth);
 
@@ -30,7 +32,7 @@ router.get('/newOrder', asyncHandler(async (req, res) => {
     res.status(400).send();
 }));
 
-router.post('/pay', asyncHandler(async (req, res) => {
+router.post('/pay', authMiddleware, asyncHandler(async (req, res) => {
   const { paymentId } = req.body;
   const order = await getNewOrder(req);
   if (!order)
@@ -44,6 +46,12 @@ router.post('/pay', asyncHandler(async (req, res) => {
       allTickets.push(...tickets);
       const roundedBalance = Math.round((item.price * item.quantity) * 100) / 100;
       await User.findByIdAndUpdate(tickets[0].seller, { $inc: { balance: roundedBalance } }).exec();
+      const userId = new mongoose.Types.ObjectId(req.user.id);
+      const eventId = new mongoose.Types.ObjectId(item.event);      
+      await Notification.findOneAndUpdate(
+        { userId: userId, eventId: eventId }, 
+        { type: "PURCHASED" }
+    );
     }
     
     order.paymentId = paymentId;

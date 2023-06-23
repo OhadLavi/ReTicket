@@ -4,5 +4,5 @@ export class Notification {
     createdAt!: string;
     isRead!: boolean;
     type!: string;
+    hasPurchased!: boolean;
 }
-

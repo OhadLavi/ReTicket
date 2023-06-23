@@ -37,7 +37,7 @@ describe('User Routes', () => {
       const createdUser = {
         ...mockUser,
         password: encryptedPassword,
-        imageURL: './uploads/user.png',
+        imageURL: './assets/user.png',
         id: '1234',
       };
       UserModel.create.mockResolvedValue(createdUser);
@@ -140,7 +140,7 @@ describe('User Routes', () => {
         email: 'test@test.com',
         name: 'Test User',
         password: 'encryptedPassword',
-        imageURL: './uploads/user.png',
+        imageURL: './assets/user.png',
         save: jest.fn().mockResolvedValue(),
       };
       
