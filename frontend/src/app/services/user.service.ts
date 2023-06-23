@@ -136,7 +136,6 @@ export class UserService {
     localStorage.removeItem('user');
     localStorage.removeItem('Cart');
     localStorage.removeItem(this.darkModeLSKey);
-    console.log('removed user from local storage');
     window.location.href = "/";
   }
 

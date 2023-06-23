@@ -84,7 +84,7 @@ router.post('/upload', authMiddleware, upload.single('file'), async (req, res) =
 
       ticketDocs = ticketResult.tickets.map(ticket => {
         ticket.eventId = eventId.toString();
-        return ticket;  // <- Just return the ticket data for now.
+        return ticket;
       });
   
       for (const ticketData of ticketDocs) {
@@ -96,7 +96,7 @@ router.post('/upload', authMiddleware, upload.single('file'), async (req, res) =
         } else {
           const newTicket = new Ticket(ticketData);
           await newTicket.save();
-          ticketData.id = newTicket._id;  // <- Assign the newly generated ID to the ticketData object.
+          ticketData.id = newTicket._id;
         }
       }
 
@@ -116,14 +116,12 @@ router.post('/upload', authMiddleware, upload.single('file'), async (req, res) =
 
 
 router.post('/submit', async (req, res) => {
-  
   try {
     const tickets = req.body.tickets;
     const sellerId = req.body.sellerId;
-    console.log(tickets);
     let errorStatus = 0;
     let errorMessage = '';
-    let lastEventId = null;  // <- Keep track of the last eventId
+    let lastEventId = null;
 
     if (!sellerId) {
       errorStatus = 400;
@@ -208,8 +206,7 @@ router.delete('/delete/:id', authMiddleware, asyncHandler(async (req, res) => {
     res.status(404).send({error: 'No ticket found'});
     return;
   }
-  console.log(ticket.seller);
-  console.log(req.user.id);
+  
   if (ticket.seller.toString() !== req.user.id.toString() || ticket.isSold) {
     res.status(403).send({error: 'You are not allowed to delete this ticket'});
     return;

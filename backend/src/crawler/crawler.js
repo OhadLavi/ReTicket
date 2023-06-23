@@ -60,9 +60,6 @@ async function scrapeWebsite(websiteName) {
         data.push(eventDetails);
         await saveEvent(eventDetails);
       }
-      else {
-        //console.log('Missing data for event:', eventDetails);
-      }
     });
     await Promise.all(pagesPromises);
     await browser.close();

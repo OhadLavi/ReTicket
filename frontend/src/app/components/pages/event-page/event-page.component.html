@@ -44,13 +44,13 @@
               <div class="ticket-stats">
                 <div class="d-flex">
                   <div class="small-text text-center px-2">
-                    <strong>{{eventm.availableTickets}}</strong><br><span class="">Available</span>
+                    <strong>{{eventm.availableTickets}}</strong><br><span class="textStyle">Available</span>
                   </div>
                   <div class="small-text text-center px-2">
-                    <strong>{{eventm.soldTickets}}</strong><br><span class="">Sold</span>
+                    <strong>{{eventm.soldTickets}}</strong><br><span class="textStyle">Sold</span>
                   </div>
                   <div class="small-text text-center px-2">
-                    <strong>{{eventm.numberOfLikes}}</strong><br><span class="">Liked</span>
+                    <strong>{{eventm.numberOfLikes}}</strong><br><span class="textStyle">Liked</span>
                   </div>
                 </div>
               </div>
@@ -90,7 +90,7 @@
                 </div>
                 <div class="ms-3 w-100">
                   <h6>Ticket Alerts</h6>
-                  <span class="">Get notified when a ticket becomes available</span>
+                  <span class="textStyle">Get notified when a ticket becomes available</span>
                 </div>
                 <div class="custom-control custom-switch">
                   <mat-slide-toggle [checked]="isInWaitingList" (change)="toggleWaitingList()"></mat-slide-toggle>

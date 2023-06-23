@@ -24,7 +24,6 @@ export class TicketUploadService {
 
   downloadTicket(fileId: string): Observable<Blob> {
     return this.http.get(URLS.TICKET.GET_TICKET_DOWNLOAD_URL(fileId.toString()), { responseType: 'blob' });
-  }
-  
+  }  
   
 }

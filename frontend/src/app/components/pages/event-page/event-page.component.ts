@@ -42,7 +42,6 @@ export class EventPageComponent implements OnInit {
         eventService.getEventById(params.id).subscribe(serverEvent => {
           this.eventm = serverEvent;
           if(this.eventm) { 
-            console.log(this.eventm);
             this.totalQuantityInCart = this.cartService.getQuantityInCart(this.eventm.id);
             this.geocodeAddress(this.eventm.location + ', ' + this.eventm.venue);
             this.checkImageDimensions(this.eventm.image);
@@ -150,16 +149,26 @@ export class EventPageComponent implements OnInit {
   
   toggleWaitingList() {
     this.isInWaitingList = !this.isInWaitingList;
-    console.log(this.isInWaitingList);
     if (this.isInWaitingList) {
       this.eventService.addToWaitingList(this.eventm.id, this.userService.currentUser.id)
       .subscribe({
-        next: (response) => console.log('Added to waiting list', response),
-        error: (err) => console.error('Error adding to waiting list', err),
+        next: (response) => {
+          this.toast.success({detail:"SUCCESS",summary:'Added to waiting list', sticky: false, duration: 3000, type: 'success'});
+        },
+        error: (err) => {
+          this.toast.error({detail:"ERROR",summary:'Error adding to waiting list', sticky: false, duration: 3000, type: 'error'});
+        },
       });
     } else {
       this.eventService.removeFromWaitingList(this.eventm.id, this.userService.currentUser.id)
-        .subscribe(() => console.log('Removed from waiting list'));
+        .subscribe({
+          next: () => {
+            this.toast.success({detail:"SUCCESS",summary:'Removed from waiting list', sticky: false, duration: 3000, type: 'success'});
+          },
+          error: (err) => {
+            this.toast.error({detail:"ERROR",summary:'Error removing from waiting list', sticky: false, duration: 3000, type: 'error'});
+          },
+        });
     }
   }  
 

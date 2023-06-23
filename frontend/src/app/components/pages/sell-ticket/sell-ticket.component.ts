@@ -6,6 +6,7 @@ import { Ticket } from 'src/app/shared/interfaces/ITicket';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
 import { NgToastService } from 'ng-angular-popup';
+import { TicketService } from 'src/app/services/ticket.service';
 
 @Component({
   selector: 'app-sell-ticket',
@@ -43,6 +44,7 @@ export class SellTicketComponent implements OnInit {
 
   constructor(
     private ticketUploadService: TicketUploadService,
+    private ticketService: TicketService,
     private userSrvice:UserService, 
     private router: Router,
     private el: ElementRef,
@@ -68,7 +70,6 @@ export class SellTicketComponent implements OnInit {
             const ticketResults = response.ticketResults.tickets;
             for (let i = 0; i < ticketResults.length; i++) {
               const ticketResult = ticketResults[i];
-              console.log(ticketResult);
               if (this.isEventDatePassed(ticketResult.eventDate)) {
                 this.isEventDatePassedFlag = true;
               } else if (!ticketResult.valid) {
@@ -115,7 +116,6 @@ export class SellTicketComponent implements OnInit {
     }
   
     this.isLoading = true; 
-    console.log(this.tickets[0].id);
     const ticketUpdates = this.tickets.map((ticket, index) => ({
       id: ticket.id, 
       price: this.ticketForm.controls['ticketPrice' + index].value, 
@@ -129,7 +129,8 @@ export class SellTicketComponent implements OnInit {
     this.ticketUploadService.submitTicketInfo(ticketInfo).subscribe({
       next: (response: Ticket[]) => {
         this.isLoading = false;
-        this.router.navigate(['/ticketInMarket']); 
+        this.ticketService.setTickets(response);
+        this.router.navigate(['/ticketInMarket']);         
       },
       error: error => {
         this.isLoading = false;
@@ -137,8 +138,6 @@ export class SellTicketComponent implements OnInit {
       }
     });
   }
-  
-  
 
 resetForm() {
   this.tickets = [];

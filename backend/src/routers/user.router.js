@@ -1,4 +1,5 @@
 const express = require('express');
+const axios = require('axios');
 const router = express.Router();
 const sample_users = require('../data/users');
 const jwt = require('jsonwebtoken');
@@ -39,7 +40,7 @@ router.post("/login", asyncHandler(
       const { email, password } = req.body;
       const user = await UserModel.findOne({ email });
       if (user && await user.isValidPassword(password)) {
-          res.status(200).json(generateTokenResponse(user));
+          res.status(200).json(await generateTokenResponse(user));
       } else {
           res.status(401).json({ error: "Invalid login. Please check your email and password." });
       }
@@ -114,7 +115,6 @@ router.put("/update/photo/:id", upload.single('photo'), asyncHandler(async (req,
 
 router.put("/delete/photo/:id", asyncHandler(async (req, res) => {
   const { id } = req.params;
-  console.log("here");
   try {
       const user = await UserModel.findById(id);
       if (!user) {
@@ -169,20 +169,37 @@ router.post("/moveToPaypal", asyncHandler(async (req, res) => {
       });
 }));
 
-const generateTokenResponse = (user) => {
-    const token = jwt.sign(
-      { id: user.id, email: user.email }, process.env.JWT_SECRET,
-      { expiresIn: "12h" }
-    );
+const generateTokenResponse = async (user) => {
+  const token = jwt.sign(
+    { id: user.id, email: user.email }, process.env.JWT_SECRET,
+    { expiresIn: "12h" }
+  );
 
-    return {
-        id: user.id,
-        email: user.email,
-        name: user.name,
-        token: token,
-        imageURL: user.imageURL,
-        balance: user.balance
-      };
+  return {
+    id: user.id,
+    email: user.email,
+    name: user.name,
+    token: token,
+    imageURL: await getImageUrl(user),
+    balance: user.balance
+  };
 };
+
+  async function isImageAvailable(imageUrl) {
+    try {
+      const response = await axios.get(imageUrl);
+      return response.status === 200;
+    } catch (error) {
+      return false;
+    }
+  }
+
+  async function getImageUrl(user) {
+    const isAvailable = await isImageAvailable('http://localhost:5000/' + user.imageURL);
+    if (!isAvailable) {
+      return './assets/user.png';
+    }
+    return user.imageURL;
+  }
 
 module.exports = router;

@@ -55,7 +55,6 @@ async function saveEvent(eventDetails) {
 
     try {
       await event.save();
-      console.log(`Event saved: ${event.name}`);
     } catch (error) {
       console.error(`An error occurred while saving the event: ${error}`);
     }

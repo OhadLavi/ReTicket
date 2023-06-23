@@ -35,7 +35,6 @@
           </a>
         </p>
         <mat-tab-group *ngIf="fileUploaded && tickets.length > 0">
-          <app-ticket-in-market [tickets]="tickets"></app-ticket-in-market>
           <mat-tab *ngFor="let ticket of tickets; index as i" label="Ticket {{ i + 1 }}">
             <div id="ticket-info-form" class="my-4 border rounded p-4">
               <div class="form-group mb-4">
