@@ -39,13 +39,16 @@ export class SellTicketComponent implements OnInit {
   ticketPriceValidators: Validators[] = [];
   uploadSuccess = false;
   containerHeight!: string;
+  ticketForm!: FormGroup;
 
   constructor(
     private ticketUploadService: TicketUploadService,
     private userSrvice:UserService, 
     private router: Router,
     private el: ElementRef,
-    private toast: NgToastService) { }
+    private toast: NgToastService) { 
+      this.ticketForm = new FormGroup({});
+    }
 
   ngOnInit() {
     setTimeout(() => {
@@ -65,6 +68,7 @@ export class SellTicketComponent implements OnInit {
             const ticketResults = response.ticketResults.tickets;
             for (let i = 0; i < ticketResults.length; i++) {
               const ticketResult = ticketResults[i];
+              console.log(ticketResult);
               if (this.isEventDatePassed(ticketResult.eventDate)) {
                 this.isEventDatePassedFlag = true;
               } else if (!ticketResult.valid) {
@@ -81,6 +85,7 @@ export class SellTicketComponent implements OnInit {
                 this.ticketPriceValidators.push(
                   [Validators.required, Validators.min(1), Validators.max(ticketResult.price)]
                 );
+                this.ticketForm.addControl('ticketPrice' + i, this.ticketPriceControls[i]);                
                 this.isLoading = false;
                 this.uploadSuccess = true;
                 setTimeout(() => { this.fileUploaded = true; this.uploadSuccess = false; }, 1200);
@@ -103,12 +108,24 @@ export class SellTicketComponent implements OnInit {
     }
   }
 
-onSubmit() {
+  onSubmit() {
+    if (this.ticketForm.invalid) {
+      this.toast.error({detail:"ERROR",summary: 'Form is invalid. Please correct the errors.', sticky: false, duration: 10000, type: 'error'});
+      return;
+    }
+  
     this.isLoading = true; 
+    console.log(this.tickets[0].id);
+    const ticketUpdates = this.tickets.map((ticket, index) => ({
+      id: ticket.id, 
+      price: this.ticketForm.controls['ticketPrice' + index].value, 
+      eventId: ticket.eventId
+    }));
     const ticketInfo = { 
-        tickets: this.tickets, 
-        sellerId: this.userSrvice.currentUser.id
+      tickets: ticketUpdates, 
+      sellerId: this.userSrvice.currentUser.id
     };
+  
     this.ticketUploadService.submitTicketInfo(ticketInfo).subscribe({
       next: (response: Ticket[]) => {
         this.isLoading = false;
@@ -119,7 +136,9 @@ onSubmit() {
         this.toast.error({detail:"ERROR",summary: error.message, sticky: false, duration: 10000, type: 'error'});
       }
     });
-}
+  }
+  
+  
 
 resetForm() {
   this.tickets = [];

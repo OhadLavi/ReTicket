@@ -30,9 +30,9 @@
                     <i class="fas fa-sync-alt me-2"></i>Update avatar
                   </label>
                   <input class="form-control d-none" id="customer-image-input" type="file" formControlName="photo" accept="image/png, image/gif, image/jpeg" (change)="updatePhoto($event)">
-                   <button class="btn btn-outline-danger mb-2 ms-2" type="button">
+                  <button class="btn btn-outline-danger mb-2 ms-2" type="button" (click)="deletePhoto()">
                     <i class="fas fa-trash-alt me-2"></i>Delete
-                  </button>
+                  </button>                  
                 </form>
                 <div class="pt-1 mb-0 ms-2 fs-sm text-muted">
                   We recommend an image of at least 400x400. Gifs work too :)
@@ -56,7 +56,7 @@
               </div>
               <div class="col-sm-6">
                 <label class="form-label" for="profile-email">UID</label>
-                <input class="form-control" id="profile-uid" formControlName="id" type="text" value="374702749" readonly>
+                <input class="form-control" id="profile-uid" formControlName="id" type="text" readonly>
               </div>
             </div>
             <!-- Submit -->

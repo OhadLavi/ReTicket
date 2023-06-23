@@ -5,6 +5,7 @@ export interface Ticket {
     location: string;
     venue: string;
     price: number;
+    originalPrice: number;
     isSold: boolean;
     seller: string;
     buyer?: string;

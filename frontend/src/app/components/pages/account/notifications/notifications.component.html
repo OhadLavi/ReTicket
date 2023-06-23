@@ -15,11 +15,16 @@
                     <p class="mb-0">{{ notification.message }}</p>
                     <small class="text-muted d-block">{{ notification.createdAt | date:'dd.MM.yy HH:mm' }}</small>
                   </div>
-                  <div *ngIf="notification.type !== 'PURCHASE'" class="col-auto text-end">
+                  <div *ngIf="notification.type !== 'PURCHASED'" class="col-auto text-end">
                     <button mat-stroked-button color="primary" [routerLink]="['/event', notification.eventId]" class="btn btn-outline-info d-flex align-items-center">
-                        <mat-icon>book_online</mat-icon> Purchase Ticket
-                      </button>
+                      <mat-icon>book_online</mat-icon> Purchase Ticket
+                    </button>
                   </div>
+                  <div *ngIf="notification.type === 'PURCHASED'" class="col-auto text-end">
+                    <button mat-stroked-button color="primary" class="btn btn-outline-info d-flex align-items-center">
+                      <mat-icon>done</mat-icon> Purchased
+                    </button>
+                </div>
                 </div>
               </div>
               <div *ngIf="notifications.length === 0" class="empty-container">

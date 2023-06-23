@@ -93,11 +93,11 @@ export class TicketGridComponent implements OnInit, OnDestroy {
     });
   }
 
-  updateTicketPrice(ticketId: string, currentPrice: number): void {
-    const dialogRef = this.dialog.open(TicketEditDialogComponent, {
-      width: 'auto',
-      data: {price: currentPrice}
-    });
+    updateTicketPrice(ticketId: string, currentPrice: number, originalPrice: number): void {
+      const dialogRef = this.dialog.open(TicketEditDialogComponent, {
+        width: 'auto',
+        data: { currentPrice: currentPrice, originalPrice: originalPrice }
+      });
   
     dialogRef.afterClosed().subscribe(result => {
       if (result?.action === 'confirm') {

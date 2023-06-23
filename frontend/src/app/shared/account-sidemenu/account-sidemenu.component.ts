@@ -17,6 +17,7 @@ export class AccountSidemenuComponent implements OnInit {
   user!:User;
   notificationCount = 0;
   ticketCount = 0;
+  favoritesCount = 0;
 
   constructor(private userService:UserService, private sharedService: SharedService, private ticketService: TicketService) {
     this.userService.userObservable.subscribe((user)=>{
@@ -24,6 +25,7 @@ export class AccountSidemenuComponent implements OnInit {
         this.user = user;
         this.loadNotifications(user.id);
         this.loadTickets();
+        this.loadFavorites();
       }
     });
   }
@@ -56,6 +58,12 @@ export class AccountSidemenuComponent implements OnInit {
   loadTickets() {
     this.ticketService.fetchUserTickets().subscribe((tickets) => {
       this.ticketCount = tickets.sellingTickets.length + tickets.boughtTickets.length;
+    });
+  }
+
+  loadFavorites() {
+    this.sharedService.fetchFavorites().subscribe((favorites) => {
+      this.favoritesCount = favorites.length;
     });
   }
   

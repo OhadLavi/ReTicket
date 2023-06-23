@@ -4,20 +4,22 @@
     <mat-icon style="color: red;">close</mat-icon>
   </button>
 </div>
-<div mat-dialog-content class="border-top border-bottom">
-    <p>Please enter the new price:</p>
-    <mat-form-field>
-      <input matInput type="number" min="0" [(ngModel)]="data.price" #priceInput="ngModel" required>
-      <mat-error *ngIf="priceInput.errors?.required">This field is required.</mat-error>
-    </mat-form-field>
-  </div>
-  <div mat-dialog-actions>
-    <button mat-raised-button color="primary" (click)="onCancel()">
-      <mat-icon>cancel</mat-icon> 
-      Cancel
-    </button>
-    <button mat-raised-button color="accent" [disabled]="priceInput.invalid" cdkFocusInitial (click)="onConfirm()">
-      <mat-icon>save</mat-icon> 
-      Save
-    </button>
-</div>  
+<div mat-dialog-content class="border-top border-bottom" [formGroup]="priceForm">
+  <p>Please enter the new price:</p>
+  <mat-form-field>
+    <input matInput type="number" formControlName="price" required>
+    <mat-error *ngIf="priceForm.controls.price.hasError('required')">This field is required.</mat-error>
+    <mat-error *ngIf="priceForm.controls.price.hasError('min')">The price cannot be lower than 0.</mat-error>
+    <mat-error *ngIf="priceForm.controls.price.hasError('max')">The price cannot exceed the original price.</mat-error>
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-raised-button color="primary" (click)="onCancel()">
+    <mat-icon>cancel</mat-icon>
+    Cancel
+  </button>
+  <button mat-raised-button color="accent" [disabled]="priceForm.invalid" cdkFocusInitial (click)="onConfirm()">
+    <mat-icon>save</mat-icon>
+    Save
+  </button>
+</div>

@@ -25,7 +25,7 @@ router.post("/register", asyncHandler(async(req, res) => {
   }
   const encrypedPassword = await bcrypt.hash(password, 10);
   try{
-      photo = './uploads/user.png';
+      photo = './assets/user.png';
       const newUser = await UserModel.create({name, email: email.toLowerCase(), password: encrypedPassword, imageURL: photo});
       res.status(200).json(generateTokenResponse(newUser));
   } catch(err){
@@ -94,8 +94,8 @@ const storage = multer.diskStorage({
     }
   });
   
-  const upload = multer({ storage: storage });
-  router.put("/update/photo/:id", upload.single('photo'), asyncHandler(async (req, res) => {
+const upload = multer({ storage: storage });
+router.put("/update/photo/:id", upload.single('photo'), asyncHandler(async (req, res) => {
     const { id } = req.params;
     const photo = req.file;
     try {
@@ -110,6 +110,23 @@ const storage = multer.diskStorage({
         console.log(error);
         res.status(500).json({ error: "An error occurred while updating the user's photo" });
     }
+}));
+
+router.put("/delete/photo/:id", asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  console.log("here");
+  try {
+      const user = await UserModel.findById(id);
+      if (!user) {
+          return res.status(404).json({ error: "User not found" });
+      }
+      user.imageURL = "./assets/user.png";
+      await user.save();
+      res.json(user);
+  } catch (error) {
+      console.log(error);
+      res.status(500).json({ error: "An error occurred while deleting the user's photo" });
+  }
 }));
 
 router.post("/moveToPaypal", asyncHandler(async (req, res) => {

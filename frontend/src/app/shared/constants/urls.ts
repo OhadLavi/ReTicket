@@ -13,6 +13,7 @@ export const URLS = {
         FAVORITE: (eventId: string) => `${BASE_URL}/api/events/setFavorite/id/${eventId}`,
         UNFAVORITE: (eventId: string) => `${BASE_URL}/api/events/unfavorite/id/${eventId}`,
         IS_FAVORITE: (eventId: string) => `${BASE_URL}/api/events/getFavorite/id/${eventId}`,
+        GET_FAVORITES_EVENTS_URL: `${BASE_URL}/api/events/getFavoritesEvents`,
     },
     USER: {
         GET_ALL: `${BASE_URL}/api/users`,
@@ -20,6 +21,7 @@ export const URLS = {
         GET_BY_SEARCH_TERM: (searchTerm: string) => `${BASE_URL}/api/users/search/${searchTerm}`,
         GET_USER_UPDATE_URL: (id: string) => `${BASE_URL}/api/users/update/${id}`,
         GET_USER_PHOTO_UPDATE_URL: (id: string) => `${BASE_URL}/api/users/update/photo/${id}`,
+        GET_USER_PHOTO_DELETE_URL: (id: string) => `${BASE_URL}/api/users/delete/photo/${id}`,
         GET_USER_MOVE_TO_PAYPAL_URL: `${BASE_URL}/api/users/moveToPaypal/`,
         GET_FAVORITES: (userId: string) => `${BASE_URL}/api/users/favorites/`,
     },

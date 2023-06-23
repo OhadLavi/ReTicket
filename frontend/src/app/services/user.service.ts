@@ -91,6 +91,20 @@ export class UserService {
     );
   }
 
+  deleteUserPhoto(userId: string): Observable<User> {
+    const deleteUserPhotoUrl = URLS.USER.GET_USER_PHOTO_DELETE_URL(userId);
+    return this.http.put<User>(deleteUserPhotoUrl, {}).pipe(
+      tap({
+        next: (updatedUser: User) => {
+          updatedUser.token = this.currentUser.token;
+          this.setUserToLocalStorage(updatedUser);
+        },
+        error: (err: any) => {
+        }
+      })
+    );
+  }
+  
   public removeUserFromLocalStorage() {
     try {
       localStorage.removeItem('user');

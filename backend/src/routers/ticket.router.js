@@ -84,16 +84,19 @@ router.post('/upload', authMiddleware, upload.single('file'), async (req, res) =
 
       ticketDocs = ticketResult.tickets.map(ticket => {
         ticket.eventId = eventId.toString();
-        return new Ticket(ticket);
+        return ticket;  // <- Just return the ticket data for now.
       });
-
-      for (const ticket of ticketDocs) {
-        await ticket.save();
-        const existingTicket = await Ticket.findOne({ barcode: ticket.barcode, isSold: false, _id: { $ne: ticket._id } });
+  
+      for (const ticketData of ticketDocs) {
+        const existingTicket = await Ticket.findOne({ barcode: ticketData.barcode, isSold: false });
         if (existingTicket) {
           await Ticket.deleteMany({ _id: { $in: ticketDocs.map(t => t._id) } });
           fs.unlinkSync(filePath);
-          return res.status(400).json({ error: `Error: A ticket with barcode ${ticket.barcode} is already on sale.` });
+          return res.status(400).json({ error: `Error: A ticket with barcode ${ticketData.barcode} is already on sale.` });
+        } else {
+          const newTicket = new Ticket(ticketData);
+          await newTicket.save();
+          ticketData.id = newTicket._id;  // <- Assign the newly generated ID to the ticketData object.
         }
       }
 
@@ -102,6 +105,7 @@ router.post('/upload', authMiddleware, upload.single('file'), async (req, res) =
     fs.unlinkSync(filePath);
     return res.status(200).json({ ticketResults: ticketResults });
   } catch (error) {
+    console.log(error);
     await Ticket.deleteMany({ _id: { $in: ticketDocs.map(t => t._id) } });
     fs.unlink(filePath, (err) => {
       if (err) console.error(err);
@@ -112,29 +116,47 @@ router.post('/upload', authMiddleware, upload.single('file'), async (req, res) =
 
 
 router.post('/submit', async (req, res) => {
+  
   try {
     const tickets = req.body.tickets;
     const sellerId = req.body.sellerId;
-    let event = "";
-    if (!sellerId)
-        return res.status(400).json({ error: 'Seller ID is required.' });
-    const newTickets = await Promise.all(tickets.map(async ({ eventId, eventDate, location, price, fileIds, description }) => {
-        const newTicket = await Ticket.create({
-          eventId: new mongoose.Types.ObjectId(eventId),
-          eventDate,
-          location,
-          price,
-          isSold: false,
-          seller: sellerId,
-          soldDate: null,
-          fileIds,
-          description
-        });
-        event = await Event.findByIdAndUpdate(eventId, { $inc: { availableTickets: 1 } });
-        return newTicket;
+    console.log(tickets);
+    let errorStatus = 0;
+    let errorMessage = '';
+    let lastEventId = null;  // <- Keep track of the last eventId
+
+    if (!sellerId) {
+      errorStatus = 400;
+      errorMessage = 'Seller ID is required.';
+    }
+
+    // Process tickets
+    const updatedTickets = await Promise.all(tickets.map(async ({ id, price, eventId }) => {
+      if (errorStatus === 0) {
+        const updatedTicket = await Ticket.findByIdAndUpdate(id, { price: price }, { new: true });
+    
+        if (!updatedTicket) {
+          errorStatus = 402;
+          errorMessage = `Error: No ticket found with id ${id}`;
+        }
+
+        const event = await Event.findByIdAndUpdate(eventId, { $inc: { availableTickets: 1 } }, { new: true });
+
+        if (!event) {
+          errorStatus = 403;
+          errorMessage = `Error: No event found with id ${eventId}`;
+        }
+
+        lastEventId = eventId;
+        return updatedTicket;
+      }
     }));
 
-    //const event = await Event.findById(eventId);
+    if (errorStatus !== 0) {
+      return res.status(errorStatus).json({ error: errorMessage });
+    }
+
+    const event = await Event.findById(lastEventId);
     if (event.availableTickets > 0 && event.waitingList.length > 0) {
       const userToNotify = event.waitingList.find(
         user => !user.notifiedAt || new Date().getTime() - user.notifiedAt.getTime() > 60*60*1000
@@ -172,8 +194,8 @@ router.post('/submit', async (req, res) => {
         }, 60*60*1000);
       }
     }
-    
-    res.status(201).json(newTickets);
+
+    res.status(200).json(updatedTickets);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Internal server error' });

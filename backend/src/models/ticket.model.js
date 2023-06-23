@@ -7,6 +7,7 @@ const ticketSchema = new mongoose.Schema({
     location: { type: String, required: false },
     venue: { type: String, required: false },
     price: { type: Number, required: true },
+    originalPrice: { type: Number, required: true },
     isSold: { type: Boolean, required: true },
     soldDate: { type: String, required: false },
     seller: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
@@ -14,7 +15,7 @@ const ticketSchema = new mongoose.Schema({
     fileIds: [{ type: String, required: true }],
     description: { type: String, required: false },
     orderId: { type: mongoose.Schema.Types.ObjectId, ref: 'Order', required: false },
-    barcode: { type: String, unique: true },
+    barcode: { type: String, required: true },
 }, {
   timestamps: true,
   toJSON: {virtuals: true},

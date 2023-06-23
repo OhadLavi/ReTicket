@@ -90,6 +90,7 @@ async function parseTicketDetails(pdfBuffer, barcode, userId) {
   const ticket = {
     artists: artistName,
     price: ticketPrice,
+    originalPrice: ticketPrice,
     eventDate: eventDate,
     status: "On sale",
     description: `Gate: ${gate}, Block: ${block}`,
@@ -226,6 +227,7 @@ async function formatTicketDetails(tickets) {
         eventDate: ticketDetails.eventDate,
         location: ticketDetails.location,
         price: ticketDetails.price,
+        originalPrice: ticketDetails.originalPrice,
         isSold: ticketDetails.isSold,
         soldDate: ticketDetails.soldDate,
         seller: ticketDetails.seller,

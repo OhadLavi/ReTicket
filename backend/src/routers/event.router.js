@@ -26,7 +26,7 @@ router.get("/search/:searchTerm?", asyncHandler(async (req, res) => {
   let allEvents = await Event.getNonExpiredEvents();
   if (!searchTerm) return res.json(allEvents);
   let similarityScores = [];
-  const searchTermWords = searchTerm.normalize('NFD').toLowerCase().replace(/[^a-zA-Z0-9\u0590-\u05FF\s]/gi, ' ').split(' ');
+  const searchTermWords = searchTerm.normalize('NFC').toLowerCase().replace(/[^a-zA-Z0-9\u0590-\u05FF\s]/gi, ' ').split(' ');
   const similarityThreshold = 0.8;
   const weights = { name: 0.6, location: 0.2, venue: 0.2 };
   let maxScoreEvent = { event: null, score: 0 };
@@ -35,29 +35,31 @@ router.get("/search/:searchTerm?", asyncHandler(async (req, res) => {
     const valuesToSearch = { name, location, venue };
     let maxSimilarity = 0;
     Object.entries(valuesToSearch).forEach(([key, value]) => {
-      const words = value.normalize('NFD').toLowerCase().replace(/[^a-zA-Z0-9\u0590-\u05FF\s]/gi, ' ').split(' ');
+      const words = value.normalize('NFC').toLowerCase().replace(/[^a-zA-Z0-9\u0590-\u05FF\s]/gi, ' ').split(' ');
       words.forEach(word => {
-        const checkSimilarity = (term) => {
-          const distance = natural.LevenshteinDistance(term, word);
-          let similarity = 1 - distance / Math.max(term.length, word.length);
-          if (similarity > 0.75 && (key === 'location' || key === 'venue')) {
-            maxSimilarity = Math.max(maxSimilarity, similarity);
+        searchTermWords.forEach(term => {
+          let similarity;
+          if (term === word) {
+            similarity = 1;  // exact match
+          } else if (word.startsWith(term)) {
+            similarity = 0.9;  // high score for prefix match
           } else {
-            similarity = weights[key] * similarity;
-            maxSimilarity = Math.max(maxSimilarity, similarity);
+            const distance = natural.LevenshteinDistance(term, word);
+            similarity = 1 - distance / Math.max(term.length, word.length);
+            if (similarity > 0.75 && (key === 'location' || key === 'venue')) {
+              similarity = Math.max(maxSimilarity, similarity);
+            } else {
+              similarity = weights[key] * similarity;
+            }
           }
+          maxSimilarity = Math.max(maxSimilarity, similarity);
           const similarityScore = `Similarity between "${term}" and "${word}" in ${key}: ${similarity}`;
           similarityScores.push(similarityScore);
           // write to file
           fs.appendFile('similarityScores.txt', similarityScore + '\n', (err) => {
             if (err) throw err;
           });
-          return similarity;
-        };
-        searchTermWords.forEach(checkSimilarity);
-        if (searchTermWords.length > 1) {
-          checkSimilarity(searchTerm.normalize('NFD').toLowerCase().replace(/[^a-zA-Z0-9\u0590-\u05FF\s]/gi, ' '));
-        }
+        });
       });
     });
     if (maxSimilarity > maxScoreEvent.score) {
@@ -67,7 +69,7 @@ router.get("/search/:searchTerm?", asyncHandler(async (req, res) => {
   });
 
   if (similarEvents.length === 0) {
-    if (maxScoreEvent.event) {
+    if (maxScoreEvent.score >= similarityThreshold) {
       similarEvents.push(maxScoreEvent.event);
     } else {
       return res.status(500).json({ message: "No results" });
@@ -75,6 +77,7 @@ router.get("/search/:searchTerm?", asyncHandler(async (req, res) => {
   }
   res.json(similarEvents);
 }));
+
 
 router.get("/id/:eventId", asyncHandler(async (req, res) => {
   const event = await Event.findById(req.params.eventId);
@@ -202,13 +205,22 @@ router.post('/transcribeAudio', upload.single('audio'), async (req, res) => {
   }
 });
 
+router.get('/getFavoritesEvents', authMiddleware, asyncHandler(async (req, res) => {
+  const events = await Event.find({ favorites: req.user.id });
+  if (!events) {
+    return res.status(404).json({ message: 'Events not found' });
+  }
+  res.status(200).json(events);
+}));
+
+
 router.get('/getFavorite/id/:eventId', authMiddleware, asyncHandler(async (req, res) => {
   const event = await Event.findById(req.params.eventId);
   if (!event) {
     return res.status(404).json({ message: 'Event not found' });
   }
   const isFavorite = event.favorites.includes(req.user.id);
-  res.json({ isFavorite: isFavorite });
+  res.status(200).json({ isFavorite: isFavorite });
 }));
 
 router.post('/setFavorite/id/:eventId', authMiddleware, asyncHandler(async (req, res) => {

@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { URLS } from '../shared/constants/urls';
 import { Notification } from '../shared/models/Notification';
+import { EventM } from '../shared/models/EventM';
 
 @Injectable({
   providedIn: 'root'
@@ -32,6 +33,10 @@ export class SharedService {
   fetchNotifications(): Observable<Notification[]> {
     return this.http.get<Notification[]>(URLS.NOTIFICATION.GET_NOTIFICATIONS_URL);
   }  
+
+  fetchFavorites(): Observable<EventM[]> {
+    return this.http.get<any>(URLS.EVENT.GET_FAVORITES_EVENTS_URL);
+  }
 
   markNotificationsAsRead(): Observable<any> {
     return this.http.put(URLS.NOTIFICATION.GET_MARK_AS_READ_URL, {});

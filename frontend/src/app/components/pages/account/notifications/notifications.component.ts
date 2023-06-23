@@ -20,6 +20,7 @@ export class NotificationsComponent implements OnInit {
     this.userService.userObservable.subscribe((user) => {
       if (user.id) {
         this.loadNotifications();
+        console.log(this.notifications);
       }
     });
   }
