@@ -25,7 +25,6 @@ router.get("/search/:searchTerm?", asyncHandler(async (req, res) => {
   const { searchTerm } = req.params;
   let allEvents = await Event.getNonExpiredEvents();
   if (!searchTerm) return res.json(allEvents);
-  let similarityScores = [];
   const searchTermWords = searchTerm.normalize('NFC').toLowerCase().replace(/[^a-zA-Z0-9\u0590-\u05FF\s]/gi, ' ').split(' ');
   const similarityThreshold = 0.8;
   const weights = { name: 0.6, location: 0.2, venue: 0.2 };
@@ -40,9 +39,9 @@ router.get("/search/:searchTerm?", asyncHandler(async (req, res) => {
         searchTermWords.forEach(term => {
           let similarity;
           if (term === word) {
-            similarity = 1;  // exact match
+            similarity = 1; // exact match
           } else if (word.startsWith(term)) {
-            similarity = 0.9;  // high score for prefix match
+            similarity = 0.9; // high score for prefix match
           } else {
             const distance = natural.LevenshteinDistance(term, word);
             similarity = 1 - distance / Math.max(term.length, word.length);
@@ -53,12 +52,6 @@ router.get("/search/:searchTerm?", asyncHandler(async (req, res) => {
             }
           }
           maxSimilarity = Math.max(maxSimilarity, similarity);
-          const similarityScore = `Similarity between "${term}" and "${word}" in ${key}: ${similarity}`;
-          similarityScores.push(similarityScore);
-          // write to file
-          fs.appendFile('similarityScores.txt', similarityScore + '\n', (err) => {
-            if (err) throw err;
-          });
         });
       });
     });
@@ -198,8 +191,8 @@ router.post('/transcribeAudio', upload.single('audio'), async (req, res) => {
 
       transcription = transcriptionHe;
     }
-
-    res.send({ transcription });
+    
+    res.status(200).send({ transcription });
   } catch (err) {
     res.status(500).send({ error: 'An error occurred while transcribing the audio.' });
   }
@@ -224,7 +217,6 @@ router.get('/getFavorite/id/:eventId', authMiddleware, asyncHandler(async (req, 
 }));
 
 router.post('/setFavorite/id/:eventId', authMiddleware, asyncHandler(async (req, res) => {
-  console.log(req.params.eventId);
   const event = await Event.findById(req.params.eventId);
   if (!event) {
     return res.status(404).json({message: 'Event not found'});

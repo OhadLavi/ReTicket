@@ -76,7 +76,6 @@ app.get('/google/redirect', (req, res) => {
 
         fs.writeFile(TOKEN_PATH, JSON.stringify(token), (err) => {
             if (err) return console.error(err);
-            console.log('Token stored to', TOKEN_PATH);
         });
     });
     res.send('Google Auth Successful');

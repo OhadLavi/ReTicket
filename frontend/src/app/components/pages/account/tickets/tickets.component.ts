@@ -29,7 +29,6 @@ export class TicketsComponent implements OnInit {
         this.boughtTickets = response.boughtTickets;
         this.sellingTickets = response.sellingTickets.filter((ticket: any) => ticket.ticketDetails.isSold === false);
         this.allTickets = [...this.soldTickets, ...this.boughtTickets, ...this.sellingTickets];
-        console.log(this.sellingTickets);
       });
   }   
 

@@ -76,7 +76,7 @@ export class HomeComponent {
   }
 
   private sendToServer(blob: Blob): void {
-    if (blob.size > 100) {
+    if (blob.size > 70) {
       this.eventService.transcribeAudio(blob).subscribe((res) => {
         this.ngZone.run(() => {
           this.searchTerm = res.transcription;

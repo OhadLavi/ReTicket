@@ -124,3 +124,7 @@ img.portrait {
     pointer-events: none;
   }
   
+  .textStyle {
+    color: #59616b;
+    font-weight: 500;
+  }

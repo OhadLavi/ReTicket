@@ -37,11 +37,14 @@ async function processTicket(pdfBuffer, userId) {
       break;
     }
     const ticket = await parseTicketDetails(pdfBuffer, barcode, userId);
+    if (ticket.error) {
+      error = ticket.error;
+      break;
+    }
     const event = await getEventByNameDate(ticket.artists, ticket.eventDate); 
     ticket.location = event.location;
     ticket.venue = event.venue;
     ticket.valid = match;
-    console.log(ticket.barcode);
     results.push(ticket);
     await fsPromises.unlink(imagePath);
   }
@@ -51,9 +54,15 @@ async function processTicket(pdfBuffer, userId) {
 
 
 async function parseTicketDetails(pdfBuffer, barcode, userId) {
-  const data = await pdfParse(pdfBuffer);
-  const text = data.text;
-  const lines = data.text.split('\n');
+  let data, text, lines;
+
+  try {
+    data = await pdfParse(pdfBuffer);
+    text = data.text;
+    lines = data.text.split('\n');
+  } catch (err) {
+    return { error: 'Failed to parse PDF document. The file might be corrupted or not a valid PDF document.' };
+  }
 
   const artistNameMatch = text.match(/Name:\s*(.*)/);
   const dateAndTimeMatch = text.match(/(\d{2}\/\d{2}\/\d{2} - \d{2}:\d{2})/);

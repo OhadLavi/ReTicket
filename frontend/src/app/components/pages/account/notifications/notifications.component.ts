@@ -20,7 +20,6 @@ export class NotificationsComponent implements OnInit {
     this.userService.userObservable.subscribe((user) => {
       if (user.id) {
         this.loadNotifications();
-        console.log(this.notifications);
       }
     });
   }
@@ -28,7 +27,6 @@ export class NotificationsComponent implements OnInit {
   loadNotifications() {
     this.sharedService.fetchNotifications().subscribe((notifications) => {
       this.notifications = notifications;
-      console.log(this.notifications);
       this.sharedService.markNotificationsAsRead().subscribe(() => {
         this.cd.detectChanges();
       });

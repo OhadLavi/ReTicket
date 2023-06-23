@@ -46,7 +46,6 @@ export class LoginComponent implements OnInit {
     if (this.loginForm.invalid) {
       return;
     }
-    console.log((this.returnUrl));
     this.userService.login(this.loginForm.value).subscribe(
       () => { 
         this.router.navigateByUrl(this.returnUrl); 
