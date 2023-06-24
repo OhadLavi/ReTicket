@@ -69,6 +69,9 @@ router.post('/pay', authMiddleware, asyncHandler(async (req, res) => {
 
 router.get('/track/:id', asyncHandler(async (req, res) => {
   const order = await OrderModel.findById(req.params.id);
+  if(!order) {
+    return res.status(404).send();
+  }
   res.send(order);
 }));
 
