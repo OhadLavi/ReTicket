@@ -33,7 +33,6 @@ export class CartService {
       let additionalQuantity = newQuantity - oldQuantity;
 
       if (newQuantity > existingCartItem.eventM.availableTickets) {
-        console.log('Error: Quantity exceeds the number of available tickets');
         return of(this.cart);
       }
 
@@ -45,7 +44,6 @@ export class CartService {
         this.updateCartToLocalStorage();
       }
     } else {
-      console.log('Error: cart item not found');
       return of(this.cart);
     }
     return of(this.cart);

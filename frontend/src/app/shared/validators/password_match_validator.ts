@@ -11,7 +11,7 @@ export function PasswordsMatchValidator(password: string, confirmPassword: strin
 
         if (passwordControl.value !== confirmPasswordControl.value) {
             confirmPasswordControl.setErrors({ passwordsMatch: true });
-            return { passwordsMatch: true };  // return error here.
+            return { passwordsMatch: true };
         } else {
             const errors = confirmPasswordControl.errors;
             if (errors) {
@@ -22,6 +22,6 @@ export function PasswordsMatchValidator(password: string, confirmPassword: strin
             }
         }
 
-        return null;  // If validation is successful, return null
+        return null;
     }
 }

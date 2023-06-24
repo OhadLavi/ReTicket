@@ -21,6 +21,8 @@ export class AppComponent {
   constructor(private overlay: OverlayContainer, private userService: UserService) { }
 
   ngOnInit(): void {
+    (document.querySelector('.pagination-previous') as HTMLElement).style.color = 'red';
+
     const darkModeOn = this.userService.getThemePreference();
     this.toggleControl.setValue(darkModeOn);
     const darkClassName = 'darkMode';

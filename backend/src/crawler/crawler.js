@@ -31,6 +31,13 @@ async function scrapeWebsite(websiteName) {
           if (!value && typeof selObj.alternative === 'string') {
             value = document.querySelector(selObj.alternative)?.[attr] || '';
           }
+          if (attr === 'innerText') {
+            value = value.replace('Open in Google Maps', '').trim();
+            
+            if (value.length > 499) {
+              value = value.slice(0, 499);
+            }
+          }
           return value;
         };
         
@@ -64,7 +71,6 @@ async function scrapeWebsite(websiteName) {
     await Promise.all(pagesPromises);
     await browser.close();
     console.log('Scraping completed!');
-    fs.writeFileSync('scrapedData.txt', JSON.stringify(data, null, 2));
   } catch (error) {
     console.error('An error occurred while scraping:', error);
   }

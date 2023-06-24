@@ -1,31 +1,16 @@
-/* section {
-    background-color: #eee;
-}
-
-body.dark-theme > section {
-    background-color: #222;
-    color: #fff;
-  }
-  
-  section.dark-theme button {
-    background-color: #333;
-    color: #fff;
-  }
-   */
    html, body {
     height: 100%;
     min-width: 400px;
   }
   
-
   :host {
-    min-height: calc(100vh - 60px);  /* Adjust 60px according to your header's height */
+    min-height: calc(100vh - 60px); 
     display: flex;
     flex-direction: column;
   }
   
   .full-vh {
-    height: calc(100vh - 510px);  /* Adjust 400px according to your header's height */
+    height: calc(100vh - 510px); 
   }
   
   
@@ -116,4 +101,20 @@ button[aria-label="Voice search"]:active {
 .text-shadow {
   font-size: 3.5rem;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+
+.ngx-pagination a {
+  color: white !important;
+}
+
+.ngx-pagination .current {
+  color: black !important; 
+}
+.my-pagination a {
+  color: white;
+}
+
+.my-pagination .current {
+  color: black;
 }

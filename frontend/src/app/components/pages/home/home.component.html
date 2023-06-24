@@ -42,14 +42,15 @@
           </div>
         </div>
         <div class="card-footer px-0 py-0">
-          <a [routerLink]="'/event/' + event.id" class="btn btn-primary w-100 h-100 btn-fill btn-lg btn-rounded" color="primary">View Details</a>
+          <a [routerLink]="'/event/' + event.id" class="btn w-100 h-100 btn-fill btn-lg btn-rounded" style="background-color: #2196f3; color: #ffffff">View Details</a>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<pagination-controls (pageChange)="p = $event"></pagination-controls>
+<pagination-controls (pageChange)="p = $event" class="pb-3"></pagination-controls>
+
 <ng-template #noResults>
   <div class="d-flex justify-content-center align-items-center full-vh">
     <p class="text-white text-center fs-4">No results found.</p>

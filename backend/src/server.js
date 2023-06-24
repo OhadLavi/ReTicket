@@ -3,9 +3,6 @@ const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
-const request = require('request');
-var osmosis = require('osmosis');
-const cheerio = require('cheerio');
 const { google } = require('googleapis');
 const TOKEN_PATH = 'token.json';
 const fs = require('fs');
@@ -38,19 +35,18 @@ app.use('/api/orders', orderRouter);
 app.use('/api/tickets', ticketRouter);
 app.use('/api/notifications', notificationRouter);
 
-//serve static assets if in production
-// if(process.env.NODE_ENV === 'production'){
-//     app.use(express.static(path.join(__dirname, 'public')));
-// }
+// Serve static assets if in production
+if(process.env.NODE_ENV === 'production'){
+    app.use(express.static(path.join(__dirname, 'public')));
+}
 
 // Start server
 app.listen(port, () => { 
     console.log(`Server is running on port: ${port}`);
-    //scrapeWebsite('eventim');
+    scrapeWebsite('eventim');
     setInterval(() => {
-         scrapeWebsite('eventim');
-        scrapeWebsite('tmisrael');
-    }, 1000 * 60 * 60 * 24); // Scrap every 24 hours
+         //scrapeWebsite('eventim');
+    }, 1000 * 60 * 60 * 24); // Crawl and scrap every 24 hours
  });
 
 // Disable strict mode for queries in Mongoose
