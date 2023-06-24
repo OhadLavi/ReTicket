@@ -157,14 +157,12 @@ router.post("/moveToPaypal", asyncHandler(async (req, res) => {
       paypal.payout.create(create_payout_json, async function (error, payout) {
         if (error) {
           console.log(error.response);
-          throw error;
         } else {  
           try {
-            const updatedUser = await UserModel.findOneAndUpdate({ _id: userId }, { balance: 0 }, { new: true });
+            await UserModel.findOneAndUpdate({ _id: userId }, { balance: 0 }, { new: true });
           } catch (err) {
             console.log("Something went wrong when updating the user balance", err);
           }
-    
           res.json({payout: payout});
         }
       });

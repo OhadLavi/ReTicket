@@ -49,12 +49,14 @@ export class CartComponent implements OnInit{
     this.cartService.removeFromCart(cartItem.ticket.id);
   }
 
-  changeQuantity(cartItem:CartItem, quantityInString:string) {
-    let newQuantity = parseInt(quantityInString);
-    if (newQuantity === 0) {
+  changeQuantity(cartItem:CartItem, quantity:number, availableTickets:number = Infinity) {
+    if (quantity === 0) {
       this.openRemoveDialog(cartItem);
+    } else if (quantity > availableTickets) {
+      this.toast.error({detail:"ERROR",summary:'Not enough tickets available', sticky: false, duration: 5000, type: 'error'});
+      return;
     } else {
-      this.cartService.updateCartItemQuantity(cartItem.eventM, newQuantity);
+      this.cartService.updateCartItemQuantity(cartItem.eventM, quantity);
     }
     if(cartItem.quantity === 0){
       cartItem.quantity = 1;
@@ -78,12 +80,15 @@ export class CartComponent implements OnInit{
   }
 
   applyCoupon() {
-    if (this.couponForm.value.couponCode === 'b') {
+    if (this.couponForm.value.couponCode === 'Braude') {
       this.cartService.applyCoupon(this.discountPercentage);
       this.cart = this.cartService.getCart();
       this.discountedPrice = this.cartService.getCart().cartPrice - this.cartService.getCart().totalPrice;
       this.couponForm.get('couponCode')?.reset();
       this.toast.success({detail:"SUCCESS",summary:'Coupon applied', sticky: false, duration: 3000, type: 'success'});
+    }
+    else {
+      this.toast.error({detail:"ERROR",summary:'Invalid coupon code', sticky: false, duration: 5000, type: 'error'});
     }
   }
 

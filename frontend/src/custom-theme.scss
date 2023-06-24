@@ -30,6 +30,19 @@ $ReTicket-dark-theme: mat.define-dark-theme((
   @include mat.all-component-themes($ReTicket-dark-theme);
 }
 
+.pagination-controls a {
+  color: mat-color($ReTicket-primary);  // This will apply the primary color of your theme
+}
+
+.pagination-controls a:hover {
+  color: mat-color($ReTicket-accent);  // This will apply the accent color of your theme when the link is hovered
+}
+
+.pagination-controls a:active {
+  color: mat-color($ReTicket-warn);  // This will apply the warn color of your theme when the link is clicked
+}
+
+
 // .lightMode {
 //   @include mat.all-component-themes($ReTicket-theme);
 // }

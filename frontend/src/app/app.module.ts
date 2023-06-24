@@ -14,7 +14,6 @@ import { HomeComponent } from './components/pages/home/home.component';
 import { RegisterComponent } from './components/partials/register/register.component';
 import { CartComponent } from './components/pages/cart/cart.component';
 import { TextInputComponent } from './components/partials/text-input/text-input.component';
-// import { DefaultButtonComponent } from './components/partials/default-button/default-button.component';
 import { EventPageComponent } from './components/pages/event-page/event-page.component';
 import { CheckoutComponent } from './components/pages/checkout/checkout.component';
 import { PaypalButtonComponent } from './components/partials/paypal-button/paypal-button.component';
@@ -58,7 +57,6 @@ import { TicketEditDialogComponent } from './components/partials/ticket-edit-dia
     RegisterComponent,
     CartComponent,
     TextInputComponent,
-    // DefaultButtonComponent,
     EventPageComponent,
     CheckoutComponent,
     PaypalButtonComponent,

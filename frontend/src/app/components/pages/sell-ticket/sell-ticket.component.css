@@ -4,16 +4,9 @@
     flex-grow: 1;
     overflow: auto;
   }
-  
-/* Dashed border for mat-card-content */
-mat-card-content {
-
-}
-
-
 
 mat-card-content:hover {
-    border-color: #292a3a; /* Change to the desired color */
+    border-color: #292a3a;
 }
 
 .icon-display {
@@ -39,23 +32,21 @@ mat-card-content:hover {
   }
   
   
-/* Color change on hover */
 #upload-container {
-    background-color: #f9fafb; /* Change as per your requirement */
+    background-color: #f9fafb; 
     border: 3px dashed #eaecef;
     transition: border-color 0.25s ease-in-out;
     cursor: pointer;
 }
 
-/* Color change on hover */
 #upload-container:hover {
-    background-color: #f3f4f6; /* Change as per your requirement */
-    border-color: #dbdee3; /* Change to the desired color */
+    background-color: #f3f4f6; 
+    border-color: #dbdee3; 
     transition: background-color 0.25s ease-in-out;
 }
 
 .highlight-on-drag-over:hover {
-    background-color: #e0e0e0; /* Change to the desired color */
+    background-color: #e0e0e0; 
 }
 
 .container{

@@ -21,5 +21,20 @@
 
 .pagination /deep/ li {
     background-color: #f1f1f1;
-    color: black;
+    color: white;
 }
+
+::ng-deep ul > li:not(.active) > a {
+    background-color: white !important;
+    border-color: white !important;
+  }
+  
+  ::ng-deep ul > li.disabled > span {
+
+    border-color: white !important;
+  }
+  
+  ::ng-deep ul > li.active > a {
+    background-color: rgb(42, 187, 255) !important;
+    border-color: white !important;
+  }
