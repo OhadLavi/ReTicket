@@ -43,11 +43,13 @@ export class EventPageComponent implements OnInit {
           this.eventm = serverEvent;
           if(this.eventm) { 
             this.totalQuantityInCart = this.cartService.getQuantityInCart(this.eventm.id);
-            this.geocodeAddress(this.eventm.location + ', ' + this.eventm.venue);
-            this.checkImageDimensions(this.eventm.image);
+            this.geocodeAddress(this.eventm.location + ', ' + this.eventm.venue); // Get the coordinates of the event
+            this.checkImageDimensions(this.eventm.image); // Check if the image is portrait or landscape
 
+            // Check if the user is authenticated
             if (this.userService.isAuth()) {
               this.isAuth = true;
+              // Check if the user is in the waiting list
               this.eventService.checkUserInWaitingList(this.eventm.id)
               .subscribe((isInWaitingList: boolean) => {
                 this.isInWaitingList = isInWaitingList;
@@ -62,6 +64,7 @@ export class EventPageComponent implements OnInit {
     });
   }
 
+  // Get the coordinates of the event
   geocodeAddress(address: string) {
     this.geocoder.geocode({ 'address': address }, (results, status) => {
       if (status === google.maps.GeocoderStatus.OK && results && results[0]) {
@@ -74,6 +77,7 @@ export class EventPageComponent implements OnInit {
     });
   }
 
+  // Check if the image is portrait or landscape and set the isPortrait variable
   checkImageDimensions(imgSrc: string) {
     const img = new Image();
     img.onload = () => {
@@ -90,6 +94,7 @@ export class EventPageComponent implements OnInit {
     this.router.navigate(['/sellTicket']);
   }
 
+  // Buy a ticket based on the quantity selected
   buyTicket() {
     if (this.userService.isAuth()) {
       if (this.totalQuantityInCart < this.eventm.availableTickets) {
@@ -105,6 +110,7 @@ export class EventPageComponent implements OnInit {
     }
   }
   
+  // Open the dialog to select the quantity of tickets to buy
   openDialog(): void {
     const dialogRef = this.dialog.open(TicketQuantityDialogComponent, {
       width: 'auto',
@@ -128,6 +134,7 @@ export class EventPageComponent implements OnInit {
     });
   }
 
+  // Toggle the favorite status of the event
   toggleFavorite() {
     this.isFavorite = !this.isFavorite;
     if (this.isFavorite) {
@@ -147,6 +154,7 @@ export class EventPageComponent implements OnInit {
     }
   }
   
+  // Toggle the waiting list status of the event
   toggleWaitingList() {
     this.isInWaitingList = !this.isInWaitingList;
     if (this.isInWaitingList) {

@@ -152,6 +152,7 @@ export class ProfileComponent implements OnInit {
     reader.readAsDataURL(file);
   }  
 
+  // Move to Paypal
   moveToPaypal() {
     this.userService.moveToPaypal(this.user.id, this.user.email, this.userBalance)
     .subscribe(res => {

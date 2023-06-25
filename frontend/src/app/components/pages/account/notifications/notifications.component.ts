@@ -24,6 +24,7 @@ export class NotificationsComponent implements OnInit {
     });
   }
   
+  // Fetches all notifications
   loadNotifications() {
     this.sharedService.fetchNotifications().subscribe((notifications) => {
       this.notifications = notifications;

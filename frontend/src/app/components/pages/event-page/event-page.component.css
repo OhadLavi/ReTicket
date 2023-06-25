@@ -113,18 +113,18 @@ img.portrait {
 :host google-map {
     height: 500px;
     width: 100%;
-  }
+}
   
-  .map-container {
+.map-container {
     height: 500px;
     width: 100%;
-  }
+}
   
-  button[disabled] {
+button[disabled] {
     pointer-events: none;
-  }
+}
   
-  .textStyle {
+.textStyle {
     color: #59616b;
     font-weight: 500;
-  }
+}

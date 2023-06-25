@@ -1,11 +1,9 @@
 .btn i {
-    transition: color 0.3s ease;
+  transition: color 0.3s ease;
 }
-  
-  .btn:hover i {
-    color: rgb(84, 110, 197);
+.btn:hover i {
+  color: rgb(84, 110, 197);
 }
-  
 .button-group {
   right: 10px;
   left: auto;

@@ -31,6 +31,7 @@ export class OrderTrackComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  // Downloads the file
   downloadFile(): void {
     if (this.fileData) {
       const blob = new Blob([this.fileData], {type: 'application/pdf'});
@@ -45,6 +46,7 @@ export class OrderTrackComponent implements OnInit {
     }
   }
   
+  // Prints the file
   printFile(): void {
     if (this.fileData) {
       const blob = new Blob([this.fileData], {type: 'application/pdf'});

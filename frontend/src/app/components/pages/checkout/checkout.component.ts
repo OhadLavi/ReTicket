@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 import { CartService } from 'src/app/services/cart.service';
 import { OrderService } from 'src/app/services/order.service';
 import { UserService } from 'src/app/services/user.service';
@@ -22,8 +21,7 @@ export class CheckoutComponent implements OnInit {
   constructor(cartService:CartService,
     private formBuilder:FormBuilder,
     private userService:UserService,
-    private orderService:OrderService,
-    private router:Router
+    private orderService:OrderService
     ) {
       const cart = cartService.getCart();
       this.cart = cart;

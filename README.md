@@ -5,10 +5,10 @@ This project is a user-friendly platform designed to streamline the process of b
 
 ## Features
 - Search for tickets for upcoming concerts by any parameter such as event name, artist name, venue, or city.
-- Voice search feature for ticket search.
-- Event's are added through a web crawler and scraper
-- Event page with details like event poster, name, location, date, available tickets, sold tickets, and likes.
-- User page with sections for profile settings, favorites, and sign out.
+- Voice search feature for ticket search using string similarity.
+- Event's are added through a web crawler and scraper using headless browser.
+- Event page with details like event poster, name, date and location (using Google places API).
+- Mail intgeration for notifications.
 - PayPal integration for payment and payout.
 
 ## Dependencies
@@ -23,8 +23,28 @@ This project is a user-friendly platform designed to streamline the process of b
 - Nodemailer API
 
 ## Getting Started
-### Prerequisites
-- Node.js: Latest stable version.
-- MongoDB: MongoDB Compass is recommended but not required.
-- Development Tools: Code editor or IDE of your choice (Visual Studio Code is highly recommended).
+1. Clone the repository:
+```
+git clone https://github.com/OhadLavi/ReTicket.git
+```
+2. Install the dependencies:
+```
+cd backend
+npm install
+```
+3. Install the dependencies for the frontend:
+```
+cd frontend
+npm install
+```
+4. Run the app:
+```
+cd frontend
+ng serve -o
 
+cd backend
+npm start
+```
+The website will be available at http://localhost:4200.
+
+make sure that the client server is running on port 4200
