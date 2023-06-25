@@ -7,7 +7,6 @@ const UserModel = require('../models/user.model');
 const bcrypt = require('bcryptjs');
 const multer = require('multer');
 const path = require('path');
-const { OAuth2Client } = require('google-auth-library');
 const { Event } = require('../models/event.model');
 const authMiddleware = require('../middlewares/auth.mid');
 const paypal = require('paypal-rest-sdk');
