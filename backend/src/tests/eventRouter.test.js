@@ -54,18 +54,18 @@ describe('Event Routes', () => {
         },
       ];
 
-      const eventId = 'event1'; // id of the event we want to retrieve
-      const mockEvent = mockEvents.find(e => e._id === eventId); // find the mock event
+      const eventId = 'event1';
+      const mockEvent = mockEvents.find(e => e._id === eventId);
 
-      Event.findById.mockResolvedValue(mockEvent); // make findById return the mock event
+      Event.findById.mockResolvedValue(mockEvent);
 
       const response = await request(app)
         .get(`/id/${eventId}`);
 
       expect(response.statusCode).toBe(200);
-      expect(response.body._id).toEqual(mockEvent._id); // the response should be the same as the mock event
+      expect(response.body._id).toEqual(mockEvent._id);
 
-      expect(Event.findById).toHaveBeenCalledWith(eventId); // check that findById was called with the correct id
+      expect(Event.findById).toHaveBeenCalledWith(eventId);
     });
   });
 

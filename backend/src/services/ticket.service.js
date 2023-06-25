@@ -13,6 +13,9 @@ const pdfPoppler = require('pdf-poppler');
 const zxing = require('node-zxing')({ scale: 2 });
 const { getEventByNameDate } = require('../services/event.service');
 
+// process the ticket - read barcode and and other details, check validity, and match to an existing event.
+// gets pdf file buffer and a userID
+// returns an object containing the count of valid tickets, an array of all parsed tickets, and in error message if any errors occured during the process.
 async function processTicket(pdfBuffer, userId) {
   const pdfPath = path.join(__dirname, '..', 'uploads', 'pdf', 'temp.pdf');
   await fsPromises.writeFile(pdfPath, pdfBuffer);
@@ -53,7 +56,9 @@ async function processTicket(pdfBuffer, userId) {
   return { validTickets: results.filter(ticket => ticket.valid).length, tickets: results, error: error };
 }
 
-
+// parse details of a ticket and create new ticket document in the DB.
+// get a pdf buffer, barcode and user id.
+// returns a ticket object
 async function parseTicketDetails(pdfBuffer, barcode, userId) {
   let data, text, lines;
   try {
@@ -117,6 +122,8 @@ async function parseTicketDetails(pdfBuffer, barcode, userId) {
   return ticket;
 }
 
+//converts a PDF to an image in jpeg format and saves is it the output path.
+//gets a pdf path and output path.
 async function convertPdfToImage(pdfPath, outputPath) {
   let opts = {
       format: 'jpeg',
@@ -137,6 +144,9 @@ async function convertPdfToImage(pdfPath, outputPath) {
   }
 }
 
+// detects and reads QR code in image.
+// gets image path.
+// returns QR code, or null if no QR was found.
 async function detectAndReadQRCode(imagePath) {
   const image = await jimp.read(imagePath);
   const qrCode = jsQR(image.bitmap.data, image.bitmap.width, image.bitmap.height);
@@ -147,6 +157,9 @@ async function detectAndReadQRCode(imagePath) {
   }
 }
 
+// detects and reads barcode in image.
+// gets image path.
+// returns a promise that resolves with the decoded barcode or rejects with an error.
 async function detectAndReadBarcode(imagePath) {
   return new Promise((resolve, reject) => {
     zxing.decode(imagePath, function(err, barcode){
@@ -159,10 +172,13 @@ async function detectAndReadBarcode(imagePath) {
   });
 }
 
+
+// checks QR and barcode match
 function checkQRAndBarcodeMatch(qrCode, barcode) {
   return qrCode === barcode;
 }
 
+// checks if the parsed date has passed.
 function checkDateIsValid(date) {
   const currentDate = new Date();
   console.log("here: " + currentDate);
@@ -170,10 +186,12 @@ function checkDateIsValid(date) {
   return date >= currentDate;
 }
 
+// update the available tickets propery in the event table in the DB.
 async function updateEventAvailableTickets(eventId, quantity) { 
   return await Event.findByIdAndUpdate(eventId, { $inc: { availableTickets: -quantity, soldTickets: quantity } }, { new: true }); 
 }
 
+// update the status property of a ticket to "sold", and setting the buyerID,soldDate and orderId in the DB in the tickets table, and sending notification to the seller.
 async function updateTicketStatus(eventId, buyerId, orderId, quantity) {
   try {
     const soldDate = new Date().toISOString();
@@ -213,19 +231,22 @@ async function updateTicketStatus(eventId, buyerId, orderId, quantity) {
   }
 }
 
-
+// returns all the tickets the user is currently selling.
 async function getSellingTickets(userId) {
   const tickets = await Ticket.find({ seller: userId }).populate('eventId').populate('fileIds');
   const formattedTickets = formatTicketDetails(tickets);
   return formattedTickets;
 }
 
+// returns all  the tickets the user bought.
 async function getBoughtTickets(userId) {
   const tickets = await Ticket.find({ buyer: userId }).populate('eventId').populate('fileIds');
   const formattedTickets = formatTicketDetails(tickets);
   return formattedTickets;
 }
 
+// gets an array of tickets and formats them.
+// returns an array of the formated tickets according to the model.
 async function formatTicketDetails(tickets) {
   return Promise.all(tickets.map(async ticket => {
       const ticketObject = ticket.toObject();

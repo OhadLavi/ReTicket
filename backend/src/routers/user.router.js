@@ -16,6 +16,7 @@ paypal.configure({
     'client_secret': process.env.PAYPAL_SECRET
 });
 
+// this route allows a new user to register.
 router.post("/register", asyncHandler(async(req, res) => {
   const {name, password, confirmPassword, email} = req.body;
   const user = await UserModel.findOne({email});
@@ -34,6 +35,7 @@ router.post("/register", asyncHandler(async(req, res) => {
   }
 }));
 
+// this route allows a user to log in.
 router.post("/login", asyncHandler(
   async (req, res) => {
       const { email, password } = req.body;
@@ -46,6 +48,7 @@ router.post("/login", asyncHandler(
   }
 ));
 
+// this route allows a user to update their information by specifying the user's id.
 router.put("/update/:id", asyncHandler(async (req, res) => {
     const { id } = req.params;
     const { name, email, password } = req.body;
@@ -72,6 +75,7 @@ router.put("/update/:id", asyncHandler(async (req, res) => {
     }
 }));
 
+// this route retreives a list of events that are favorited by the authenticated user.
 router.get('/favorites/', authMiddleware, asyncHandler(async (req, res) => {
   const events = await Event.find({ favorites: req.user.id });
   res.json(events);
@@ -85,6 +89,8 @@ const storage = multer.diskStorage({
   });
   
 const upload = multer({ storage: storage });
+
+// this route allows a user to update their profile photo.
 router.put("/update/photo/:id", upload.single('photo'), asyncHandler(async (req, res) => {
     const { id } = req.params;
     const photo = req.file;
@@ -102,6 +108,7 @@ router.put("/update/photo/:id", upload.single('photo'), asyncHandler(async (req,
     }
 }));
 
+// this route allows a user to delete their profile photo.
 router.put("/delete/photo/:id", asyncHandler(async (req, res) => {
   const { id } = req.params;
   try {
@@ -118,6 +125,7 @@ router.put("/delete/photo/:id", asyncHandler(async (req, res) => {
   }
 }));
 
+// this route handles the payouts to the user through paypal API.
 router.post("/moveToPaypal", asyncHandler(async (req, res) => {
     const { userId, userEmail, amount } = req.body;
 
@@ -156,6 +164,7 @@ router.post("/moveToPaypal", asyncHandler(async (req, res) => {
       });
 }));
 
+// this function generates a token for the user using JWT package and returns the user a token.
 const generateTokenResponse = async (user) => {
   const token = jwt.sign(
     { id: user.id, email: user.email }, process.env.JWT_SECRET,
@@ -172,6 +181,8 @@ const generateTokenResponse = async (user) => {
   };
 };
 
+  // this function checks if an image url is available using the axios package to perform a get request.
+  // returns a boolean according to the outcome.
   async function isImageAvailable(imageUrl) {
     try {
       const response = await axios.get(imageUrl);
@@ -181,6 +192,7 @@ const generateTokenResponse = async (user) => {
     }
   }
 
+  // tjos funcions checks if the image available and returns its url if it does. else it returns a default image.
   async function getImageUrl(user) {
     const isAvailable = await isImageAvailable('http://localhost:5000/' + user.imageURL);
     if (!isAvailable) {

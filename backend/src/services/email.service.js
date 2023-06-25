@@ -29,6 +29,7 @@ const oAuth2Client = new google.auth.OAuth2(client_id, client_secret, redirect_u
 oAuth2Client.setCredentials(token);
 const calendar = google.calendar({ version: 'v3', auth: oAuth2Client });
 
+// send an email using the the nodemailer package.
 async function sendEmail(mailOptions) {
   const transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
@@ -43,6 +44,7 @@ async function sendEmail(mailOptions) {
   transporter.sendMail(mailOptions);
 }
 
+// create a detailed email with tickets and event information for a user, and then sends the mail using the sendMail function.
 async function sendTicketsEmail(order, email) {
   const itemsGroupedByEvent = order.items.reduce((groupedItems, item) => {
       (groupedItems[item.event] = groupedItems[item.event] || []).push(item);
@@ -90,6 +92,7 @@ async function sendTicketsEmail(order, email) {
     }))
   ])).flat();
 
+  // an object containing all necessary data for the email, including sender, receiver, subject, and content of mail.
   const mailOptions = {
     from: process.env.EMAIL_ADDRESS,
     to: email,
@@ -113,6 +116,7 @@ async function sendTicketsEmail(order, email) {
   sendEmail(mailOptions);
 }
 
+// finds and returns an event's details by its id.
 async function findEventDetailsByEventId(eventId) {
   try {
     const event = await Event.findById(eventId);
@@ -126,6 +130,7 @@ async function findEventDetailsByEventId(eventId) {
   }
 }
 
+// sends a notification email to a user using the sendMail function.
 async function sendNotifcationEmail(email, subject, message) {
   const mailOptions = {
     from: process.env.EMAIL_ADDRESS,

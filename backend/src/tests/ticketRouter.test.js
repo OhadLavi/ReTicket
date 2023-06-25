@@ -66,12 +66,8 @@ describe('Ticket Routes', () => {
         filename: 'testFile.pdf',
       };
       File.findById.mockResolvedValue(fileData);
-
-      console.log('Mocked return value for File.findById:', await File.findById(fileId));
   
       const response = await request(app).get(`/getTicketFile/${fileId}`);
-
-      console.log('Response headers:', response.headers);
   
       expect(response.status).toBe(200);
       expect(response.header['content-type']).toEqual('application/pdf');

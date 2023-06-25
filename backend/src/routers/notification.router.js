@@ -2,6 +2,7 @@ const router = require('express').Router();
 const Notification = require('../models/notification.model');
 const authMiddleware = require('../middlewares/auth.mid');
 
+// this route fetches the most recent five notifications for the authenticated user.
 router.get('/', authMiddleware, async (req, res) => {
   try {
     const userId = req.user.id;
@@ -13,7 +14,7 @@ router.get('/', authMiddleware, async (req, res) => {
   }
 });
 
-
+// this route marks all unread notifications for the authenticated user as read.
 router.put('/read', authMiddleware, async (req, res) => {
   try {
     const userId = req.user.id;

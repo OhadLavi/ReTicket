@@ -45,9 +45,7 @@ describe('User Routes', () => {
         .send(mockUser);
       
       expect(response.statusCode).toBe(200);
-      //expect(response.body.token).toBeDefined();
     
-      // Check if the user was created in the database with the correct properties
       expect(UserModel.create).toHaveBeenCalledWith({
         name: mockUser.name,
         email: mockUser.email.toLowerCase(),
@@ -55,7 +53,6 @@ describe('User Routes', () => {
         imageURL: './assets/user.png'
       });
 
-      // Or if you need to check against the returned user from the create mock
       const promise = UserModel.create.mock.results[0].value;
       promise.then((data) => {
         const createdUserInDB = {
@@ -66,7 +63,6 @@ describe('User Routes', () => {
           imageURL: data.imageURL,
           id: data.id
         }
-        console.log(createdUserInDB);
         expect(createdUserInDB.name).toBe(mockUser.name);
         expect(createdUserInDB.email).toBe(mockUser.email);
       });
@@ -80,13 +76,10 @@ describe('User Routes', () => {
           email: 'johndoe@gmail.com',
       };
   
-      // Mock findOne to return a user, indicating that the user already exists.
       UserModel.findOne.mockResolvedValue(existingUser);
   
-      // Then, try to register the same user again.
       const res = await request(app).post('/register').send(existingUser);
   
-      // We expect a 400 status (Bad Request), as this user should already exist.
       expect(res.statusCode).toEqual(400);
       expect(res.body).toHaveProperty('error');
       expect(res.body.error).toEqual('User already exists');
@@ -130,16 +123,13 @@ describe('User Routes', () => {
 
       UserModel.findOne.mockResolvedValue(null);
 
-      // First, register a user.
       await request(app).post('/register').send(existingUser);
 
-      // Then, try to log in with the wrong password.
       const res = await request(app).post('/login').send({
           email: 'janedoe@gmail.com',
           password: 'wrongpassword',
       });
 
-      // We expect a 401 status (Unauthorized), as the password is wrong.
       expect(res.statusCode).toEqual(401);
       expect(res.body).toHaveProperty('error');
       expect(res.body.error).toEqual('Invalid login. Please check your email and password.');

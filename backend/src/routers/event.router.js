@@ -9,11 +9,17 @@ const upload = multer();
 const natural = require('natural'); 
 const authMiddleware = require('../middlewares/auth.mid');
 
+// this route fetches all non-expired events.
 router.get("/", asyncHandler(async (req, res) => {
   const events = await Event.getNonExpiredEvents();
   res.json(events);
 }));
 
+// this route searches for events using the search term provided by the user.
+// the term is normalized before being split into individual words.
+// then each word in the search term is compared with the name, venue and location of each event.
+// the similarity of the search term and the values of these fields is calculated and weighted.
+// an event is included in the search results if its similarity score is greater than or equal to a specific threshold.
 router.get("/search/:searchTerm?", asyncHandler(async (req, res) => {
   const { searchTerm } = req.params;
   let allEvents = await Event.getNonExpiredEvents();
@@ -64,12 +70,13 @@ router.get("/search/:searchTerm?", asyncHandler(async (req, res) => {
   res.json(similarEvents);
 }));
 
-
+// this route fetches a specific event by its id.
 router.get("/id/:eventId", asyncHandler(async (req, res) => {
   const event = await Event.findById(req.params.eventId);
   res.json(event);
 }));
 
+// this route checks if the authenticated user is in the waiting list for a specific event.
 router.get("/checkInWaitingList/:eventId", authMiddleware, asyncHandler(async (req, res) => {
   const event = await Event.findById(req.params.eventId);
   if (!event) {
@@ -80,7 +87,7 @@ router.get("/checkInWaitingList/:eventId", authMiddleware, asyncHandler(async (r
   res.json(isInWaitingList);
 }));
 
-
+// this route adds the authenticated user to the waiting list of a specific event.
 router.post("/id/:eventId/waitingList", authMiddleware, asyncHandler(async (req, res) => {
   const userId = req.user.id;
   const event = await Event.findById(req.params.eventId);
@@ -97,6 +104,7 @@ router.post("/id/:eventId/waitingList", authMiddleware, asyncHandler(async (req,
   }
 }));
 
+// this route removes the authenticated user from the waiting list of a specific event.
 router.delete("/id/:eventId/waitingList", authMiddleware, asyncHandler(async (req, res) => {
   const userId = req.user.id;
   const event = await Event.findById(req.params.eventId);
@@ -113,6 +121,9 @@ router.delete("/id/:eventId/waitingList", authMiddleware, asyncHandler(async (re
   return res.json(event);
 }));
 
+// this route finds the cheapest tickets for a specific event, up to a given quantity.
+// returns 404 status if there are no available tickets.
+// returns 400 status if there are not enough available tickets.
 router.get("/cheapestTickets/:eventId/:quantity", asyncHandler(async (req, res) => {
   const eventId = req.params.eventId;
   const quantity = req.params.quantity;
@@ -131,6 +142,8 @@ router.get("/cheapestTickets/:eventId/:quantity", asyncHandler(async (req, res) 
   res.json(tickets);
 }));
 
+// this route transcribes audio data sent by the user into text.
+// first it tries english, and if the confidence level is below a certain threshold it retries for hebrew.
 router.post('/transcribeAudio', upload.single('audio'), async (req, res) => {
   try {
     const client = new speech.SpeechClient({
@@ -192,6 +205,7 @@ router.post('/transcribeAudio', upload.single('audio'), async (req, res) => {
   }
 });
 
+// this route fetches events that the authenticated user marked as favorites.
 router.get('/getFavoritesEvents', authMiddleware, asyncHandler(async (req, res) => {
   const events = await Event.find({ favorites: req.user.id });
   if (!events) {
@@ -200,7 +214,7 @@ router.get('/getFavoritesEvents', authMiddleware, asyncHandler(async (req, res) 
   res.status(200).json(events);
 }));
 
-
+// this route checks if a specific event has been marked as a favorite by the authenticated user.
 router.get('/getFavorite/id/:eventId', authMiddleware, asyncHandler(async (req, res) => {
   const event = await Event.findById(req.params.eventId);
   if (!event) {
@@ -210,6 +224,7 @@ router.get('/getFavorite/id/:eventId', authMiddleware, asyncHandler(async (req, 
   res.status(200).json({ isFavorite: isFavorite });
 }));
 
+// this route marks a specific event as favorite for the authenticated user.
 router.post('/setFavorite/id/:eventId', authMiddleware, asyncHandler(async (req, res) => {
   const event = await Event.findById(req.params.eventId);
   if (!event) {
@@ -226,6 +241,7 @@ router.post('/setFavorite/id/:eventId', authMiddleware, asyncHandler(async (req,
   res.status(200).json(event);
 }));
 
+// this route unmarks a specific event as favorite for the authenticated user.
 router.delete('/unfavorite/id/:eventId', authMiddleware, asyncHandler(async (req, res) => {
   const event = await Event.findById(req.params.eventId);
   if (!event) {

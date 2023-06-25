@@ -15,6 +15,8 @@ const authMiddleware = require('../middlewares/auth.mid');
 
 router.use(auth);
 
+// this route creates a new order with the tickets specified in the request body.
+// the order is associated with the authenticated user's id.
 router.post('/create', asyncHandler(async (req, res) => {
   const requestOrder = req.body;
   if (requestOrder.items.length <= 0)
@@ -24,6 +26,7 @@ router.post('/create', asyncHandler(async (req, res) => {
   res.send(newOrder);
 }));
 
+// this route retreives the authenticated user's most recent order which is still in the "NEW" status.
 router.get('/newOrder', asyncHandler(async (req, res) => {
   const order = await getNewOrder(req);
   if (order)
@@ -32,6 +35,12 @@ router.get('/newOrder', asyncHandler(async (req, res) => {
     res.status(400).send();
 }));
 
+// this route pays for the authenticated user's most recent "NEW" order.
+// for each ticket in the order it updates the number of available tickets for the event.
+// adds the rounded balance to the ticket seller's balance.
+// updates the order status to "PAID", and associates it with the provided payment id.
+// sends an email to the order's email address with information about the purchased tickets.
+// returns the purchased tickets file as a response.
 router.post('/pay', authMiddleware, asyncHandler(async (req, res) => {
   const { paymentId } = req.body;
   const order = await getNewOrder(req);
@@ -67,6 +76,7 @@ router.post('/pay', authMiddleware, asyncHandler(async (req, res) => {
   }
 }));
 
+// this route fetches an order by its id.
 router.get('/track/:id', asyncHandler(async (req, res) => {
   const order = await OrderModel.findById(req.params.id);
   if(!order) {
@@ -75,6 +85,7 @@ router.get('/track/:id', asyncHandler(async (req, res) => {
   res.send(order);
 }));
 
+// fetches the authenticated user's most recent "NEW" order. used in GET /newOrder and POST /pay routes.
 async function getNewOrder(req) {
   return await OrderModel.findOne({ user: req.userId, orderStatus: OrderStatus.NEW });
 }

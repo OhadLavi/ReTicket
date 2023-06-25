@@ -22,11 +22,13 @@ const { send, eventNames } = require('process');
 const { processTicket} = require('../services/ticket.service');
 const authMiddleware = require('../middlewares/auth.mid');
 
+// this route fetches all tickets in the database.
 router.get("/", asyncHandler(async(req, res) => {
     const tickets = await Ticket.find();
     res.json(tickets);
 }));
 
+// this route  uploads a file(the pdf ticket), reads the contents of the ticket, and adds the ticket to the database.
 router.post('/upload', authMiddleware, upload.single('file'), async (req, res) => {
   const { path: filePath, originalname } = req.file;
   let ticketDocs = [];
@@ -95,7 +97,8 @@ router.post('/upload', authMiddleware, upload.single('file'), async (req, res) =
   }
 });
 
-
+// this route submits tickets for sale.
+// it updates the ticket prices and notifies the users in the event waiting list that ticket has become available.
 router.post('/submit', async (req, res) => {
   try {
     const tickets = req.body.tickets;
@@ -181,6 +184,7 @@ router.post('/submit', async (req, res) => {
   }
 });
 
+// this route deletes a ticket from the database by his id.
 router.delete('/delete/:id', authMiddleware, asyncHandler(async (req, res) => {
   const ticket = await Ticket.findById(req.params.id);
   if (!ticket) {
@@ -196,6 +200,7 @@ router.delete('/delete/:id', authMiddleware, asyncHandler(async (req, res) => {
   res.status(200).send({message: 'Ticket deleted'});
 }));
 
+// this route fetches the tickets that the currently authenticated user is selling and tickets they have bought.
 router.get('/getUserTickets', authMiddleware, asyncHandler(async(req, res) => {
   const userId = req.user.id;
   const sellingTickets = await getSellingTickets(userId);
@@ -206,6 +211,7 @@ router.get('/getUserTickets', authMiddleware, asyncHandler(async(req, res) => {
   });
 }));
 
+// this route updates the price of a ticket with the given ticket id.
 router.put('/updatePrice/:id', authMiddleware, asyncHandler(async(req, res) => {
   const ticketId = req.params.id;
   const newPrice = req.body.price;
@@ -219,6 +225,7 @@ router.put('/updatePrice/:id', authMiddleware, asyncHandler(async(req, res) => {
   }
 }));
 
+// this route returns the file assosiated with the particular ticket with the given id.
 router.get('/getTicketFile/:id', async (req, res) => {
   try {
     const file = await File.findById(req.params.id);
