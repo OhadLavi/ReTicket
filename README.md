@@ -27,7 +27,7 @@ This project is a user-friendly platform designed to streamline the process of b
 ```
 git clone https://github.com/OhadLavi/ReTicket.git
 ```
-2. Install the dependencies:
+2. Install the dependencies for the backend:
 ```
 cd backend
 npm install
@@ -45,6 +45,5 @@ ng serve -o
 cd backend
 npm start
 ```
-The website will be available at http://localhost:4200.
-
-make sure that the client server is running on port 4200
+The website will be available at http://localhost:4200
+make sure that the client server is running on port 5000
