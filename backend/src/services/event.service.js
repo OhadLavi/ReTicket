@@ -3,7 +3,6 @@ const { Event } = require('../models/event.model');
 // queries the DB for an event using the name, date, and venue of the event.
 // returns the event or an error if the event wasn't found.
 async function getEventByNameDateLocation(name, date, venue) {
-  console.log(name, date, venue);
   const event = await Event.findOne({
     name: name,
     date: { $eq: date },
@@ -18,7 +17,6 @@ async function getEventByNameDateLocation(name, date, venue) {
 // queries the DB for an event using the name and date of the event.
 // returns the event or an error if the event wasn't found.
 async function getEventByNameDate(name, date) {
-  console.log(name, date);
   const event = await Event.findOne({
     name: name,
     date: { $eq: date }
