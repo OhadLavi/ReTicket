@@ -89,8 +89,6 @@ async function parseTicketDetails(pdfBuffer, barcode, userId) {
   const [day, month, year] = date.split('/');
   const eventDate = new Date(Date.UTC(`20${year}`, month - 1, day, time.split(':')[0], time.split(':')[1]));
   const localISOTime = eventDate.toISOString();
-  console.log(localISOTime);
-
 
   
   const newFile = new File({
@@ -165,8 +163,6 @@ function checkQRAndBarcodeMatch(qrCode, barcode) {
 
 function checkDateIsValid(date) {
   const currentDate = new Date();
-  console.log("here: " + currentDate);
-  console.log("there: " + date >= currentDate);
   return date >= currentDate;
 }
 
