@@ -58,14 +58,15 @@ export class SellTicketComponent implements OnInit {
     }, 15000);
   }
 
+  // Uploads tickets
   onFileSelected(event: Event) {
     const file = (event.target as HTMLInputElement).files;
     if (file) {
       let container = this.el.nativeElement.querySelector('#upload-container');
       this.containerHeight = getComputedStyle(container).height;
       this.isLoading = true;
-      for (let i = 0; i < file.length; i++) {
-        this.ticketUploadService.uploadTicket(file[i]).subscribe({
+      for (let i = 0; i < file.length; i++) { // Upload each file
+        this.ticketUploadService.uploadTicket(file[i]).subscribe({ // Upload ticket
           next: (response: any) => {
             const ticketResults = response.ticketResults.tickets;
             for (let i = 0; i < ticketResults.length; i++) {
@@ -74,19 +75,21 @@ export class SellTicketComponent implements OnInit {
                 this.isEventDatePassedFlag = true;
               } else if (!ticketResult.valid) {
                 this.toast.error({detail:"ERROR",summary: ticketResult.errorMessage, sticky: false, duration: 10000, type: 'error'});
-              } else {
+              } else { // Valid ticket
                 ticketResult.eventDate = new Date(ticketResult.eventDate).toISOString().split('T')[0];
                 this.tickets.push(ticketResult);
+                // Add ticket price control
                 this.ticketPriceControls.push(
                   new FormControl(
                     ticketResult.price, 
                     [Validators.required, Validators.min(1), Validators.max(ticketResult.price)]
                   )
                 );
+                // Add ticket price validator
                 this.ticketPriceValidators.push(
                   [Validators.required, Validators.min(1), Validators.max(ticketResult.price)]
                 );
-                this.ticketForm.addControl('ticketPrice' + i, this.ticketPriceControls[i]);                
+                this.ticketForm.addControl('ticketPrice' + i, this.ticketPriceControls[i]); // Add control to form
                 this.isLoading = false;
                 this.uploadSuccess = true;
                 setTimeout(() => { this.fileUploaded = true; this.uploadSuccess = false; }, 1200);
@@ -109,6 +112,7 @@ export class SellTicketComponent implements OnInit {
     }
   }
 
+  // Submit ticket info 
   onSubmit() {
     if (this.ticketForm.invalid) {
       this.toast.error({detail:"ERROR",summary: 'Form is invalid. Please correct the errors.', sticky: false, duration: 10000, type: 'error'});
@@ -139,21 +143,22 @@ export class SellTicketComponent implements OnInit {
     });
   }
 
-resetForm() {
-  this.tickets = [];
-  this.fileUploaded = false;
-}
-
-isEventDatePassed(date: string): boolean {
-  const today = new Date().setHours(0, 0, 0, 0);
-  const selectedDate = new Date(date).setHours(0, 0, 0, 0);
-  return selectedDate < today;
-}
-
-checkTicketPrice(ticket: Ticket) {
-  if (ticket.price > this.originalPrice) {
-    this.toast.warning({detail:"WARN",summary: 'Updated price cannot be more than the original price.', sticky: false, duration: 10000, type: 'warning'});
+  // Reset form
+  resetForm() {
+    this.tickets = [];
+    this.fileUploaded = false;
   }
-}
+
+  isEventDatePassed(date: string): boolean {
+    const today = new Date().setHours(0, 0, 0, 0);
+    const selectedDate = new Date(date).setHours(0, 0, 0, 0);
+    return selectedDate < today;
+  }
+
+  checkTicketPrice(ticket: Ticket) {
+    if (ticket.price > this.originalPrice) {
+      this.toast.warning({detail:"WARN",summary: 'Updated price cannot be more than the original price.', sticky: false, duration: 10000, type: 'warning'});
+    }
+  }
 
 }

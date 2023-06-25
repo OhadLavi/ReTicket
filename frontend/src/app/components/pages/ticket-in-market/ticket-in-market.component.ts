@@ -16,7 +16,7 @@ export class TicketInMarketComponent implements OnInit {
   ngOnInit(): void {
     this.tickets = this.ticketService.getTickets();
 
-    if (this.tickets.length === 0) {
+    if (this.tickets.length === 0) { // If there are no tickets, redirect to home page
       this.router.navigateByUrl('/');
     }
   }

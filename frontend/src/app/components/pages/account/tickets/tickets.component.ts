@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { TicketService } from 'src/app/services/ticket.service';
 import { UserService } from 'src/app/services/user.service';
-import { environment } from 'src/app/shared/constants/environments'
 
 @Component({
   selector: 'app-tickets',
@@ -14,7 +13,6 @@ export class TicketsComponent implements OnInit {
   boughtTickets: any = [];
   soldTickets: any = [];
   sellingTickets: any = [];
-  private exchangeRate = environment.exchangeRate;
   
   constructor(private ticketService: TicketService, private userService:UserService) { }
 
@@ -24,26 +22,15 @@ export class TicketsComponent implements OnInit {
     this.fetchTickets();
   }
 
+  // Fetches all tickets
   fetchTickets(): void {
     this.ticketService.fetchUserTickets()
       .subscribe(response => {
         this.soldTickets = response.sellingTickets.filter((ticket: any) => ticket.ticketDetails.isSold === true);
         this.boughtTickets = response.boughtTickets;
         this.sellingTickets = response.sellingTickets.filter((ticket: any) => ticket.ticketDetails.isSold === false);
-        this.allTickets = [...this.soldTickets, ...this.boughtTickets, ...this.sellingTickets];
-        // this.allTickets = this.allTickets.map((ticket: any) => {
-        //   ticket.ticketDetails.price = this.convertPrice(ticket.ticketDetails);
-        //   return ticket;
-        // });
+        this.allTickets = [...this.soldTickets, ...this.boughtTickets, ...this.sellingTickets]; // Merge all tickets
       });
   }   
-
-  convertPrice(ticket: any): number {
-    if (ticket && 'price' in ticket && this.exchangeRate) {
-      return (Math.round(ticket.price / this.exchangeRate * 100) / 100);
-    }
-    return 0;
-  }
-  
   
 }

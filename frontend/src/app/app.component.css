@@ -1,38 +1,32 @@
 :host {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    overflow-x: hidden;
-    overflow-y: hidden;
-    background-color: #1a2129;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  background-color: #1a2129;
 }
-
 .component-full-height {
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-    overflow: auto;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  overflow: auto;
 }
-
 .pagination /deep/ .current {
-    background-color: #3f51b5;
-    color: white;
+  background-color: #3f51b5;
+  color: white;
 }
-
 .pagination /deep/ li {
-    background-color: #f1f1f1;
-    color: white;
+  background-color: #f1f1f1;
+  color: white;
 }
-
 ::ng-deep ul:not(.nav) > li:not(.active) > a {
   background-color: white !important;
   border-color: white !important;
 }
-
 ::ng-deep ul:not(.nav) > li.disabled > span {
   border-color: white !important;
 }
-
 ::ng-deep ul:not(.nav) > li.active > a {
   background-color: rgb(42, 187, 255) !important;
   border-color: white !important;

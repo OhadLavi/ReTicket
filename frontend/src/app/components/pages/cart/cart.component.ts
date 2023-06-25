@@ -37,6 +37,7 @@ export class CartComponent implements OnInit{
       couponCode: ['']
     });
 
+    // Get the cart from the cart service
     this.cartService.getCartObservable().subscribe(cart => {
       this.cart = cart;
       this.discountedPrice = this.cartService.getCart().cartPrice - this.cartService.getCart().totalPrice;
@@ -45,10 +46,12 @@ export class CartComponent implements OnInit{
     this.returnUrl = this.activatedRoute.snapshot.queryParams.returnUrl;
   }
 
+  // Removes the cart item from the cart
   removeFromCart(cartItem:CartItem) {
     this.cartService.removeFromCart(cartItem.ticket.id);
   }
 
+  // Changes the quantity of the cart item
   changeQuantity(cartItem:CartItem, quantity:number, availableTickets:number = Infinity) {
     if (quantity === 0) {
       this.openRemoveDialog(cartItem);
@@ -63,6 +66,7 @@ export class CartComponent implements OnInit{
     }
   }
   
+  // Opens the remove cart item dialog
   openRemoveDialog(cartItem:CartItem): void {
     const dialogRef = this.dialog.open(RemoveCartItemDialogComponent, {
       width: 'auto',
@@ -79,6 +83,7 @@ export class CartComponent implements OnInit{
     });
   }
 
+  // Apply coupon code
   applyCoupon() {
     if (this.couponForm.value.couponCode === 'Braude') {
       this.cartService.applyCoupon(this.discountPercentage);

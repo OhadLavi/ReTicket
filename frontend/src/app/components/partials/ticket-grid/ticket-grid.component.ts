@@ -1,6 +1,5 @@
-import { Component, EventEmitter, Inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { interval, Subscription } from 'rxjs';
 import { NgToastService } from 'ng-angular-popup';
 import { TicketService } from 'src/app/services/ticket.service';
@@ -15,7 +14,7 @@ import { TicketEditDialogComponent } from '../ticket-edit-dialog/ticket-edit-dia
 })
 export class TicketGridComponent implements OnInit, OnDestroy {
   userId: String = '';
-  constructor(private sanitizer: DomSanitizer, private userService:UserService, private ticketService: TicketService, private toast: NgToastService, private dialog: MatDialog) {
+  constructor(private userService:UserService, private ticketService: TicketService, private toast: NgToastService, private dialog: MatDialog) {
     this.userId = this.userService.currentUser.id;
   }
   
@@ -25,6 +24,7 @@ export class TicketGridComponent implements OnInit, OnDestroy {
   intervalSubscription?: Subscription;
 
   ngOnInit() {
+    // Updates the countdown every second
     this.intervalSubscription = interval(1000).subscribe(() => {
       this.tickets.forEach(ticket => {
         ticket.countdown = this.countdown(ticket.event.date);
@@ -34,10 +34,11 @@ export class TicketGridComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     if (this.intervalSubscription) {
-      this.intervalSubscription.unsubscribe();
+      this.intervalSubscription.unsubscribe(); // Unsubscribes from the interval
     }
   }
 
+  // Opens the file in a new tab
   openFile(file: string): void {
     const byteCharacters = atob(file);
     const byteNumbers = new Array(byteCharacters.length);
@@ -51,6 +52,7 @@ export class TicketGridComponent implements OnInit, OnDestroy {
     setTimeout(() => window.URL.revokeObjectURL(url), 100);
   }
   
+  // Returns the countdown
   countdown(eventDate: string): string {
     const currentTime = new Date().getTime();
     const targetTime = new Date(eventDate).getTime();
@@ -70,6 +72,7 @@ export class TicketGridComponent implements OnInit, OnDestroy {
     }
   }
 
+  // Deletes the ticket
   deleteTicket(ticketId: string, event: Event): void {
     event.stopPropagation();
     
@@ -93,7 +96,8 @@ export class TicketGridComponent implements OnInit, OnDestroy {
     });
   }
 
-    updateTicketPrice(ticketId: string, currentPrice: number, originalPrice: number): void {
+  // Updates the ticket price
+  updateTicketPrice(ticketId: string, currentPrice: number, originalPrice: number): void {
       const dialogRef = this.dialog.open(TicketEditDialogComponent, {
         width: 'auto',
         data: { currentPrice: currentPrice, originalPrice: originalPrice }

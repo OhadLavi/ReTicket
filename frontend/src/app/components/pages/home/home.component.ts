@@ -31,6 +31,7 @@ export class HomeComponent {
     this.searchEvents();
   }
 
+  // Fetches all events
   searchEvents(): void {
     let eventsObservable:Observable<EventM[]>;
     if (this.searchTerm)
@@ -52,6 +53,7 @@ export class HomeComponent {
     );
   }
 
+  // Starts recording audio
   startRecording(): void {
     navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
       this.stream = stream;
@@ -63,6 +65,7 @@ export class HomeComponent {
     });
   }
 
+  // Stops recording audio and sends it to the server
   stopRecording(): void {
     if (this.recorder) {
       this.isRecording = false;
@@ -75,6 +78,7 @@ export class HomeComponent {
     }
   }
 
+  // Sends audio to the server
   private sendToServer(blob: Blob): void {
     if (blob.size > 70) {
       this.eventService.transcribeAudio(blob).subscribe((res) => {
@@ -88,6 +92,7 @@ export class HomeComponent {
     }
   }
 
+  // Clears the search bar
   clearSearch() {
     this.searchTerm = '';
     this.searchEvents();

@@ -1,34 +1,27 @@
-
 :host {
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-    overflow: auto;
-    align-items: center;
-    justify-content: center;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  overflow: auto;
+  align-items: center;
+  justify-content: center;
 }
-
 .mat-mdc-form-field-error {
-    font-size: 0.85rem;
+  font-size: 0.85rem;
 }
-
 mat-card {
   width: 35rem;
   padding: 3rem !important;
 }
-
 mat-card-title {
   font-size: 2.1rem;
   font-weight: 600;
 }
-
 mat-form-field {
   width: 100%;
   margin: 0.5rem 0;
 }
-
 button {
   width: 100%;
   padding: 0.5rem 0;
 }
-

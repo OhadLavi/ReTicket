@@ -29,7 +29,7 @@ export class TicketEditDialogComponent {
 
   onConfirm(): void {
     if (this.priceForm.valid) {
-      this.dialogRef.close({ price: this.priceForm.value.price, action: 'confirm' });
+      this.dialogRef.close({ price: this.priceForm.value.price, action: 'confirm' }); // Send the new price to the parent component
     }
   }
 }
