@@ -44,7 +44,7 @@ describe('Event Service', () => {
         date: { $eq: eventData.date },
         venue: eventData.venue
       });
-      expect(event).toEqual({ error: 'Error: Event not found' });
+      expect(event).toEqual({ error: 'Error: Event not found1' });
     });
   });
 
@@ -80,7 +80,7 @@ describe('Event Service', () => {
         name: eventData.name,
         date: { $eq: eventData.date }
       });
-      expect(event).toEqual({ error: 'Error: Event not found' });
+      expect(event).toEqual({ error: 'Error: Event not found2' });
     });
   });
 });
