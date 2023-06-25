@@ -45,5 +45,6 @@ ng serve -o
 cd backend
 npm start
 ```
-The website will be available at http://localhost:4200
-make sure that the client server is running on port 5000
+The website will be available at http://localhost:4200.
+
+make sure that the client server is running on port 5000.

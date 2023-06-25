@@ -1,7 +1,6 @@
 const { Event } = require('../models/event.model');
 
 async function getEventByNameDateLocation(name, date, venue) {
-  console.log(name, date, venue);
   const event = await Event.findOne({
     name: name,
     date: { $eq: date },
@@ -14,7 +13,6 @@ async function getEventByNameDateLocation(name, date, venue) {
 }
 
 async function getEventByNameDate(name, date) {
-  console.log(name, date);
   const event = await Event.findOne({
     name: name,
     date: { $eq: date }
