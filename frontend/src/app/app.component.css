@@ -24,17 +24,16 @@
     color: white;
 }
 
-::ng-deep ul > li:not(.active) > a {
-    background-color: white !important;
-    border-color: white !important;
-  }
-  
-  ::ng-deep ul > li.disabled > span {
+::ng-deep ul:not(.nav) > li:not(.active) > a {
+  background-color: white !important;
+  border-color: white !important;
+}
 
-    border-color: white !important;
-  }
-  
-  ::ng-deep ul > li.active > a {
-    background-color: rgb(42, 187, 255) !important;
-    border-color: white !important;
-  }
+::ng-deep ul:not(.nav) > li.disabled > span {
+  border-color: white !important;
+}
+
+::ng-deep ul:not(.nav) > li.active > a {
+  background-color: rgb(42, 187, 255) !important;
+  border-color: white !important;
+}

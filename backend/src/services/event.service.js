@@ -1,24 +1,26 @@
 const { Event } = require('../models/event.model');
 
 async function getEventByNameDateLocation(name, date, venue) {
+  console.log(name, date, venue);
   const event = await Event.findOne({
     name: name,
     date: { $eq: date },
     venue: venue
   });
   if (!event) {
-    return { error: 'Error: Event not found' };
+    return { error: 'Error: Event not found1' };
   }
   return event;
 }
 
 async function getEventByNameDate(name, date) {
+  console.log(name, date);
   const event = await Event.findOne({
     name: name,
     date: { $eq: date }
   });
   if (!event) {
-    return { error: 'Error: Event not found' };
+    return { error: 'Error: Event not found2' };
   }
   return event;
 }

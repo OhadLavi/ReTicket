@@ -3,6 +3,9 @@ const moment = require('moment');
 const puppeteer = require('puppeteer');
 const websiteConfigs = require('./websiteConfigs');
 const { saveEvent } = require('../services/event.service');
+const eventRoutes = require('../routers/event.router');
+const sample_events = require('../data/events');
+const { Event } = require('../models/event.model');
 
 async function scrapeWebsite(websiteName) {
   const config = websiteConfigs[websiteName];
@@ -18,10 +21,12 @@ async function scrapeWebsite(websiteName) {
       return links;
     }, config.linkSelector);
     let data = [];
+    await Event.create(sample_events);
     const pagesPromises = eventLinks.map(async (link) => {
-      const page = await browser.newPage();
-      await page.goto(link, { waitUntil: 'networkidle0' });
 
+  try {
+    const page = await browser.newPage();
+    await page.goto(link, { waitUntil: 'networkidle0', timeout: 50000 });
       const rawEventDetails = await page.evaluate((selectors) => {
         const getValueFromSelectors = (selObj, attr = 'innerText') => {
           let value = '';
@@ -67,8 +72,11 @@ async function scrapeWebsite(websiteName) {
         data.push(eventDetails);
         await saveEvent(eventDetails);
       }
-    });
-    await Promise.all(pagesPromises);
+    } catch (error) {
+      
+    }
+});
+await Promise.all(pagesPromises);
     await browser.close();
     console.log('Scraping completed!');
   } catch (error) {

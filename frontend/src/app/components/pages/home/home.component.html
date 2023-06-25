@@ -49,10 +49,11 @@
   </div>
 </section>
 
-<pagination-controls (pageChange)="p = $event" class="pb-3"></pagination-controls>
+<pagination-controls *ngIf="events.length > 0" (pageChange)="p = $event" class="pb-3"></pagination-controls>
 
 <ng-template #noResults>
   <div class="d-flex justify-content-center align-items-center full-vh">
-    <p class="text-white text-center fs-4">No results found.</p>
+    <p class="text-white text-center fs-4" *ngIf="searchTerm && events.length > 0">No results found.</p>
+    <p class="text-white text-center fs-4">There are no events to display.</p>
   </div>
 </ng-template>

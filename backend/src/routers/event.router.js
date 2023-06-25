@@ -188,6 +188,7 @@ router.post('/transcribeAudio', upload.single('audio'), async (req, res) => {
     
     res.status(200).send({ transcription });
   } catch (err) {
+    console.log(err);
     res.status(500).send({ error: 'An error occurred while transcribing the audio.' });
   }
 });
