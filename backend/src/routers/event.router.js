@@ -6,7 +6,7 @@ const asyncHandler = require('express-async-handler');
 const multer = require('multer');
 const speech = require('@google-cloud/speech');
 const upload = multer();
-const natural = require('natural');
+const natural = require('natural'); 
 const authMiddleware = require('../middlewares/auth.mid');
 
 router.get("/", asyncHandler(async (req, res) => {
