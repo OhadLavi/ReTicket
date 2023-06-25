@@ -18,20 +18,9 @@ const storage = multer.diskStorage({
   filename: function (req, file, cb) {cb(null, file.originalname);}
 }); 
 const upload = multer({ storage: storage });
-const sample_events = require('../data/events');
 const { send, eventNames } = require('process');
 const { processTicket} = require('../services/ticket.service');
 const authMiddleware = require('../middlewares/auth.mid');
-
-router.get("/seed", asyncHandler(async (req, res) => {
-  const eventsCount = await Event.countDocuments();
-  if (eventsCount > 0) {
-      res.send("Seed data already exists");
-      return;
-  }
-  await Event.create(sample_events);
-  res.send("Seed data created");
-}));
 
 router.get("/", asyncHandler(async(req, res) => {
     const tickets = await Ticket.find();

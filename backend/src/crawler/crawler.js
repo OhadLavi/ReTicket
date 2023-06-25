@@ -4,7 +4,6 @@ const puppeteer = require('puppeteer');
 const websiteConfigs = require('./websiteConfigs');
 const { saveEvent } = require('../services/event.service');
 const eventRoutes = require('../routers/event.router');
-const sample_events = require('../data/events');
 const { Event } = require('../models/event.model');
 
 async function scrapeWebsite(websiteName) {
@@ -21,9 +20,7 @@ async function scrapeWebsite(websiteName) {
       return links;
     }, config.linkSelector);
     let data = [];
-    await Event.create(sample_events);
     const pagesPromises = eventLinks.map(async (link) => {
-
   try {
     const page = await browser.newPage();
     await page.goto(link, { waitUntil: 'networkidle0', timeout: 50000 });
