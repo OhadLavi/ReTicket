@@ -1,27 +1,24 @@
-const fs = require('fs');
 const moment = require('moment');
 const puppeteer = require('puppeteer');
 const websiteConfigs = require('./websiteConfigs');
 const { saveEvent } = require('../services/event.service');
-const eventRoutes = require('../routers/event.router');
-const { Event } = require('../models/event.model');
 
 async function scrapeWebsite(websiteName) {
-  const config = websiteConfigs[websiteName];
-  try {
+  const config = websiteConfigs[websiteName]; // Configuration settings are retrieved based on the provided website name
+  try { // A new Puppeteer browser instance is created and a new page is opened in that browser
     const browser = await puppeteer.launch({headless: "new"});
     const page = await browser.newPage();
-    await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.82 Safari/537.36');
-    await page.goto(config.url, { waitUntil: 'networkidle0' });
+    await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.82 Safari/537.36'); // The browser is set to mimic a specific user agent
+    await page.goto(config.url, { waitUntil: 'networkidle0' }); // The browser navigates to the URL from the config file
     console.log('Scraping in process...');
-    const eventLinks = await page.evaluate((linkSelector) => {
+    const eventLinks = await page.evaluate((linkSelector) => { // Event links are collected from the page
       let links = Array.from(document.querySelectorAll(linkSelector)).map(a => a.href);
       links = links.filter(link => !link.endsWith('.pdf'));
       return links;
     }, config.linkSelector);
     let data = [];
     const pagesPromises = eventLinks.map(async (link) => {
-  try {
+  try { // A new page is opened for each event link
     const page = await browser.newPage();
     await page.goto(link, { waitUntil: 'networkidle0', timeout: 50000 });
       const rawEventDetails = await page.evaluate((selectors) => {
@@ -42,7 +39,7 @@ async function scrapeWebsite(websiteName) {
           }
           return value;
         };
-        
+        // The values are retrieved from the page using the selectors from the config file
         let name = getValueFromSelectors(selectors.name);
         let timeDate = getValueFromSelectors(selectors.timeDate);
         let venue = getValueFromSelectors(selectors.venue);
@@ -73,7 +70,7 @@ async function scrapeWebsite(websiteName) {
       
     }
 });
-await Promise.all(pagesPromises);
+await Promise.all(pagesPromises); // All promises are awaited before closing the browser
     await browser.close();
     console.log('Scraping completed!');
   } catch (error) {

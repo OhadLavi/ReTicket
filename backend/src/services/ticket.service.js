@@ -23,7 +23,7 @@ async function processTicket(pdfBuffer, userId) {
   const imagePaths = await convertPdfToImage(pdfPath, imageDir);
   const results = [];
   let error = null;
-
+  // loop through all images created from the pdf file
   for (const imagePath of imagePaths) {
     const qrCode = await detectAndReadQRCode(imagePath);
     const barcode = await detectAndReadBarcode(imagePath);
@@ -68,7 +68,7 @@ async function parseTicketDetails(pdfBuffer, barcode, userId) {
   } catch (err) {
     return { error: 'Failed to parse PDF document. The file might be corrupted or not a valid PDF document.' };
   }
-
+  
   const artistNameMatch = text.match(/Name:\s*(.*)/);
   const dateAndTimeMatch = text.match(/(\d{2}\/\d{2}\/\d{2} - \d{2}:\d{2})/);
   const gateMatch = text.match(/שער\s*(\d{1,2})/);
@@ -79,6 +79,7 @@ async function parseTicketDetails(pdfBuffer, barcode, userId) {
 
   let ticketPrice, block;
 
+  // get ticket price and description
   for (let i = 0; i < lines.length; i++) {
     if (lines[i].includes('₪')) {
       const priceMatch = lines[i-3].match(/(\d+\.\d{2})/);
@@ -95,7 +96,6 @@ async function parseTicketDetails(pdfBuffer, barcode, userId) {
   const eventDate = new Date(Date.UTC(`20${year}`, month - 1, day, time.split(':')[0], time.split(':')[1]));
   const localISOTime = eventDate.toISOString();
 
-  
   const newFile = new File({
     data: pdfBuffer,
     contentType: 'application/pdf',
