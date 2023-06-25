@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const sample_events = require('../data/events');
 const { Event } = require('../models/event.model');
 const Ticket = require('../models/ticket.model');
 const asyncHandler = require('express-async-handler');
@@ -244,16 +243,6 @@ router.delete('/unfavorite/id/:eventId', authMiddleware, asyncHandler(async (req
     await event.save();
   }
   res.status(200).json(event);
-}));
-
-router.get("/seed", asyncHandler(async (req, res) => {
-  const eventsCount = await Event.countDocuments();
-  if (eventsCount > 0) {
-    res.send("Seed data already exists");
-    return;
-  }
-  await Event.create(sample_events);
-  res.send("Seed data created");
 }));
 
 module.exports = router;
