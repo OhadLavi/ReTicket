@@ -43,9 +43,8 @@ if(process.env.NODE_ENV === 'production'){
 // Start server
 app.listen(port, () => { 
     console.log(`Server is running on port: ${port}`);
-    scrapeWebsite('eventim');
     setInterval(() => {
-         //scrapeWebsite('eventim');
+         scrapeWebsite('eventim');
     }, 1000 * 60 * 60 * 24); // Crawl and scrap every 24 hours
  });
 

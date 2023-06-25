@@ -44,7 +44,7 @@ router.post('/pay', authMiddleware, asyncHandler(async (req, res) => {
       await updateEventAvailableTickets(item.eventM, item.quantity);
       const tickets = await updateTicketStatus(item.event, order.userId, order._id, item.quantity);
       allTickets.push(...tickets);
-      const roundedBalance = Math.round((item.price * item.quantity) * 100) / 100;
+      const roundedBalance = Math.round((item.price * 1.05 * item.quantity) * 100) / 100;
       await User.findByIdAndUpdate(tickets[0].seller, { $inc: { balance: roundedBalance } }).exec();
       const userId = new mongoose.Types.ObjectId(req.user.id);
       const eventId = new mongoose.Types.ObjectId(item.event);      

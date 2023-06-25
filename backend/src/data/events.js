@@ -1,15 +1,26 @@
 const events = [
+    // {
+    //     name: "One Republic",
+    //     description: "OneRepublic is an American pop rock band formed in Colorado Springs, Colorado, in 2002. It consists of lead vocalist and multi-instrumentalist Ryan Tedder, guitarist Zach Filkins, guitarist Drew Brown, bassist and cellist Brent Kutzle, drummer Eddie Fisher and keyboardist Brian Willett.",
+    //     date: "2023-08-11T15:30:00.000Z",
+    //     location: "Rishon LeZion, IL",
+    //     venue: "Live Park",
+    //     image: "https://www.musicgorilla.com/wp-content/uploads/2014/10/onerepublic.jpg",
+    //     price: 0,
+    //     availableTickets: 0,
+    //     soldTickets: 0
+    // },
     {
-        name: "One Republic",
-        description: "OneRepublic is an American pop rock band formed in Colorado Springs, Colorado, in 2002. It consists of lead vocalist and multi-instrumentalist Ryan Tedder, guitarist Zach Filkins, guitarist Drew Brown, bassist and cellist Brent Kutzle, drummer Eddie Fisher and keyboardist Brian Willett.",
-        date: "2023-08-11T15:30:00.000Z",
-        location: "Rishon LeZion, IL",
-        venue: "Live Park",
-        image: "https://www.musicgorilla.com/wp-content/uploads/2014/10/onerepublic.jpg",
+        name: "Bruno Mars",
+        description: "Peter Gene Hernandez, known professionally as Bruno Mars, is an American singer, songwriter, record producer, musician, and dancer. He is known for his stage performances, retro showmanship, and for performing in a wide range of musical styles, including pop, R&B, funk, soul, reggae, hip hop, and rock.",
+        date: "2023-10-04T18:00:00.000Z",
+        location: "Tel Aviv, IL",
+        venue: "Yarkon Park",
+        image: "https://i.postimg.cc/tTVNpq0W/brunomars.png",
         price: 0,
         availableTickets: 0,
         soldTickets: 0
-    },
+    }
     // {
     //     name: "The Weeknd",
     //     description: "The Weeknd is an R&B singer-songwriter and producer hailing from Scarborough, Ontario, Canada who was born on February 16th, 1990. Since his debut in 2011, he has won three Juno Awards, eight Billboard Music Awards, two Grammy Awards, and has been nominated for an Academy Award.",

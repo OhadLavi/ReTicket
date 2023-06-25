@@ -1,7 +1,6 @@
 const fs = require('fs');
 const fsPromises = require('fs').promises;
 const { Event } = require('../models/event.model');
-const pdfjsLib = require('pdfjs-dist');
 const jsQR = require('jsqr');
 const jimp = require('jimp');
 const Ticket = require('../models/ticket.model');
@@ -20,7 +19,6 @@ async function processTicket(pdfBuffer, userId) {
   const imageDir = path.join(__dirname, '..', 'uploads', 'images');
   const imagePaths = await convertPdfToImage(pdfPath, imageDir);
   const results = [];
-  let i = 0;
   let error = null;
 
   for (const imagePath of imagePaths) {
@@ -35,12 +33,17 @@ async function processTicket(pdfBuffer, userId) {
       break;
     }
     const ticket = await parseTicketDetails(pdfBuffer, barcode, userId);
+    if (checkDateIsValid(ticket.eventDate)) {
+      error = 'Error: Ticket date is not valid';
+      break;
+    }
     if (ticket.error) {
       error = ticket.error;
       break;
     }
     const event = await getEventByNameDate(ticket.artists, ticket.eventDate); 
     ticket.location = event.location;
+    console.log(event);
     ticket.venue = event.venue;
     ticket.valid = match;
     results.push(ticket);
@@ -53,7 +56,6 @@ async function processTicket(pdfBuffer, userId) {
 
 async function parseTicketDetails(pdfBuffer, barcode, userId) {
   let data, text, lines;
-
   try {
     data = await pdfParse(pdfBuffer);
     text = data.text;
@@ -84,8 +86,12 @@ async function parseTicketDetails(pdfBuffer, barcode, userId) {
     }
   }
   const [date, time] = dateAndTime.split(' - ');
-  const [month, day, year] = date.split('/');
-  const eventDate = new Date(`20${year}-${month}-${day}T${time}:00`).toISOString();
+  const [day, month, year] = date.split('/');
+  const eventDate = new Date(Date.UTC(`20${year}`, month - 1, day, time.split(':')[0], time.split(':')[1]));
+  const localISOTime = eventDate.toISOString();
+  console.log(localISOTime);
+
+
   
   const newFile = new File({
     data: pdfBuffer,
@@ -98,7 +104,7 @@ async function parseTicketDetails(pdfBuffer, barcode, userId) {
     artists: artistName,
     price: ticketPrice,
     originalPrice: ticketPrice,
-    eventDate: eventDate,
+    eventDate: localISOTime,
     status: "On sale",
     description: `Gate: ${gate}, Block: ${block}`,
     fileName: savedFile.name,
@@ -159,6 +165,8 @@ function checkQRAndBarcodeMatch(qrCode, barcode) {
 
 function checkDateIsValid(date) {
   const currentDate = new Date();
+  console.log("here: " + currentDate);
+  console.log("there: " + date >= currentDate);
   return date >= currentDate;
 }
 
@@ -255,12 +263,6 @@ async function formatTicketDetails(tickets) {
           files: files
       };
   }));
-}
-
-async function loadPdf(pdfPath) {
-  const pdfData = new Uint8Array(fs.readFileSync(pdfPath));
-  const pdf = await pdfjsLib.getDocument(data).promise;
-  return pdf;
 }
 
 module.exports = {

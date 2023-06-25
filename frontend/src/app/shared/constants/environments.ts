@@ -1,5 +1,5 @@
 export const environment = {
     production: false,
-    exchangeRate: 3.5,
+    exchangeRate: 3.63,
   };
   

@@ -18,35 +18,14 @@ $ReTicket-theme: mat.define-light-theme((
 
 @include mat.all-component-themes($ReTicket-theme);
 
-$ReTicket-dark-theme: mat.define-dark-theme((
-  color: (
-    primary: $ReTicket-primary,
-    accent: $ReTicket-accent,
-    warn: $ReTicket-warn,
-  )
-));
+// $ReTicket-dark-theme: mat.define-dark-theme((
+//   color: (
+//     primary: $ReTicket-primary,
+//     accent: $ReTicket-accent,
+//     warn: $ReTicket-warn,
+//   )
+// ));
 
-.darkMode {
-  @include mat.all-component-themes($ReTicket-dark-theme);
-}
-
-.pagination-controls a {
-  color: mat-color($ReTicket-primary);  // This will apply the primary color of your theme
-}
-
-.pagination-controls a:hover {
-  color: mat-color($ReTicket-accent);  // This will apply the accent color of your theme when the link is hovered
-}
-
-.pagination-controls a:active {
-  color: mat-color($ReTicket-warn);  // This will apply the warn color of your theme when the link is clicked
-}
-
-
-// .lightMode {
-//   @include mat.all-component-themes($ReTicket-theme);
-// }
-
-// :root {
-//   --color-primary: #{mat-color($ReTicket-primary)};
-// }
+// // .darkMode {
+// //   @include mat.all-component-themes($ReTicket-dark-theme);
+// // }

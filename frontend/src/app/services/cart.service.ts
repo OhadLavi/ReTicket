@@ -4,6 +4,7 @@ import { Cart } from '../shared/models/Cart';
 import { CartItem } from '../shared/models/CartItem';
 import { EventM } from '../shared/models/EventM';
 import { EventService } from './event.service';
+import { environment } from 'src/app/shared/constants/environments'
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,7 @@ export class CartService {
   private cart:Cart = this.getCartFromLocalStorage();
   private cartSubject: BehaviorSubject<Cart> = new BehaviorSubject(this.cart);
   constructor(private eventService:EventService) { }
-  exchangeRate = 3.5;
+  private exchangeRate = environment.exchangeRate;
 
   getQuantityInCart(eventId: string): number {
     return this.cart.items.reduce((total, item) => {
