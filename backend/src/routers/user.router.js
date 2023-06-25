@@ -1,7 +1,6 @@
 const express = require('express');
 const axios = require('axios');
 const router = express.Router();
-const sample_users = require('../data/users');
 const jwt = require('jsonwebtoken');
 const asyncHandler = require('express-async-handler');
 const UserModel = require('../models/user.model');
@@ -77,16 +76,6 @@ router.put("/update/:id", asyncHandler(async (req, res) => {
 router.get('/favorites/', authMiddleware, asyncHandler(async (req, res) => {
   const events = await Event.find({ favorites: req.user.id });
   res.json(events);
-}));
-
-router.get("/seed", asyncHandler(async (req, res) => {
-    const usersCount = await UserModel.countDocuments();
-    if (usersCount > 0) {
-        res.send("Seed data already exists");
-        return;
-    }
-    await UserModel.create(sample_users);
-    res.send("Seed data created");
 }));
 
 const storage = multer.diskStorage({
