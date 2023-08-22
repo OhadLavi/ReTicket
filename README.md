@@ -2,7 +2,9 @@
 
 ## Description
 This project is a user-friendly platform designed to streamline the process of buying and selling second-hand concert e-tickets.
+
 It serves two main types of users: buyers and sellers. As a ticket buyer, you can effortlessly search for your desired concert by artist, city, date, or category.
+
 As a ticket seller, you can easily sell your unused tickets by uploading the ticket’s PDF file and setting your desired price.
 
 ## Features
