@@ -9,6 +9,7 @@ As a ticket seller, you can easily sell your unused tickets by uploading the tic
 
 ## Features
 - Search for tickets for upcoming concerts by any parameter such as event name, artist name, venue, or city.
+- Utilize OCR and QR code recognition for secure and convenient validation of e-tickets 
 - Voice search feature for ticket search using string similarity.
 - Event's are added through a web crawler and scraper using headless browser.
 - Event page with details like event poster, name, date and location (using Google places API).
