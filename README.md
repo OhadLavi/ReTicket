@@ -52,4 +52,4 @@ npm start
 ```
 The website will be available at http://localhost:4200.
 
-make sure that the client server is running on port 5000.
+make sure that the server is running on port 5000.
